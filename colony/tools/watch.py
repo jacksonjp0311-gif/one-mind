@@ -68,15 +68,16 @@ def dream(source: str = "one-mind") -> int:
 
 
 def echo(source: str, report: dict) -> None:
-    """One receipt. The next evolve will find it."""
+    """One receipt the other lineage can read. Dream talks."""
     try:
         from colony.tools.symbiotic_exchange import append_receipt
+        other = "colony" if source == "one-mind" else "one-mind"
         append_receipt(
             source,
-            "watch",
-            f"watch:{report.get('checked', 0)}:{report.get('foreign', 0)}",
+            "dream",
+            f"dream:{other}:{report.get('checked', 0)}",
             "observed",
-            report,
+            {**report, "to": other, "from": source},
         )
     except Exception:
         pass
