@@ -871,6 +871,12 @@ def propose_for_role(
                     outcome = "adopted_elsewhere"
         except Exception:
             pass
+        try:
+            from colony.tools.traces import record_trace
+            if prop and getattr(prop, "fingerprint", ""):
+                record_trace(prop.fingerprint, int(getattr(getattr(prop, "match", None), "score", 0) or 0))
+        except Exception:
+            pass
         emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=foreign,
              bias_delta=delta, outcome=outcome)
         try:
