@@ -76,12 +76,12 @@
       "reason": "inbox_gap"
     },
     {
-      "topic": "brain-to-text",
+      "topic": "ceiling-aware]",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
     {
-      "topic": "ceiling-aware]",
+      "topic": "compute-useful",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
@@ -247,8 +247,8 @@
     }
   ],
   "source": "growth_refresh+findings_coupling",
-  "updated_at": "2026-11-17T15:50:27Z",
-  "updated_cycle": "20261117T154826Z_4ee9ac",
+  "updated_at": "2026-11-17T17:00:50Z",
+  "updated_cycle": "20261117T165803Z_d80ecd",
   "charter_inform": {
     "hints": 29,
     "inform_only": true,

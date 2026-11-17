@@ -12,7 +12,7 @@
       "start": 4,
       "verified": {
         "lo": 4,
-        "hi": 546748611,
+        "hi": 548348611,
         "by": "colony",
         "label": "bounded evidence, not proof"
       },
@@ -24,15 +24,9 @@
       "literature": "Published computations report verification far beyond this range (e.g. Oliveira e Silva, Herzog & Pardi, to 4·10^18).",
       "label": "bounded evidence, not proof",
       "proof": false,
-      "last_run": "2026-11-17T14:00:24Z",
-      "runs": 187,
+      "last_run": "2026-11-17T16:49:36Z",
+      "runs": 188,
       "extensions": [
-        {
-          "ts": "2026-11-16T19:55:57Z",
-          "lo": 516434116,
-          "hi": 519634115,
-          "seconds": 2.4245
-        },
         {
           "ts": "2026-11-16T20:57:17Z",
           "lo": 519634116,
@@ -86,10 +80,16 @@
           "lo": 545148612,
           "hi": 546748611,
           "seconds": 1.129
+        },
+        {
+          "ts": "2026-11-17T16:49:36Z",
+          "lo": 546748612,
+          "hi": 548348611,
+          "seconds": 1.2388
         }
       ],
       "last_data": {
-        "max_least_prime": 881
+        "max_least_prime": 1033
       },
       "stall_streak": 0,
       "recipe_use": {
@@ -223,7 +223,7 @@
       "start": 1,
       "verified": {
         "lo": 1,
-        "hi": 2988607,
+        "hi": 3004607,
         "by": "colony",
         "label": "bounded evidence, not proof"
       },
@@ -235,15 +235,9 @@
       "literature": "Implied far beyond this range by published prime-gap computations; open in general.",
       "label": "bounded evidence, not proof",
       "proof": false,
-      "last_run": "2026-11-17T15:17:42Z",
-      "runs": 187,
+      "last_run": "2026-11-17T16:55:06Z",
+      "runs": 188,
       "extensions": [
-        {
-          "ts": "2026-11-16T20:00:39Z",
-          "lo": 2828608,
-          "hi": 2844607,
-          "seconds": 1.7445
-        },
         {
           "ts": "2026-11-16T21:02:06Z",
           "lo": 2844608,
@@ -297,10 +291,16 @@
           "lo": 2972608,
           "hi": 2988607,
           "seconds": 1.7636
+        },
+        {
+          "ts": "2026-11-17T16:55:06Z",
+          "lo": 2988608,
+          "hi": 3004607,
+          "seconds": 1.7612
         }
       ],
       "last_data": {
-        "max_first_prime_offset": 258
+        "max_first_prime_offset": 205
       },
       "stall_streak": 0,
       "recipe_use": {
@@ -328,7 +328,7 @@
       "start": 2,
       "verified": {
         "lo": 2,
-        "hi": 277400001,
+        "hi": 279000001,
         "by": "colony",
         "label": "bounded evidence, not proof"
       },
@@ -340,15 +340,9 @@
       "literature": "Published work rules out small counterexamples (e.g. Cohen & Hagis: any counterexample has many prime factors); open in general.",
       "label": "bounded evidence, not proof",
       "proof": false,
-      "last_run": "2026-11-17T15:22:42Z",
-      "runs": 187,
+      "last_run": "2026-11-17T17:00:19Z",
+      "runs": 188,
       "extensions": [
-        {
-          "ts": "2026-11-16T20:21:58Z",
-          "lo": 261400002,
-          "hi": 263000001,
-          "seconds": 2.2609
-        },
         {
           "ts": "2026-11-16T21:21:41Z",
           "lo": 263000002,
@@ -402,6 +396,12 @@
           "lo": 275800002,
           "hi": 277400001,
           "seconds": 2.2599
+        },
+        {
+          "ts": "2026-11-17T17:00:19Z",
+          "lo": 277400002,
+          "hi": 279000001,
+          "seconds": 2.2202
         }
       ],
       "stall_streak": 0,
@@ -2673,5 +2673,5 @@
       }
     }
   ],
-  "updated_at": "2026-11-17T15:50:03Z"
+  "updated_at": "2026-11-17T17:00:22Z"
 }
