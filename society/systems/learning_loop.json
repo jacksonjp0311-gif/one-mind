@@ -2107,7 +2107,7 @@
       "voided": 1
     }
   },
-  "last_cycle": "20261117T200131Z_5268e2",
+  "last_cycle": "20261117T202808Z_9fa683",
   "last_hive_deferral": {
     "action": {
       "direction": "up",
@@ -2118,18 +2118,18 @@
     "applied_to_live_oracle": false,
     "authorized": false,
     "card_id": "",
-    "cycle_id": "20261117T200131Z_5268e2",
-    "deferred_count": 31,
+    "cycle_id": "20261117T202306Z_8f99c2",
+    "deferred_count": 33,
     "deferred_under": "37030afa648a051f0c7c2036d2941610df7a9f5dbcc17c5a4b9c1e666daf7f03",
     "event": "hive_deferred",
     "fingerprint": "set_knob:direction=up:name=park_cycles:value=14",
     "label": "dead_end_streak",
     "method": "",
-    "ts": "2026-11-17T20:04:55Z"
+    "ts": "2026-11-17T20:26:24Z"
   },
   "n_inconclusive": 6,
   "n_kept": 14,
-  "n_proposed": 7,
+  "n_proposed": 8,
   "n_reverted": 10,
   "n_twin_held": 0,
   "n_voided": 16,
@@ -2263,16 +2263,35 @@
       "method": "Remember already-tried targets for longer before retrying them (longer working memory).",
       "source": "hive_vote",
       "ts": "2026-11-16T03:42:04Z"
+    },
+    {
+      "action": {
+        "direction": "up",
+        "name": "retry_policy_cycles",
+        "op": "set_knob",
+        "value": 5
+      },
+      "card_id": "mc_c54402191c99",
+      "concept": "",
+      "cycle_id": "20261117T201859Z_220c94",
+      "deferred_count": 32,
+      "event": "proposed",
+      "field": "",
+      "fingerprint": "set_knob:direction=up:name=retry_policy_cycles:value=5",
+      "knob": "retry_policy_cycles",
+      "method": "Replay failed attempts before giving up, so the colony learns from its own misses.",
+      "source": "hive_vote",
+      "ts": "2026-11-17T20:21:55Z"
     }
   ],
   "shadow": {
     "accuracy_permille": 0,
     "correct": 0,
-    "incorrect": 76,
-    "pending": 124,
-    "resolved": 76,
+    "incorrect": 75,
+    "pending": 125,
+    "resolved": 75,
     "source": "hive_shadows",
-    "ts": "2026-11-17T20:05:56Z",
+    "ts": "2026-11-17T20:35:15Z",
     "unlabeled": 0
   },
   "twin_pending": [],

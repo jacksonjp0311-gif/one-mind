@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-17T20:01:59Z",
-  "cycle_id": "20261117T200131Z_5268e2",
+  "ts": "2026-11-17T20:28:37Z",
+  "cycle_id": "20261117T202808Z_9fa683",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -12,7 +12,6 @@
       "stem_snell_least_time"
     ],
     "oracle_kills_by_theme": {
-      "authored_mut_swap_related_sequence_2d4852ce385c": 1,
       "authored_mut_swap_related_sequence_52a5162a7db1": 1,
       "authored_mut_swap_related_sequence_539c6e5aed66": 1,
       "authored_mut_swap_related_sequence_6086023df475": 1,
@@ -112,10 +111,10 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8382,
-      "slope": 3e-06,
+      "last": 0.8384,
+      "slope": -8.6e-05,
       "min": 0.8379,
-      "max": 0.8409
+      "max": 0.8403
     },
     "novelty": {
       "last": 0.6786,
@@ -144,7 +143,7 @@
   },
   "stall": {
     "stalled": false,
-    "aggregate_range": 0.0021,
+    "aggregate_range": 0.0013,
     "novelty_max": 0.6786,
     "window": 6,
     "reason": "moving"
@@ -276,23 +275,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 0.822,
+      "ratio": 0.931,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 0.847,
+      "ratio": 0.946,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 0.874,
+      "ratio": 0.936,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 0.853,
+      "ratio": 0.872,
       "drift": false
     },
     "kinematics_microbench": {
-      "ratio": 0.926,
+      "ratio": 0.952,
       "drift": false
     }
   },
@@ -301,10 +300,10 @@
     "verified": {
       "goldbach_even": 549948611,
       "collatz_descent": 591800000,
-      "legendre_square_gap": 3004607,
-      "lehmer_totient": 279000001,
+      "legendre_square_gap": 3020607,
+      "lehmer_totient": 280600001,
       "erdos_straus": 1529127,
-      "twin_primes_hl": 738200000,
+      "twin_primes_hl": 742200000,
       "oeis_A104062_next": 518690000001
     },
     "reviews": [],
