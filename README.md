@@ -55,6 +55,20 @@ It is not Agent Colony. Colony keeps a tighter gate. One Mind keeps a looser one
 5. On reload, a fresh process loads those records and can retrieve them by key.
 6. When the store exceeds its budget, the least-used records are pruned.
 
+
+
+## Where the keep lives
+
+Two logs. Do not confuse them.
+
+| Log | What it records | Keep? |
+|---|---|---|
+| `data/commons/cycle_telemetry.jsonl` | Swarm proposals. Outcome is usually `proposed`. | No |
+| `society/systems/self_heal.json` | Trial vs baseline. `adopted_count` is the keep count. Evidence array holds `event: adopt`. | Yes |
+| `data/commons/crystallized.jsonl` | Durable records. Category `kept` means a trial beat baseline. Category `stable` means repeated observation. | Yes, if `kept` |
+
+A swarm proposal is not a keep. A keep is an adopt in self-heal state, or a `kept` line in the crystallized file.
+
 ## Claim boundary
 
 Durable records are of category `stable` (repeated observation) unless a trial beats baseline, in which case the category is `kept`. Semantic gain is not established. This system does not claim general intelligence.
