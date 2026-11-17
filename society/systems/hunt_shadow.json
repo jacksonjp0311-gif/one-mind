@@ -2,8 +2,8 @@
   "mode": "report_only",
   "note": "P, scores, novelty kills, desk decisions and authorization are unchanged. COLONY_HUNT=live only reorders/re-rewards exploration (colony/hunt.py); see colony/hunt_shadow.py for the rules.",
   "last": {
-    "ts": "2026-11-17T20:35:14Z",
-    "cycle_id": "20261117T202808Z_9fa683",
+    "ts": "2026-11-17T20:58:22Z",
+    "cycle_id": "20261117T205431Z_05193a",
     "mode": "report_only",
     "guidance": {
       "mode": "shadow",
@@ -210,36 +210,6 @@
     }
   },
   "history": [
-    {
-      "ts": "2026-11-17T07:04:30Z",
-      "cycle_id": "20261117T065809Z_91dd06",
-      "n_meet_bar_actual": 36,
-      "n_meet_bar_shadow": 14,
-      "n_unknown_claims": 33,
-      "drop_out_of_bar": 22,
-      "enter_bar": 0,
-      "guidance_mode": "shadow",
-      "near_misses": {
-        "oracle_rows": 0,
-        "shifted_window_failures": 0,
-        "single_reason_kills": 0
-      }
-    },
-    {
-      "ts": "2026-11-17T07:09:26Z",
-      "cycle_id": "20261117T070435Z_de4261",
-      "n_meet_bar_actual": 36,
-      "n_meet_bar_shadow": 14,
-      "n_unknown_claims": 33,
-      "drop_out_of_bar": 22,
-      "enter_bar": 0,
-      "guidance_mode": "shadow",
-      "near_misses": {
-        "oracle_rows": 0,
-        "shifted_window_failures": 0,
-        "single_reason_kills": 0
-      }
-    },
     {
       "ts": "2026-11-17T08:08:27Z",
       "cycle_id": "20261117T080102Z_2b0f42",
@@ -648,6 +618,36 @@
     {
       "ts": "2026-11-17T20:35:14Z",
       "cycle_id": "20261117T202808Z_9fa683",
+      "n_meet_bar_actual": 36,
+      "n_meet_bar_shadow": 14,
+      "n_unknown_claims": 33,
+      "drop_out_of_bar": 22,
+      "enter_bar": 0,
+      "guidance_mode": "shadow",
+      "near_misses": {
+        "oracle_rows": 0,
+        "shifted_window_failures": 0,
+        "single_reason_kills": 0
+      }
+    },
+    {
+      "ts": "2026-11-17T20:54:26Z",
+      "cycle_id": "20261117T205049Z_e4a2fd",
+      "n_meet_bar_actual": 36,
+      "n_meet_bar_shadow": 14,
+      "n_unknown_claims": 33,
+      "drop_out_of_bar": 22,
+      "enter_bar": 0,
+      "guidance_mode": "shadow",
+      "near_misses": {
+        "oracle_rows": 0,
+        "shifted_window_failures": 0,
+        "single_reason_kills": 0
+      }
+    },
+    {
+      "ts": "2026-11-17T20:58:22Z",
+      "cycle_id": "20261117T205431Z_05193a",
       "n_meet_bar_actual": 36,
       "n_meet_bar_shadow": 14,
       "n_unknown_claims": 33,
