@@ -1,0 +1,393 @@
+"""Desk authoring of new disabled hard checks from proven lemmas (guide: become an author)."""
+from __future__ import annotations
+
+import ast
+import json
+
+import pytest
+
+import colony.authoring as A
+from colony.lessons import write_human_guide, write_lesson
+
+@pytest.fixture(autouse=True)
+def _no_instrument_candidates(monkeypatch):
+    """These tests cover lemma-compose / feed authoring; instrument checks have their own tests."""
+    import colony.instrument_checks as _ic
+    monkeypatch.setattr(_ic, "candidates", lambda *a, **k: [])
+
+
+BASE = '''
+def check_a(n: int) -> bool:
+    """sum of first n odds = n^2"""
+    return sum(2 * i + 1 for i in range(n)) == n * n
+
+
+def check_b(n: int) -> bool:
+    """2^n via doubling"""
+    x = 1
+    for _ in range(n):
+        x *= 2
+    return x == (1 << n)
+
+
+def check_triv(n: int) -> bool:
+    return True
+
+
+def check_self(n: int) -> bool:
+    return n == n
+
+
+{extra_fns}
+# Adversarial aliases used by Oracle theme held-out windows (same callables)
+
+CANDIDATE_LEMMAS = [
+    ("a_lemma", lambda: all(check_a(n) for n in range(0, 10)), True),
+]
+
+HARD_TIER_LEMMAS = [
+    ("b_lemma", lambda: all(check_b(n) for n in range(0, 10)), True),
+    ("triv_lemma", lambda: all(check_triv(n) for n in range(0, 10)), True),
+    ("self_lemma", lambda: all(check_self(n) for n in range(0, 10)), True),
+{extra_entries}]
+'''
+
+
+def _repo(tmp_path, monkeypatch, *, extra_fns="", extra_entries="", latest=None):
+    import colony.lessons as L
+
+    root = tmp_path / "repo"
+    bench = root / "society" / "benchmarks"
+    art = bench / "artifacts"
+    art.mkdir(parents=True)
+    (art / "lemma_impl.py").write_text(
+        BASE.format(extra_fns=extra_fns, extra_entries=extra_entries), encoding="utf-8"
+    )
+    (bench / "lemma_microbench.py").write_text("P = 'artifacts/lemma_impl.py'\n", encoding="utf-8")
+    checks = latest or {"basic:a_lemma": True, "hard:b_lemma": True, "hard:triv_lemma": True, "hard:self_lemma": True}
+    (bench / "latest.json").write_text(json.dumps({"benches": [{"checks": checks}]}), encoding="utf-8")
+    for attr, val in (
+        ("ROOT", root), ("BENCH_DIR", bench), ("BENCH_ARTIFACTS_DIR", art),
+        ("BENCH_LATEST", bench / "latest.json"),
+        ("LESSONS_JSONL", tmp_path / "lessons.jsonl"), ("LEDGER_SYSTEM", tmp_path / "ledger.json"),
+    ):
+        monkeypatch.setattr(L, attr, val)
+    return art / "lemma_impl.py"
+
+
+def _guide():
+    write_human_guide(
+        what="BECOME AN AUTHOR: compose proven lemmas into new disabled checks",
+        author="James Jackson",
+        mutation="author_new_hard_checks_from_proven_lemmas",
+        catalog_hint={"prefer": ["author_new_checks"], "require": ["bench_cite"]},
+        tags=["human_guide", "author_checks", "become_author", "unenabled_variant", "cite", "chain", "compose"],
+    )
+
+
+
+@pytest.fixture(autouse=True)
+def _pairs_on(monkeypatch):
+    """These tests exercise the compose mechanism itself (kept behind COLONY_AUTHOR_PAIRS=on)."""
+    monkeypatch.setenv("COLONY_AUTHOR_PAIRS", "on")
+
+
+def test_generates_disabled_check_from_proven_lemmas(tmp_path, monkeypatch):
+    path = _repo(tmp_path, monkeypatch)
+    _guide()
+    assert A.guide_authoring_active()
+    rows = A.author_checks(cycle_id="t1")
+    assert len(rows) == 1 and rows[0]["accepted"]
+    name = rows[0]["name"]
+    assert name == "authored_a_lemma__b_lemma_w1"
+    src = path.read_text()
+    ast.parse(src)
+    assert f'("{name}", check_{name}, False),' in src  # written DISABLED
+    # windows are disjoint from (past) the base range(0, 10)
+    assert "range(10, 15)" in rows[0]["assertion"]
+    from colony.lessons import target_enabled, unenabled_chain_variants, chain_citations
+    assert target_enabled(name) is False
+    var = {v["name"]: v for v in unenabled_chain_variants()}
+    assert set(var[name]["components"]) == {"a_lemma", "b_lemma"}
+    c = chain_citations(name)
+    assert c["artifact"] == "society/benchmarks/artifacts/lemma_impl.py"
+    assert c["bench"] == ["society/benchmarks/lemma_microbench.py"]
+    # lesson cites component artifacts
+    les = [json.loads(l) for l in (tmp_path / "lessons.jsonl").read_text().splitlines()]
+    auth = [e for e in les if e.get("type") == "authored_check"]
+    assert auth and any("::check_a" in x for x in auth[0]["evidence"])
+
+
+def test_bounded_per_cycle(tmp_path, monkeypatch):
+    _repo(tmp_path, monkeypatch)
+    _guide()
+    assert len(A.author_checks(cycle_id="t", max_new=1)) <= 1
+    assert A.MAX_AUTHORED_PER_CYCLE >= 1 and A.MAX_AUTHORED_TOTAL >= A.MAX_AUTHORED_PER_CYCLE
+
+
+def test_trivial_components_excluded(tmp_path, monkeypatch):
+    path = _repo(tmp_path, monkeypatch)
+    names = [c["lemma"] for c in A.eligible_components(path.read_text())]
+    assert names == ["a_lemma", "b_lemma"]  # `return True` and `n == n` rejected
+
+
+def test_non_falsifiable_and_empty_window_rejected(tmp_path, monkeypatch):
+    path = _repo(tmp_path, monkeypatch)
+    src = path.read_text()
+    empty = A.insert_disabled(src, "authored_empty", (
+        "def check_authored_empty() -> bool:\n"
+        "    return all(check_a(n) for n in range(5, 5)) and all(check_b(n) for n in range(5, 5))\n"
+    ))
+    r = A.verify_candidate(empty, "authored_empty", ["check_a", "check_b"])
+    assert not r["accepted"] and r["reason"].startswith("trivial")
+    taut = A.insert_disabled(src, "authored_taut", (
+        "def check_authored_taut() -> bool:\n"
+        "    return [check_a(n) for n in range(10, 15)] is not None and [check_b(n) for n in range(10, 15)] is not None\n"
+    ))
+    r = A.verify_candidate(taut, "authored_taut", ["check_a", "check_b"])
+    assert not r["accepted"] and r["reason"] == "trivial:not_falsifiable"
+
+
+def test_false_extension_rejected(tmp_path, monkeypatch):
+    # A "lemma" that only holds on its base window must not be authored past it
+    extra = "def check_small(n: int) -> bool:\n    return n * n < 100\n\n"
+    path = _repo(tmp_path, monkeypatch, extra_fns=extra,
+                 extra_entries="    (\"small_lemma\", lambda: all(check_small(n) for n in range(0, 10)), True),\n",
+                 latest={"basic:a_lemma": True, "hard:b_lemma": True, "hard:small_lemma": True})
+    _guide()
+    rows = A.author_checks(cycle_id="t", max_new=3)
+    assert all("small_lemma" not in r["name"] for r in rows)
+    les = [json.loads(l) for l in (tmp_path / "lessons.jsonl").read_text().splitlines()]
+    assert any(e.get("type") == "authoring_reject" and "small_lemma" in e["mutation"] for e in les)
+    # rejected candidates are not retried (no reject spam)
+    n_rej = sum(1 for e in les if e.get("type") == "authoring_reject")
+    A.author_checks(cycle_id="t2", max_new=0)
+    A.author_checks(cycle_id="t3", max_new=3)
+    les2 = [json.loads(l) for l in (tmp_path / "lessons.jsonl").read_text().splitlines()]
+    assert sum(1 for e in les2 if e.get("type") == "authoring_reject") == n_rej
+    assert "check_small" in path.read_text()
+
+
+def test_duplicate_body_rejected(tmp_path, monkeypatch):
+    dup = ("    (\"my_copy\", lambda: all(check_a(n) for n in range(10, 15)) "
+           "and all(check_b(n) for n in range(10, 15)), True),\n")
+    _repo(tmp_path, monkeypatch, extra_entries=dup)
+    _guide()
+    assert A.author_checks(cycle_id="t") == []
+
+
+def test_blocked_theme_respected(tmp_path, monkeypatch):
+    path = _repo(tmp_path, monkeypatch)
+    _guide()
+    for i in range(3):  # kill cooldown on a_lemma
+        write_lesson(decision="revert", check="oracle", what="kill", source="t",
+                     mutation="a_lemma", lesson_type="oracle_kill", cycle_id=f"k{i}")
+    assert "a_lemma" not in [c["lemma"] for c in A.eligible_components(path.read_text())]
+    assert A.author_checks(cycle_id="t") == []
+
+
+def test_seek_fallback_never_proposes_cooled(tmp_path, monkeypatch):
+    import colony.lessons as L
+
+    _repo(tmp_path, monkeypatch)
+    _guide()
+
+    class _All(dict):
+        def __contains__(self, k):
+            return True
+
+    monkeypatch.setattr(L, "blocked_themes", lambda **kw: _All())
+    assert L.seek_proposal_from_guides(cycle_id="t") is None
+
+
+def test_seek_skips_cooled_and_targets_authored(tmp_path, monkeypatch):
+    import colony.lessons as L
+
+    _repo(tmp_path, monkeypatch)
+    _guide()
+    rows = A.author_checks(cycle_id="t1")
+    name = rows[0]["name"]
+    pick = L.seek_proposal_from_guides(cycle_id="t2")
+    assert pick is not None and pick[2] == f"seek_enable:{name}"
+    for i in range(3):
+        write_lesson(decision="revert", check="oracle", what="kill", source="t",
+                     mutation=name, lesson_type="oracle_kill", cycle_id=f"k{i}")
+    pick2 = L.seek_proposal_from_guides(cycle_id="t3")
+    assert pick2 is None or L.theme_key(pick2[2]) != name
+
+
+def test_fresh_pass_on_authored_check_gets_P_credit(tmp_path, monkeypatch):
+    import colony.standing_trust as ST
+
+    _repo(tmp_path, monkeypatch)
+    _guide()
+    name = A.author_checks(cycle_id="t1")[0]["name"]
+    log = tmp_path / "oracle.jsonl"
+    log.write_text(json.dumps({
+        "mutation": name, "kind": "hard_enable", "passed": True, "fitness_credit": True,
+        "cycle_id": "c2", "sense": {"sense_pass": True}, "hear": {"bus_ok": False}, "kills": [],
+    }) + "\n")
+    monkeypatch.setattr(ST, "ORACLE_LOG", log)
+    title = f"Chain `{name}` citing X"
+    assert ST.resolve_proposal_target(action=f"seek_enable:{name}", mutation=title) == name
+    P, terms = ST.compute_proposal_P(
+        mutation=title, action=f"seek_enable:{name}", novelty={"textbook_reuse": 0.0},
+        bench_delta=0.0, cycle_id="c2",
+    )
+    assert terms["P_oracle"] == 1.0
+    assert ST.meets_standing_trust(P, machine_checked=True)
+    # same proposal, killed target → stays under the unchanged 0.70 gate
+    log.write_text(json.dumps({"mutation": name, "passed": False, "cycle_id": "c2"}) + "\n")
+    P2, t2 = ST.compute_proposal_P(
+        mutation=title, action=f"seek_enable:{name}", novelty={"textbook_reuse": 0.0},
+        bench_delta=0.5, cycle_id="c2",
+    )
+    assert t2["P_oracle"] == 0.0 and P2 < ST.STANDING_TRUST_P_MIN == 0.70
+
+
+def test_saturated_hard_pass_authors_nothing(tmp_path, monkeypatch):
+    """Once the hard component is pinned, a new check cannot raise the score, so it takes no slot."""
+    import colony.lessons as L
+
+    path = _repo(tmp_path, monkeypatch)
+    _guide()
+    latest = json.loads(L.BENCH_LATEST.read_text(encoding="utf-8"))
+    latest["benches"][0]["bench"] = "lemma_microbench"
+    latest["benches"][0]["n_hard_pass"] = 162
+    L.BENCH_LATEST.write_text(json.dumps(latest), encoding="utf-8")
+    assert A.hard_pass_cannot_raise_score()
+    assert A.author_checks(cycle_id="t_sat", max_new=1) == []
+    assert "authored_" not in path.read_text(encoding="utf-8")
+
+
+def test_coverage_keep_does_not_take_an_authored_slot(tmp_path):
+    """A coverage keep releases the authored function and the catalog tuple. The cap stays 150."""
+    assert A.MAX_AUTHORED_TOTAL == 150
+    assert A.coverage_keep_takes_no_slot("coverage", "authored_frontier_cong_x_w1")
+    assert not A.coverage_keep_takes_no_slot("internal_score", "authored_frontier_cong_x_w1")
+    assert not A.coverage_keep_takes_no_slot("coverage", "b_lemma")
+    src = '''
+def check_b(n: int) -> bool:
+    return n == n + 1 - 1
+
+
+def check_authored_demo_w1() -> bool:
+    """authored"""
+    return check_b(1)
+
+
+HARD_TIER_LEMMAS = [
+    ("b_lemma", check_b, True),
+    ("authored_demo_w1", check_authored_demo_w1, False),
+]
+'''
+    out = A.strip_authored_check(src, "authored_demo_w1")
+    assert out is not None
+    tree = ast.parse(out)
+    names = {n for n, _c, _f in A._entries(tree)}
+    assert "authored_demo_w1" not in names and "b_lemma" in names
+    assert "def check_authored_demo_w1" not in out and "def check_b" in out
+    assert A.strip_authored_check(src, "b_lemma") is None
+    path = tmp_path / "lemma_impl.py"
+    path.write_text(src, encoding="utf-8")
+    assert A.release_authored_slot(path, "authored_demo_w1")
+    assert "authored_demo_w1" not in path.read_text(encoding="utf-8")
+
+
+def test_total_cap_single_source(tmp_path, monkeypatch):
+    """The overall cap is MAX_AUTHORED_TOTAL (150) and author_checks enforces exactly that constant."""
+    assert A.MAX_AUTHORED_TOTAL == 150
+    path = _repo(tmp_path, monkeypatch)
+    _guide()
+    import ast as _ast
+    n = sum(1 for nm, _c, _f in A._entries(_ast.parse(path.read_text())) if nm.startswith(A.AUTHORED_PREFIX))
+    monkeypatch.setattr(A, "MAX_AUTHORED_TOTAL", n)
+    assert A.author_checks(cycle_id="t", max_new=1) == []
+
+
+def test_skip_predicate_covers_ledger_and_enabled_windows():
+    """A recorded check blocks that name and a later window. A short family does not."""
+    recorded = {"authored_sieve_hash_w1", "hard_tier"}
+    enabled = {"authored_frontier_cong_hash_w1"}
+    assert A.authoring_should_skip("authored_sieve_hash_w1", recorded, enabled)
+    assert A.authoring_should_skip("authored_sieve_hash_w3", recorded, set())
+    assert A.authoring_should_skip("authored_frontier_cong_hash_w2", set(), enabled)
+    assert not A.authoring_should_skip("authored_other_target_w1", recorded, enabled)
+    assert not A.authoring_should_skip("authored_hard_tier_topic_w1", {"hard_tier"}, set())
+
+
+def test_author_skips_name_already_in_the_lesson_ledger(tmp_path, monkeypatch):
+    import colony.conjecture_desk as D
+    import colony.novelty_gate as NG
+
+    _repo(tmp_path, monkeypatch)
+    _guide()
+    monkeypatch.setattr(D, "HISTORY", tmp_path / "history.jsonl")
+    monkeypatch.setattr(NG, "KNOWN", tmp_path / "known.json")
+    recorded = "authored_a_lemma__b_lemma_w1"
+    write_lesson(
+        decision="revert", check="oracle", what="already in the ledger",
+        source="test", mutation=recorded, lesson_type="oracle_kill",
+        family="hard_tier", cycle_id="old",
+    )
+    rows = A.author_checks(cycle_id="t_ledger", max_new=3)
+    blocked = A.window_base(recorded)
+    assert blocked not in {A.window_base(r["name"]) for r in rows}
+
+
+def test_pick_skips_recorded_authored_window_but_keeps_own_birth(tmp_path, monkeypatch):
+    import colony.conjecture_desk as D
+    import colony.lessons as L
+    import colony.novelty_gate as NG
+    from colony.lessons import MutationCooldown
+
+    monkeypatch.setattr(L, "LESSONS_JSONL", tmp_path / "lessons.jsonl")
+    monkeypatch.setattr(L, "LEDGER_SYSTEM", tmp_path / "ledger.json")
+    monkeypatch.setattr(D, "HISTORY", tmp_path / "history.jsonl")
+    monkeypatch.setattr(NG, "KNOWN", tmp_path / "known.json")
+    write_lesson(
+        decision="skip", check="authoring", what="birth", source="test",
+        mutation="authored_fresh_w1", lesson_type="authored_check", family="hard_tier", cycle_id="b",
+    )
+    write_lesson(
+        decision="revert", check="oracle", what="killed", source="test",
+        mutation="authored_dead_w1", lesson_type="oracle_kill", family="hard_tier", cycle_id="k",
+    )
+    src = '''
+HARD = [
+    ("authored_fresh_w1", lambda: True, False),
+    ("authored_dead_w1", lambda: True, False),
+    ("authored_dead_w2", lambda: True, False),
+    ("authored_live_w2", lambda: True, False),
+    ("authored_live_w1", lambda: True, True),
+    ("plain_lemma", lambda: True, False),
+]
+'''
+    ordered = [
+        ("authored_dead_w1", "hard_enable", "enable:authored_dead_w1"),
+        ("authored_dead_w2", "hard_enable", "enable:authored_dead_w2"),
+        ("authored_live_w2", "hard_enable", "enable:authored_live_w2"),
+        ("authored_fresh_w1", "hard_enable", "enable:authored_fresh_w1"),
+        ("plain_lemma", "hard_enable", "enable:plain_lemma"),
+    ]
+    cd = MutationCooldown(blocked={}, avoided=set(), penalties={})
+    name, _kind, _snip, cooled = D.pick_mutation(ordered, cooldown=cd, lemma_src=src)
+    assert name == "authored_fresh_w1"
+    assert cooled["authored_dead_w1"] == "already_in_lesson_ledger_or_history"
+    assert cooled["authored_dead_w2"] == "already_in_lesson_ledger_or_history"
+    assert cooled["authored_live_w2"] == "already_in_lesson_ledger_or_history"
+
+
+def test_plain_pairings_off_by_default_but_feeding_compositions_allowed(monkeypatch):
+    import ast as _ast
+    from colony import authoring as A
+    monkeypatch.delenv("COLONY_AUTHOR_PAIRS", raising=False)
+    assert A.pairs_mode() == "off"
+    side = _ast.parse("all(check_a(n) for n in range(3)) and all(check_b(n) for n in range(3))", mode="eval").body
+    fed = _ast.parse("all(check_b(fib(n)) for n in range(3))", mode="eval").body
+    assert A.is_plain_pairing({"source": "compose", "body": side})
+    assert not A.is_plain_pairing({"source": "compose", "body": fed})
+    oeis = _ast.parse("all(seq(n) == t for n, t in X) and all(check_a(n) for n in range(3))", mode="eval").body
+    assert not A.is_plain_pairing({"source": "oeis", "body": oeis})
+    monkeypatch.setenv("COLONY_AUTHOR_PAIRS", "on")
+    assert A.pairs_mode() == "on"

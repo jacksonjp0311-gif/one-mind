@@ -1,0 +1,274 @@
+{
+  "fields": {
+    "automated_reasoning": {
+      "cards_formed": 0,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 2,
+      "distinct_concepts": 1,
+      "papers": 8,
+      "reads": 9
+    },
+    "cognitive_science": {
+      "cards_formed": 3,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 4,
+      "distinct_concepts": 3,
+      "papers": 8,
+      "reads": 10
+    },
+    "consciousness_self_models": {
+      "cards_formed": 1,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 4,
+      "distinct_concepts": 2,
+      "papers": 8,
+      "reads": 10
+    },
+    "learning_theory": {
+      "cards_formed": 0,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 9,
+      "distinct_concepts": 2,
+      "papers": 8,
+      "reads": 10
+    },
+    "mathematics": {
+      "cards_formed": 0,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 0,
+      "distinct_concepts": 0,
+      "papers": 16,
+      "reads": 19
+    },
+    "meta_learning": {
+      "cards_formed": 0,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 7,
+      "distinct_concepts": 3,
+      "papers": 8,
+      "reads": 11
+    },
+    "multi_agent_systems": {
+      "cards_formed": 1,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 3,
+      "distinct_concepts": 3,
+      "papers": 8,
+      "reads": 9
+    },
+    "neural_architecture": {
+      "cards_formed": 5,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 12,
+      "distinct_concepts": 7,
+      "papers": 14,
+      "reads": 10
+    },
+    "open_endedness": {
+      "cards_formed": 6,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 6,
+      "distinct_concepts": 1,
+      "papers": 6,
+      "reads": 10
+    },
+    "optimization_search": {
+      "cards_formed": 3,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 7,
+      "distinct_concepts": 2,
+      "papers": 7,
+      "reads": 10
+    },
+    "physics_complex_systems": {
+      "cards_formed": 1,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 4,
+      "distinct_concepts": 3,
+      "papers": 8,
+      "reads": 10
+    },
+    "recursive_self_improvement": {
+      "cards_formed": 2,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 1,
+      "distinct_concepts": 1,
+      "papers": 8,
+      "reads": 9
+    },
+    "self_learning_loops": {
+      "cards_formed": 2,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 10,
+      "distinct_concepts": 4,
+      "papers": 11,
+      "reads": 10
+    },
+    "swarm_collective_intelligence": {
+      "cards_formed": 6,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 7,
+      "distinct_concepts": 2,
+      "papers": 8,
+      "reads": 10
+    }
+  },
+  "fields_with_papers": 14,
+  "n_fields": 14,
+  "note": "Breadth of reading. Cards are kept only by self-heal windows + twin control. Not AGI.",
+  "top_architecture_ideas": [
+    {
+      "description": "Keep an archive of behaviourally different claim forms and prefer under-explored ones (novelty/quality-diversity archive).",
+      "examples": [
+        {
+          "arxiv_id": "2611.17097",
+          "field": "neural_architecture",
+          "title": "Broadcast, Don't Replicate: Eliminating Weight HBM in Datacenter LLM Serving"
+        },
+        {
+          "arxiv_id": "2611.12762",
+          "field": "consciousness_self_models",
+          "title": "Sage-Taiyi: A Metacognitive Architecture for Scientific Discovery"
+        },
+        {
+          "arxiv_id": "2611.15885",
+          "field": "recursive_self_improvement",
+          "title": "Reward-Driven Collider Physics Challenges for Self-Improving Agentic AI via Reinforcement Learning"
+        }
+      ],
+      "fields": [
+        "consciousness_self_models",
+        "neural_architecture",
+        "open_endedness",
+        "recursive_self_improvement"
+      ],
+      "idea": "novelty_archive",
+      "n_papers": 9
+    },
+    {
+      "description": "Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).",
+      "examples": [
+        {
+          "arxiv_id": "2611.08615",
+          "field": "swarm_collective_intelligence",
+          "title": "s$^3$: Simple Scaling of Swarms via Cooperative Multi-agent RL"
+        },
+        {
+          "arxiv_id": "2611.07996",
+          "field": "swarm_collective_intelligence",
+          "title": "SEER: A Scalable Event-Driven Runtime for Parallel Execution of Multi-Agent Reinforcement Learning Environments"
+        },
+        {
+          "arxiv_id": "2611.07618",
+          "field": "swarm_collective_intelligence",
+          "title": "A Bilevel Neurodynamic Approach for Distributed SCAD-Regularized Sparse Least Squares"
+        }
+      ],
+      "fields": [
+        "multi_agent_systems",
+        "neural_architecture",
+        "swarm_collective_intelligence"
+      ],
+      "idea": "swarm_topology",
+      "n_papers": 8
+    },
+    {
+      "description": "A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).",
+      "examples": [
+        {
+          "arxiv_id": "2611.15426",
+          "field": "self_learning_loops",
+          "title": "SimRec: Learning to Search, Ask, and Recommend from Simulated Interaction"
+        },
+        {
+          "arxiv_id": "2611.10841",
+          "field": "self_learning_loops",
+          "title": "A Gamified Framework for Conflict-Driven Design: Discovering Strategies for Collaborative Resilience with Multi-Agent Learning"
+        },
+        {
+          "arxiv_id": "2611.08908",
+          "field": "self_learning_loops",
+          "title": "Toward LLM Self-Play Under Data Scarcity: Effectiveness, Generalizability, and Trustworthiness"
+        }
+      ],
+      "fields": [
+        "self_learning_loops"
+      ],
+      "idea": "self_play_challenger",
+      "n_papers": 7
+    },
+    {
+      "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
+      "examples": [
+        {
+          "arxiv_id": "2611.17314",
+          "field": "meta_learning",
+          "title": "Linking Rapid Learning to Compositional Structure in Neural Networks: Evidence from Additive Analogies in Meta-Learned Parameter Spaces"
+        },
+        {
+          "arxiv_id": "2611.15923",
+          "field": "meta_learning",
+          "title": "Reinforcement Learning for Target Jerk Estimation in Interceptor Homing Phase"
+        },
+        {
+          "arxiv_id": "2611.15071",
+          "field": "meta_learning",
+          "title": "Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment"
+        }
+      ],
+      "fields": [
+        "meta_learning",
+        "self_learning_loops"
+      ],
+      "idea": "meta_controller",
+      "n_papers": 6
+    },
+    {
+      "description": "A gating step that sends each target to a specialist desk (mixture-of-experts style routing).",
+      "examples": [
+        {
+          "arxiv_id": "2611.17879",
+          "field": "neural_architecture",
+          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
+        },
+        {
+          "arxiv_id": "2611.17857",
+          "field": "neural_architecture",
+          "title": "Fuse-All MoE Inference Kernel with Load Balancing on TPUs"
+        },
+        {
+          "arxiv_id": "2611.17472",
+          "field": "neural_architecture",
+          "title": "Do Mixture-of-Experts Routers Benefit from Ensembling?"
+        }
+      ],
+      "fields": [
+        "neural_architecture"
+      ],
+      "idea": "specialist_routing",
+      "n_papers": 6
+    }
+  ],
+  "totals": {
+    "cards_formed": 30,
+    "cards_kept": 0,
+    "cards_tested": 0,
+    "concepts": 76,
+    "papers": 126,
+    "reads": 147
+  }
+}

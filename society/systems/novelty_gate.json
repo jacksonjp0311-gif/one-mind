@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-17T00:32:36Z",
+  "hits": 19,
+  "kills": 9,
+  "rows": 30,
+  "kill_rows": 11,
+  "counting": "per_target_latest",
+  "latest": {
+    "ts": "2026-11-17T00:32:36Z",
+    "cycle_id": "20261117T003050Z_3512b6",
+    "mutation": "authored_mut_swap_related_sequence_d7641743d5d4",
+    "kind": "hard_enable",
+    "novel_to_commons": false,
+    "kills": [
+      "already_in_lesson_ledger_or_history"
+    ],
+    "textbook_reuse": 0.3333,
+    "in_ledger": true,
+    "own_authoring_record_only": false,
+    "oracle_used": "caller_verdict",
+    "stripped": {
+      "already_enabled": false,
+      "in_catalog": true,
+      "hard_pass": 187,
+      "hard_n": 187,
+      "stripped_fails_usefulness": true,
+      "score": 0.8681,
+      "impl_id": "lemma_impl_v2_basic10_hard187"
+    },
+    "held_out": {
+      "survives": true,
+      "reason": "hard_tier_green_and_hard_enable",
+      "hard_pass": 187,
+      "ok": true
+    },
+    "note": "Novelty = new-to-commons under machine gates only. Not theorem discovery. Textbook reuse \u2248 0 required. Not AGI."
+  },
+  "note": "New-to-commons novelty gate. Textbook reuse\u22480. Not novel theorems."
+}

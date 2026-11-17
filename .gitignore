@@ -1,0 +1,35 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+
+# trust loop: transient write-ahead journal (never commit)
+society/benchmarks/.desk_journal.json
+society/benchmarks/.desk_journal.tmp
+
+# conjecture desk per-run rollback copies (local only)
+society/benchmarks/.lemma_backups/
+
+# checker proposal lane: runtime snapshot, append-only log, proposal files (never commit)
+society/systems/checker_lane.json
+data/commons/checker_lane.jsonl
+society/systems/checker_proposals/
+
+# self-heal lane: append-only detailed log (never commit). The snapshot
+# society/systems/self_heal.json is kept (like stall_state) so trials
+# persist across evolve runs. Evidence of adopt/revert lives there.
+data/commons/self_heal.jsonl
+
+# Hive: append-only JSONL logs stay uncommitted (they can grow). The
+# committed snapshots — society/systems/swarm_learn.json (state,
+# calibration, shadows, outcomes), society/systems/swarm_rules.json,
+# and society/systems/swarm_library.json (bounded library) — are
+# enough to restore the library, abstain/apply counts, open trial,
+# and calibration across CI runs. See hive/README.md (Persistence).
+data/commons/fix_library.jsonl
+data/commons/swarm_learn.jsonl

@@ -1,0 +1,363 @@
+"""CLI: python -m colony cycle | evolve | status | dashboard | authorize | bench-improve | feeds
+
+Hold posture (colony.hold_posture): default HOLD; light evolve watch; selective authorize only.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="python -m colony",
+        description="Agent Colony — light the spark and witness.",
+    )
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    p_cycle = sub.add_parser("cycle", help="Run one society cycle")
+    p_cycle.add_argument("--offline", action="store_true", help="Seed only; no HTTP")
+    p_evolve = sub.add_parser("evolve", help="Run N autonomous evolve cycles")
+    p_evolve.add_argument("--cycles", type=int, default=5, help="Number of cycles (default 5)")
+    p_evolve.add_argument("--offline", action="store_true", help="Seed only; no HTTP")
+    p_evolve.add_argument(
+        "--arm",
+        choices=("treatment", "control"),
+        default=None,
+        help="treatment (default) or control: same pipeline, self-mod off, isolated state",
+    )
+    sub.add_parser("status", help="Print status JSON")
+    sub.add_parser("dashboard", help="Refresh DASHBOARD.html + WITNESS_SUMMARY.md")
+    p_auth = sub.add_parser(
+        "authorize",
+        help="Human authorize: selectively accept/reject ledger findings (no silent accept-all)",
+    )
+    p_auth.add_argument(
+        "--decisions",
+        required=True,
+        help="Path to JSON list of {finding_id, decision, rationale} (+ optional proposals)",
+    )
+    p_auth.add_argument(
+        "--authorizer",
+        default="James Paul Jackson",
+        help="Human principal name (default: James Paul Jackson)",
+    )
+    p_auth.add_argument(
+        "--delegated-via",
+        default="Grok Bot (explicit trust grant)",
+        help="Delegation note recorded in witness/receipt",
+    )
+    p_lessons = sub.add_parser("lessons", help="Lesson ledger: digest or human_guide (human-only)")
+    p_lessons.add_argument("--guide", default=None, help="Write a human_guide lesson (requires human author)")
+    p_lessons.add_argument("--author", default="James Paul Jackson", help="Human author (allowlisted)")
+    p_lessons.add_argument("--mutation", default="", help="Optional mutation/theme hint")
+    p_feeds = sub.add_parser("feeds", help="Fetch external feeds once (fail-soft; exit 0 on outage) + refresh sensors")
+    p_feeds.add_argument("--force", action="store_true", help="Ignore the per-source TTL")
+    p_feeds.add_argument("--offline", action="store_true", help="No network; only refresh sensors")
+    sub.add_parser("hold", help="Print hold posture (HOLD default; selective authorize only)")
+    sub.add_parser("charters", help="Print institution standing charters (agenda autonomy; no truth authority)")
+    p_pilots = sub.add_parser("pilots", help="Pilot sandbox lane status / propose (no durable accept)")
+    p_pilots.add_argument("--propose", action="store_true", help="Propose a demo sandbox pilot")
+    p_pilots.add_argument("--name", default="demo_gather_filter", help="Pilot name")
+    p_pilots.add_argument("--kind", default="gather_filter", help="skill|router|gather_filter|improvement|rsi_bias")
+    p_bi = sub.add_parser(
+        "bench-improve",
+        help="Measure→patch→remeasure bench artifacts; keep if aggregate rises else revert",
+    )
+    p_bi.add_argument(
+        "--patch",
+        default=None,
+        help="Force patch name (fft_remove_slow_loops|fft_add_slow_loops|autodiff_busy_loop)",
+    )
+    p_bi.add_argument(
+        "--demo",
+        action="store_true",
+        help="Run keep-then-revert demo (remove slow loops, then add slow loops)",
+    )
+    p_seed = sub.add_parser(
+        "seed-control",
+        help="Copy current treatment state into control/ once, then freeze self-mod knobs",
+    )
+    p_seed.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-copy even if control/ is already seeded (tests only; erases control history)",
+    )
+    p_twin = sub.add_parser(
+        "twin-scoreboard",
+        help="Update society/systems/twin_scoreboard.json and the growth chart",
+    )
+    p_twin.add_argument("--cycles", type=int, default=None, help="Cycles in this paired run")
+    p_twin.add_argument(
+        "--no-append",
+        action="store_true",
+        help="Refresh latest snapshots without appending a history row",
+    )
+    p_twin.add_argument(
+        "--treatment-result",
+        default=None,
+        help="GitHub Actions job result for the treatment arm (success/failure/skipped)",
+    )
+    p_twin.add_argument(
+        "--control-result",
+        default=None,
+        help="GitHub Actions job result for the control arm (success/failure/skipped)",
+    )
+    sub.add_parser(
+        "self-build",
+        help="Read-only dry run of the self-build pipeline (item 80): candidate blueprints and self-tests",
+    )
+    args = parser.parse_args(argv)
+
+    if args.cmd == "self-build":
+        from colony.self_build import dry_run
+        print(json.dumps(dry_run(), indent=2, default=str))
+        return 0
+
+    from colony.society import Society
+
+    if args.cmd == "cycle":
+        society = Society(live_fetch=not args.offline)
+        r = society.run_cycle()
+        print(f"cycle_id={r.cycle_id}")
+        print(f"tribute_count={r.tribute_count} topics={r.tribute_topics}")
+        print(f"tribute_compliant={r.tribute_compliant}")
+        print(f"new_roles={r.new_roles} retired={r.retired_roles}")
+        print(f"institutions={r.institutions}")
+        print(f"councils={r.councils}")
+        print(f"builds={r.builds} systems_used={r.systems_used}")
+        print(f"comms={r.communications} replies={r.replies} read={r.messages_read}")
+        print(f"fitness={r.fitness}")
+        print(f"enacted={len(r.enacted)} status_counts={r.status_counts}")
+        print(f"witness={r.witness_path}")
+        print(f"report={r.report_path}")
+        from colony.dashboard import refresh_dashboard
+
+        refresh_dashboard(society.root)
+        return 0
+
+    if args.cmd == "evolve":
+        if args.arm:
+            os.environ["COLONY_ARM"] = args.arm
+        from colony.arm import prepare_arm
+        info = prepare_arm()
+        if info.get("arm") == "control" and not info.get("seeded"):
+            print(info.get("error") or "control arm is not seeded", file=sys.stderr)
+            return 2
+        society = Society(live_fetch=not args.offline)
+        before = society.status()
+        results = society.evolve(cycles=args.cycles)
+        after = society.status()
+        print("--- evolve summary ---")
+        print(f"cycles_run={len(results)}")
+        print(f"fitness_before={before.get('fitness_latest')}")
+        print(f"fitness_after={after.get('fitness_latest')}")
+        print(f"agents_active={after.get('agents_active')}")
+        print(f"agents_retired={after.get('agents_retired')}")
+        print(f"population={after.get('population')}")
+        print(f"commons_size={after.get('commons_size')}")
+        print(f"government_proposals={after.get('government_proposals')}")
+        print(f"genomes={len(after.get('genomes') or [])}")
+        print(f"systems={after.get('systems')}")
+        print(f"improvement_proposals={after.get('improvement_proposals')}")
+        return 0
+
+    if args.cmd == "status":
+        print(json.dumps(Society(live_fetch=False).status(), indent=2))
+        return 0
+
+    if args.cmd == "dashboard":
+        from colony.dashboard import refresh_dashboard
+
+        paths = refresh_dashboard()
+        print(f"dashboard={paths['dashboard']}")
+        print(f"summary={paths['summary']}")
+        return 0
+
+    if args.cmd == "authorize":
+        from pathlib import Path as _Path
+
+        from colony.authorize import AuthorizeItem, Authorizer
+
+        payload = json.loads(_Path(args.decisions).read_text(encoding="utf-8"))
+        items_raw = payload.get("items") if isinstance(payload, dict) else payload
+        items = [
+            AuthorizeItem(
+                finding_id=i["finding_id"],
+                decision=i["decision"],
+                rationale=i["rationale"],
+            )
+            for i in items_raw
+        ]
+        proposals = []
+        if isinstance(payload, dict):
+            for p in payload.get("proposals") or []:
+                proposals.append((p["proposal_id"], p["decision"], p["rationale"]))
+        result = Authorizer().apply(
+            items,
+            authorizer=args.authorizer,
+            delegated_via=args.delegated_via,
+            proposal_ids=proposals,
+        )
+        print(
+            json.dumps(
+                {
+                    "cycle_id": result.cycle_id,
+                    "authorizer": result.authorizer,
+                    "delegated_via": result.delegated_via,
+                    "accepted": len(result.accepted),
+                    "rejected": len(result.rejected),
+                    "skipped": len(result.skipped),
+                    "proposal_updates": len(result.proposal_updates),
+                    "receipt": str(result.receipt_path),
+                    "accepted_ids": [a["finding_id"] for a in result.accepted],
+                    "rejected_ids": [r["finding_id"] for r in result.rejected],
+                },
+                indent=2,
+            )
+        )
+        return 0
+
+    if args.cmd == "bench-improve":
+        from colony.bench_improve import improve_demo, improve_once
+
+        if args.demo:
+            results = improve_demo()
+            for r in results:
+                print(
+                    f"patch={r.patch_name} decision={r.decision} "
+                    f"before={r.before_score} after={r.after_score} delta={r.delta}"
+                )
+            return 0
+        r = improve_once(force_patch=args.patch)
+        print(
+            json.dumps(
+                {
+                    "patch": r.patch_name,
+                    "decision": r.decision,
+                    "before_score": r.before_score,
+                    "after_score": r.after_score,
+                    "delta": r.delta,
+                    "note": r.note,
+                    "target": r.target,
+                },
+                indent=2,
+            )
+        )
+        return 0
+
+
+    
+    if args.cmd == "lessons":
+        from colony.lessons import digest, write_human_guide, load_lessons
+        if args.guide:
+            entry = write_human_guide(
+                what=args.guide,
+                author=args.author,
+                mutation=args.mutation or "",
+            )
+            print(json.dumps({"wrote": entry.get("id"), "type": entry.get("type"), "status": entry.get("status")}, indent=2))
+        else:
+            print(digest(limit=8))
+            print(f"n_active≈{len(load_lessons(limit=200))}")
+        return 0
+
+    if args.cmd == "feeds":
+        out: dict = {}
+        try:
+            from colony.feeds import counts, fetch_all
+            if not args.offline:
+                out["fetch"] = fetch_all(force=args.force)
+            out["cache"] = counts()
+        except Exception as e:  # noqa: BLE001 — a feed outage never fails the run
+            out["error"] = f"{type(e).__name__}: {e}"
+        try:
+            from colony.sensors import refresh
+            out["signals"] = refresh("feeds_cli").get("signals")
+        except Exception as e:  # noqa: BLE001
+            out["sensors_error"] = f"{type(e).__name__}: {e}"
+        print(json.dumps(out, indent=2))
+        return 0
+
+    if args.cmd == "hold":
+        from colony.hold_posture import latest_hold
+
+        print(json.dumps(latest_hold(), indent=2))
+        return 0
+
+    if args.cmd == "charters":
+        from colony.institution_charters import ensure_charters, latest_charters
+
+        ensure_charters(cycle_id="cli")
+        print(json.dumps(latest_charters(), indent=2))
+        return 0
+
+    if args.cmd == "pilots":
+        from colony.pilot_lane import ensure_sandbox, latest_lane, propose_pilot
+
+        ensure_sandbox()
+        if args.propose:
+            row = propose_pilot(
+                name=args.name,
+                kind=args.kind,
+                body={"demo": True, "reversible": True},
+                proposed_by="cli",
+                cycle_id="cli",
+                rationale="CLI demo sandbox pilot — promotion still needs authorize.",
+            )
+            print(json.dumps(row, indent=2))
+            return 0
+        print(json.dumps(latest_lane(), indent=2))
+        return 0
+
+
+    if args.cmd == "seed-control":
+        os.environ.setdefault("COLONY_ARM", "control")
+        os.environ["COLONY_SEED_CONTROL"] = "1"
+        from colony.arm import ControlSeedError, ensure_control_seed
+        try:
+            rec = ensure_control_seed(force=bool(args.force))
+        except ControlSeedError as exc:
+            print(json.dumps({"ok": False, "error": str(exc)}, indent=2, default=str), file=sys.stderr)
+            print(json.dumps({"ok": False, "error": str(exc)}, indent=2, default=str))
+            return 1
+        print(json.dumps(rec, indent=2, default=str))
+        if rec.get("already_seeded") or rec.get("control_seeded"):
+            return 0
+        print(json.dumps({"ok": False, "error": "seed did not set control_seeded"}, indent=2), file=sys.stderr)
+        return 1
+
+    if args.cmd == "twin-scoreboard":
+        from colony.dashboard import refresh_dashboard
+        from colony.twin import format_visibility, update_scoreboard
+        board = update_scoreboard(
+            cycles_this_run=args.cycles,
+            append=not args.no_append,
+            treatment_result=args.treatment_result,
+            control_result=args.control_result,
+        )
+        print(format_visibility(board))
+        print(
+            json.dumps(
+                {
+                    "paired_runs": board.get("paired_runs"),
+                    "treatment_cycles": board.get("treatment_cycles"),
+                    "control_cycles": board.get("control_cycles"),
+                    "delta": board.get("delta"),
+                    "control_missing": (board.get("control") or {}).get("missing"),
+                    "paired": board.get("last_paired"),
+                    "updated_at": board.get("updated_at"),
+                },
+                indent=2,
+            )
+        )
+        refresh_dashboard()
+        return 0
+
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

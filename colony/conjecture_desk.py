@@ -1,0 +1,939 @@
+"""Conjecture desk — propose candidates; mutate hard-tier lemmas; keep on score rise."""
+from __future__ import annotations
+
+import json
+import os
+import shutil
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from colony.conjecture_mutations import (
+    MUTATION_SNIPPETS,
+    all_snippets,
+    already_has as _already_has,
+    apply_mutation as _apply_mutation,
+    recent_revert_counts,
+    register_mutation_candidate,
+)
+
+ROOT = Path(__file__).resolve().parent.parent
+LEMMA_IMPL = ROOT / "society" / "benchmarks" / "artifacts" / "lemma_impl.py"
+KINEMATICS_IMPL = ROOT / "society" / "benchmarks" / "artifacts" / "kinematics_impl.py"
+BACKUP_DIR = ROOT / "society" / "benchmarks" / ".lemma_backups"
+STEM_BACKUP_DIR = ROOT / "society" / "benchmarks" / ".stem_backups"
+HISTORY = ROOT / "society" / "benchmarks" / "conjecture_history.jsonl"
+CACHE = ROOT / "data" / "research_cache" / "papers.jsonl"
+WITNESS_NOTE = ROOT / "society" / "benchmarks" / "WITNESS_CONJECTURE.md"
+
+
+def _utc() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _invalidate_pyc(path: Path) -> None:
+    cache = path.parent / "__pycache__"
+    if cache.is_dir():
+        for pyc in cache.glob(f"{path.stem}*.pyc"):
+            try:
+                pyc.unlink()
+            except OSError:
+                pass
+
+
+def run_lemma_bench() -> dict[str, Any]:
+    from society.benchmarks.lemma_microbench import run as run_lemma
+    return run_lemma()
+
+
+def run_stem_bench() -> dict[str, Any]:
+    from society.benchmarks.kinematics_microbench import run as run_stem
+    return run_stem()
+
+
+def _load_paper_themes(limit: int = 12) -> list[dict[str, Any]]:
+    if not CACHE.exists():
+        return []
+    out: list[dict[str, Any]] = []
+    for ln in CACHE.read_text(encoding="utf-8").splitlines():
+        if not ln.strip():
+            continue
+        try:
+            out.append(json.loads(ln))
+        except json.JSONDecodeError:
+            continue
+    return out[-limit:]
+
+
+class _ChallengerOff(Exception):
+    """Internal: Challenger switched off for a matched ablation (COLONY_CHALLENGER=0)."""
+
+
+class _Withheld(Exception):
+    """Internal: the Challenger withheld this submission (skip Oracle / novelty judgment)."""
+
+
+@dataclass
+class ConjectureResult:
+    ts: str
+    decision: str
+    before_score: float
+    after_score: float
+    delta: float
+    mutation: str = ""
+    themes: list[str] = field(default_factory=list)
+    proposals: list[dict[str, Any]] = field(default_factory=list)
+    note: str = ""
+    finding_ids: list[str] = field(default_factory=list)
+    kind: str = ""
+    promotion: dict[str, Any] | None = None
+    why_believe: dict[str, Any] | None = None  # machine note: components + ranges + Challenger
+    self_rejected: bool = False  # Challenger withheld it from the Oracle
+    extras: list[dict[str, Any]] = field(default_factory=list)  # item 86: extra hard_enable picks this cycle
+
+
+def propose_from_themes(themes, *, ledger=None, cycle_id: str = ""):
+    proposals = []
+    for t in themes[:5]:
+        title = t.get("title") or "untitled"
+        arxiv = t.get("arxiv_id") or ""
+        doi = t.get("doi") or ""
+        prop = {
+            "kind": "conjecture_candidate",
+            "theme": title[:120],
+            "arxiv_id": arxiv,
+            "doi": doi,
+            "claim": (
+                f"CONJECTURE CANDIDATE (not discovered): themes from `{title[:80]}` "
+                f"may suggest hard-tier lemmas. Needs machine-check + authorize. Not Millennium."
+            ),
+            "status": "candidate",
+        }
+        proposals.append(prop)
+        if ledger is not None:
+            fnd = ledger.create(
+                role="spark",
+                claim=prop["claim"],
+                evidence_urls=[u for u in [t.get("url") or "", f"arxiv:{arxiv}" if arxiv else "",
+                                           "society/benchmarks/lemma_microbench.py", "artifacts:lemma_impl"] if u],
+                provenance="conjecture_desk",
+                status="candidate",
+                tags=["conjecture", "open-math", "compute-useful-math", "not_discovery", "candidate", "hard_tier"],
+                notes="Proposed from paper theme; NOT a discovery claim. Hard-tier pressure.",
+                topic_id="open-math-problems",
+                title=f"Conjecture candidate from: {title[:70]}",
+                meta={"kind": "conjecture_candidate", "cycle_id": cycle_id, "arxiv_id": arxiv,
+                      "doi": doi, "not_discovery": True, "hard_tier": True},
+            )
+            prop["finding_id"] = fnd.id
+    return proposals
+
+
+SPEED_NOISE_MARGIN = 0.25      # |Δspeed| below this is wall-clock noise, not a real cost
+INSTRUMENT_PREFIX = "authored_sieve_"
+INSTRUMENT_BUDGET_S = 120.0    # instrument checks: own time budget (same as the sieve cap)
+
+
+def _r(x: float) -> float:
+    """Bench scores are rounded to 1e-4; compare neutralized scores at 1e-3 so rounding residue
+    is not read as a fall (real component changes are >= ~0.01)."""
+    return round(x, 3)
+
+
+def speed_neutral_scores(before: dict, after: dict, name: str) -> tuple[float, float, str]:
+    """Scores to compare for keep/revert with wall-clock noise taken out.
+
+    The reported bench score is unchanged. For the comparison only, the speed component
+    (``speed_weight * speed``) is removed from both sides when |Δspeed| < SPEED_NOISE_MARGIN,
+    or when the mutation is an instrument check whose added time fits INSTRUMENT_BUDGET_S
+    (instrument checks are budgeted by the sieve cap, not the 0.15 s speed term). An
+    instrument check over its budget compares raw scores AND is treated as a fall.
+    """
+    bs, as_ = float(before.get("score") or 0.0), float(after.get("score") or 0.0)
+    if "speed" not in before or "speed" not in after:
+        return bs, as_, ""
+    w_b = float(before.get("speed_weight") or 0.0)
+    w_a = float(after.get("speed_weight") or 0.0)
+    sp_b, sp_a = float(before.get("speed") or 0.0), float(after.get("speed") or 0.0)
+    if name.startswith(INSTRUMENT_PREFIX):
+        added = float(after.get("seconds") or 0.0) - float(before.get("seconds") or 0.0)
+        if added > INSTRUMENT_BUDGET_S:
+            return bs, min(as_, bs - 1e-3), f"instrument_over_budget:{added:.1f}s"
+        return _r(bs - w_b * sp_b), _r(as_ - w_a * sp_a), f"instrument_budget:{added:.3f}s"
+    if abs(sp_a - sp_b) < SPEED_NOISE_MARGIN:
+        return _r(bs - w_b * sp_b), _r(as_ - w_a * sp_a), f"speed_noise:{sp_a - sp_b:+.3f}"
+    return bs, as_, ""
+
+
+# Item 86: the Oracle re-runs every hard_enable entry on a disjoint shifted window
+# (colony/trust/shifted_holdout.py). Enabling only flips the entry's flag, so an entry whose
+# expression has no shiftable shape, or no data headroom, is killed there every time. The
+# desk skips such entries before spending its pick (the same check, run early; never a pass).
+_SHIFT_STRUCTURAL = ("shift_not_applicable(",)
+
+
+def shift_prescreen_reason(name: str, *, src_path: Path | None = None) -> str | None:
+    """'prescreen_shift:<reason>' when the Oracle's shifted-window held-out cannot pass, else None."""
+    try:
+        from colony.trust.shifted_holdout import shifted_window_check
+        r = shifted_window_check(Path(src_path or LEMMA_IMPL), name)
+    except Exception:  # noqa: BLE001 -- unknown: let the Oracle decide
+        return None
+    reason = str(r.get("reason") or "")
+    if r.get("status") != "pass" and any(reason.startswith(t) for t in _SHIFT_STRUCTURAL):
+        return f"prescreen_shift:{reason}"
+    return None
+
+
+def _self_mod() -> bool:
+    try:
+        from colony.arm import self_mod_enabled
+        return bool(self_mod_enabled())
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def pick_mutation(
+    ordered: list[tuple[str, str, str]],
+    *,
+    cooldown: Any,
+    fresh_authored: set[str] | None = None,
+    recent_reverts: dict[str, int] | None = None,
+    force_mutation: str | None = None,
+    lemma_src: str = "",
+    shift_prescreen: bool = False,
+    only_kinds: tuple[str, ...] | None = None,
+) -> tuple[str | None, str, str, dict[str, str]]:
+    """First pickable mutation → (name, kind, snippet, cooled{name: reason}).
+
+    ``cooldown`` is the shared :class:`colony.lessons.MutationCooldown` (kill cooldown, human
+    guide blocks, revert penalties) — the same filter seek uses. Cooled names are never picked,
+    not even when forced. Returns ``(None, "", "", cooled)`` when nothing is pickable; the caller
+    then falls through to authoring / catalog-exhausted handling.
+    """
+    fresh_authored = fresh_authored or set()
+    recent_reverts = recent_reverts or {}
+    cooled: dict[str, str] = {}
+    try:
+        from colony.stall import assess_recovery, identical_kill_streak, load_oracle_rows
+        _stall_rows = load_oracle_rows()
+        _stall_on = bool(assess_recovery(_stall_rows).get("on"))
+    except Exception:
+        _stall_rows, _stall_on = [], False
+    try:
+        from colony.authoring import enabled_names_in_src, ledger_view, pick_skips_recorded
+        _ledger_view = ledger_view()
+        _enabled_catalog = enabled_names_in_src(lemma_src)
+    except Exception:
+        _ledger_view, _enabled_catalog = None, set()
+        pick_skips_recorded = None  # type: ignore[assignment]
+    _known: set[str] | None = None
+    for name, k, snip in ordered:
+        if force_mutation and name != force_mutation:
+            continue
+        if name in fresh_authored:
+            continue  # authored this cycle: wait for a proposal + Oracle next cycle
+        why = cooldown.reason(name)
+        if why:
+            cooled[name] = why
+            continue
+        if _stall_on and identical_kill_streak(name, _stall_rows):
+            cooled[name] = "recovery_identical_kills"
+            continue
+        if _ledger_view is not None and pick_skips_recorded(name, _ledger_view, _enabled_catalog):
+            cooled[name] = "already_in_lesson_ledger_or_history"
+            continue
+        # Short-window retry limit (kept): easy_pad 3, hard 2 recent reverts
+        limit = 3 if name.startswith("easy_pad") else 2
+        if not force_mutation and recent_reverts.get(name, 0) >= limit:
+            continue
+        if (k or "").startswith("stem"):
+            stem_src = KINEMATICS_IMPL.read_text(encoding="utf-8") if KINEMATICS_IMPL.exists() else ""
+            if _already_has(stem_src, name):
+                continue
+            if shift_prescreen and k == "stem_enable":
+                # Item 97: the novelty gate kills a STEM pick already in the ledger/history
+                # (and the Athanor area veto reverts every STEM enable), so the slot is
+                # wasted. Same condition as the gate, read-only. Treatment only.
+                try:
+                    from colony.novelty_gate import in_ledger_kill, known_identities_readonly
+                    if _known is None:
+                        _known = known_identities_readonly()
+                    _ledgered = in_ledger_kill(name, _known)
+                except Exception:  # noqa: BLE001 -- cannot tell: let the gate decide
+                    _ledgered = False
+                if _ledgered:
+                    cooled[name] = "already_in_lesson_ledger_or_history"
+                    continue
+            if shift_prescreen and k == "stem_enable" and snip == f"enable:{name}":
+                # Item 96: tautological STEM enables do not use an Oracle slot (the novelty
+                # gate kills them as trivial anyway). Logged + lesson via the pre-screen.
+                try:
+                    from colony.oracle_prescreen import screen as _prescreen
+                    _drop = _prescreen(name, k, source="conjecture_desk_pick")
+                except Exception:  # noqa: BLE001
+                    _drop = None
+                if _drop:
+                    cooled[name] = f"oracle_prescreen:{_drop['would_kill']}"
+                    continue
+            return name, k, snip, cooled
+        if _already_has(lemma_src, name):
+            continue
+        if k == "hard_enable" and snip == f"enable:{name}" and lemma_src and f'("{name}"' not in lemma_src:
+            cooled[name] = "no_check_to_enable"   # an enable stub with no check behind it always fails
+            continue
+        if only_kinds is not None and (k or "") not in only_kinds:
+            continue
+        if shift_prescreen and k == "hard_enable":
+            why_shift = shift_prescreen_reason(name)
+            if why_shift:
+                cooled[name] = why_shift
+                continue
+        return name, k, snip, cooled
+    return None, "", "", cooled
+
+
+JOURNAL = ROOT / "society" / "benchmarks" / ".desk_journal.json"
+
+
+def _journal_open(*, target: Path, backup: Path, mutation: str, kind: str, cycle_id: str) -> None:
+    """Write-ahead marker: an artifact is about to be mutated. Removed once keep/revert lands."""
+    JOURNAL.parent.mkdir(parents=True, exist_ok=True)
+    tmp = JOURNAL.with_suffix(".tmp")
+    tmp.write_text(json.dumps({"target": str(target), "backup": str(backup), "mutation": mutation,
+                               "kind": kind, "cycle_id": cycle_id, "ts": _utc()}), encoding="utf-8")
+    tmp.replace(JOURNAL)
+
+
+def _journal_close() -> None:
+    try:
+        JOURNAL.unlink()
+    except FileNotFoundError:
+        pass
+
+
+def recover_interrupted(*, cycle_id: str = "") -> dict[str, Any] | None:
+    """Restart recovery: a journal left behind means a run died between apply and keep/revert.
+
+    The mutation was never judged, so it is rolled back to the pre-apply backup. Idempotent:
+    a second call (or a target already equal to the backup) changes nothing.
+    """
+    if not JOURNAL.exists():
+        return None
+    try:
+        j = json.loads(JOURNAL.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        j = {}
+    target, backup = Path(str(j.get("target") or "")), Path(str(j.get("backup") or ""))
+    restored = False
+    if not j.get("target") or not backup.is_file():
+        # Cannot roll back safely: keep the journal so the gate fails loudly.
+        return {"recovered": False, "reason": "backup_missing_or_journal_unreadable", **j}
+    if not target.is_file() or target.read_bytes() != backup.read_bytes():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(backup, target)
+        _invalidate_pyc(target)
+        restored = True
+    _journal_close()
+    rec = {"recovered": True, "restored_bytes": restored, **j}
+    with HISTORY.open("a", encoding="utf-8") as f:
+        f.write(json.dumps({"ts": _utc(), "decision": "recovered_rollback", "mutation": j.get("mutation"),
+                            "kind": j.get("kind"), "note": f"interrupted run rolled back (restored={restored})",
+                            "interrupted_cycle": j.get("cycle_id"), "cycle_id": cycle_id}) + "\n")
+    return rec
+
+
+def improve_once(*, force_mutation=None, ledger=None, cycle_id: str = "", extra_pick: bool = False):
+    recover_interrupted(cycle_id=cycle_id)
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    STEM_BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    themes = _load_paper_themes()
+    proposals = propose_from_themes(themes, ledger=ledger, cycle_id=cycle_id)
+    # Default math path; may switch to STEM after mutation pick
+    before = run_lemma_bench()
+    before_score = float(before.get("score") or 0.0)
+    target_impl = LEMMA_IMPL
+    backup_dir = BACKUP_DIR
+    run_bench = run_lemma_bench
+    src = LEMMA_IMPL.read_text(encoding="utf-8") if LEMMA_IMPL.exists() else ""
+    recent_reverts = recent_revert_counts()
+    chosen = kind = snippet = ""
+    chosen = None
+    snippets = list(all_snippets())
+    try:
+        # Guide: seek unenabled harder variants built from proven lemmas (discovered
+        # from the artifact catalogs) — Oracle still decides keep vs revert.
+        from colony.lessons import variant_mutation_snippets
+        _have = {n for n, _k, _s in snippets}
+        _variants = [v for v in variant_mutation_snippets() if v[0] not in _have]
+        snippets += _variants
+    except Exception:
+        _variants = []
+    # Guide: when no disabled variants remain, AUTHOR new disabled hard checks from
+    # proven lemmas. They stay disabled this cycle (a later proposal targets them and
+    # the Oracle judges the enable) — authoring never enables anything.
+    fresh_authored: set[str] = set()
+    authoring_ran = False
+    hard_tier_built = None
+    if not extra_pick and _self_mod():
+        # Spark: no hand-written hard-tier family left to enable → add the next vetted OEIS
+        # relation family, DISABLED (the Oracle decides on a later cycle's enable).
+        try:
+            from colony.hard_tier_families import build_next as _build_family
+            hard_tier_built = _build_family(LEMMA_IMPL, cycle_id=cycle_id)
+            if hard_tier_built and hard_tier_built.get("name"):
+                fresh_authored.add(str(hard_tier_built["name"]))
+                src = LEMMA_IMPL.read_text(encoding="utf-8") if LEMMA_IMPL.exists() else src
+        except Exception:  # noqa: BLE001
+            hard_tier_built = None
+    try:
+        from colony.authoring import guide_authoring_active, author_checks
+        from colony.lessons import variant_mutation_snippets as _vms
+        from colony.frontier_checks import fallback_live as _fb_live
+        # COLONY_RETEST_FALLBACK=live: author (at most MAX_AUTHORED_PER_CYCLE) every cycle, so the
+        # next cycle always has a disabled check waiting instead of alternating author / enable
+        if (not extra_pick and (not _variants and not _vms() or _fb_live())
+                and guide_authoring_active()):
+            authoring_ran = True
+            fresh_authored = fresh_authored | {r["name"] for r in author_checks(cycle_id=cycle_id) if r.get("accepted")}
+            src = LEMMA_IMPL.read_text(encoding="utf-8") if LEMMA_IMPL.exists() else src
+    except Exception:
+        pass
+    # Same cooldown filter seek uses (kill cooldown + human-guide blocks + revert penalties).
+    # Fail closed: if it cannot be built, nothing is picked this cycle.
+    cooled: dict[str, str] = {}
+    try:
+        from colony.lessons import mutation_cooldown
+        cooldown = mutation_cooldown()
+    except Exception as exc:  # noqa: BLE001
+        cooldown = None
+        cooldown_error = str(exc)[:200]
+    try:
+        from colony.exploration_budget import pick_mutation_order
+        ordered = pick_mutation_order(snippets)
+    except Exception:
+        ordered = snippets
+    lemma_src = src
+    if cooldown is not None:  # fail closed: no cooldown snapshot → no pick
+        chosen, kind, snippet, cooled = pick_mutation(
+            ordered, cooldown=cooldown, fresh_authored=fresh_authored,
+            recent_reverts=recent_reverts, force_mutation=force_mutation, lemma_src=lemma_src,
+            shift_prescreen=_self_mod(),
+            only_kinds=("hard_enable",) if extra_pick else None,
+        )
+    if extra_pick and not chosen:
+        # Item 86: an extra pick only enables a waiting hard_enable entry; it never authors,
+        # takes an OEIS idle turn, or writes a history row when there is none.
+        return ConjectureResult(ts=_utc(), decision="skip", before_score=before_score,
+                                after_score=before_score, delta=0.0,
+                                note="extra pick: no hard_enable entry left", kind="")
+    if chosen and (kind or "").startswith("stem"):
+        # STEM mutations live in kinematics_impl.
+        target_impl = KINEMATICS_IMPL
+        backup_dir = STEM_BACKUP_DIR
+        run_bench = run_stem_bench
+        before = run_bench()
+        before_score = float(before.get("score") or 0.0)
+        src = KINEMATICS_IMPL.read_text(encoding="utf-8") if KINEMATICS_IMPL.exists() else ""
+    if not chosen and cooldown is None:
+        result = ConjectureResult(
+            ts=_utc(), decision="skip", before_score=before_score, after_score=before_score,
+            delta=0.0, themes=[t.get("title", "")[:60] for t in themes[:4]], proposals=proposals,
+            note=f"Cooldown filter unavailable ({cooldown_error}); fail closed, no pick.",
+            finding_ids=[p.get("finding_id") for p in proposals if p.get("finding_id")],
+        )
+        _append_history(result); _write_witness([result]); return result
+    if not chosen and not authoring_ran:
+        # Everything left was cooled/blocked/done: fall through to authoring new disabled
+        # checks (they wait for a proposal + Oracle) rather than a cooled pick.
+        try:
+            from colony.authoring import guide_authoring_active, author_checks
+            if guide_authoring_active():
+                authoring_ran = True
+                fresh_authored = fresh_authored | {r["name"] for r in author_checks(cycle_id=cycle_id) if r.get("accepted")}
+        except Exception:
+            pass
+    if not chosen:
+        # The lemma catalog has nothing left that is not cooled or blocked. This cycle's
+        # turn goes to one OEIS conjecture attempt (a zero-credit family, or a search
+        # past the published b-file). Cooled stub mutations are not queued.
+        oeis_rep = None
+        try:
+            from colony.oeis_conjectures import idle_turn
+            oeis_rep = idle_turn(cycle_id or "desk_idle")
+        except Exception:
+            oeis_rep = None
+        try:
+            from colony.lessons import write_lesson
+            chosen0 = ((oeis_rep or {}).get("chosen") or [{}])[0]
+            write_lesson(
+                decision="skip",
+                check="conjecture",
+                what="catalog exhausted — OEIS idle turn (zero-credit family or beyond b-file)",
+                source="conjecture_desk",
+                cycle_id=cycle_id,
+                lesson_type="catalog_exhausted",
+                family="hard_tier",
+                catalog_hint={
+                    "oeis_idle": (oeis_rep or {}).get("purpose") or "unavailable",
+                    "target": str(chosen0.get("id") or ""),
+                },
+                tags=["catalog_exhausted", "oeis_idle"],
+            )
+        except Exception:
+            pass
+        if oeis_rep and oeis_rep.get("chosen"):
+            ch0 = oeis_rep["chosen"][0]
+            oeis_note = (
+                f" OEIS idle attempt: {ch0.get('anum') or ch0.get('id')}"
+                f" form={ch0.get('form')} purpose={oeis_rep.get('purpose')}."
+            )
+            try:
+                from colony.stall import record_turn
+                record_turn(cycle_id or "desk_idle", "oeis_idle",
+                            str(ch0.get("id") or ch0.get("anum") or ""), "attempt")
+            except Exception:
+                pass
+        elif oeis_rep is not None:
+            oeis_note = " OEIS idle attempt: no open target."
+            try:
+                from colony.stall import record_turn
+                record_turn(cycle_id or "desk_idle", "oeis_idle", "", "skip")
+            except Exception:
+                pass
+        else:
+            oeis_note = " OEIS idle attempt unavailable."
+            try:
+                from colony.stall import record_turn
+                record_turn(cycle_id or "desk_idle", "desk", "catalog_exhausted", "skip")
+            except Exception:
+                pass
+        result = ConjectureResult(
+            ts=_utc(), decision="skip", before_score=before_score, after_score=before_score,
+            delta=0.0, themes=[t.get("title", "")[:60] for t in themes[:4]], proposals=proposals,
+            note=("No pending hard-tier lemma mutations (catalog exhausted or empty)."
+                  + (f" Cooled/blocked skipped: {sorted(cooled)[:8]}." if cooled else "")
+                  + (f" Authored new disabled checks: {sorted(fresh_authored)[:4]}." if fresh_authored else "")
+                  + oeis_note),
+            finding_ids=[p.get("finding_id") for p in proposals if p.get("finding_id")],
+        )
+        _append_history(result); _write_witness([result]); return result
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    new_bytes = target_impl.read_bytes()
+    latest = None
+    cands = sorted(backup_dir.glob(f"{target_impl.stem}_{chosen}_*.py"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if cands and cands[0].read_bytes() == new_bytes:
+        backup = cands[0]  # reuse identical
+    else:
+        backup = backup_dir / f"{target_impl.stem}_{chosen}_{datetime.now(timezone.utc).strftime('%H%M%S')}.py"
+        shutil.copy2(target_impl, backup)
+        # Cap: keep last 5 distinct per target+mutation
+        for oldp in cands[4:]:
+            try:
+                oldp.unlink()
+            except OSError:
+                pass
+    new_src = _apply_mutation(src, chosen, kind, snippet)
+    if kind == "stem_easy_pad":
+        # Force a no-op "apply" marker so Oracle can kill easy STEM pad
+        new_src = src if src else None
+    if not new_src:
+        result = ConjectureResult(
+            ts=_utc(), decision="skip", before_score=before_score, after_score=before_score, delta=0.0,
+            mutation=chosen, kind=kind, themes=[t.get("title", "")[:60] for t in themes[:4]],
+            proposals=proposals, note="Mutation apply failed.",
+            finding_ids=[p.get("finding_id") for p in proposals if p.get("finding_id")],
+        )
+        _append_history(result); return result
+    _ath_guard = None
+    if kind == "stem_easy_pad":
+        after = dict(before); after_score = before_score
+        # Do not write; oracle will kill
+    else:
+        _journal_open(target=target_impl, backup=backup, mutation=chosen or "", kind=kind or "",
+                      cycle_id=cycle_id)
+        target_impl.write_text(new_src, encoding="utf-8"); _invalidate_pyc(target_impl)
+        if os.environ.get("COLONY_TEST_CRASH_AFTER_APPLY") == "1":  # fault-injection fixture only
+            os._exit(17)
+        # Athanor 3.0 worker memory cap: run the candidate in a capped child process first
+        # (shadow: report-only, the in-process bench below always runs).
+        try:
+            from colony.trust.athanor_gate import pre_bench_guard
+            _ath_guard = pre_bench_guard(new_src=new_src, target_impl=target_impl, kind=kind or "")
+        except Exception:  # noqa: BLE001
+            _ath_guard = None
+        if _ath_guard and _ath_guard.get("block"):
+            # live gate: the capped run failed, so the candidate never runs in-process; revert
+            after = {**before, "ok": False, "score": before_score,
+                     "error": f"athanor_guard:{_ath_guard.get('reason')}"}
+        else:
+            after = run_bench()
+    after_score = float(after.get("score") or 0.0)
+    delta = round(after_score - before_score, 4)
+    n_before = int(before.get("n_checks") or 0)
+    n_after = int(after.get("n_checks") or 0)
+    n_hard_before = int(before.get("n_hard_pass") or 0)
+    n_hard_after = int(after.get("n_hard_pass") or 0)
+    _cmp_before, _cmp_after, _speed_note = speed_neutral_scores(before, after, chosen or "")
+    rose = after.get("ok") and (
+        _cmp_after > _cmp_before + 1e-6
+        or (_cmp_after >= _cmp_before - 1e-9 and n_hard_after > n_hard_before)
+    )
+    if kind in ("easy_pad", "stem_easy_pad") and n_hard_after <= n_hard_before:
+        rose = False
+    # Challenger (self-challenge, block-only): before the Oracle sees this mutation the colony
+    # tries to break it — boundary / far / seeded-sample / type edges / triviality. A block
+    # withholds the submission (no Oracle run, no score); a pass approves nothing.
+    oracle_note = ""
+    oracle_passed = False
+    _desk_verdict = None
+    why = None
+    self_rejected = False
+    try:
+        from colony.trust.flags import challenger_enabled
+        if not challenger_enabled():
+            raise _ChallengerOff()
+        from colony.challenger import challenge_entry, record as challenger_record, why_believe
+        _ch = challenge_entry(new_src, chosen or "", cycle_id=cycle_id, before_src=src)
+        why = why_believe(_ch, extra={"before_score": before_score, "after_score": after_score,
+                                      "hard_pass_delta": n_hard_after - n_hard_before})
+        challenger_record(_ch, why=why)
+        self_rejected = bool(_ch.blocked)
+    except _ChallengerOff:
+        why = {"challenger": "disabled_by_ablation(COLONY_CHALLENGER=0)"}
+        self_rejected = False
+    except Exception as _cx:  # noqa: BLE001 — fail closed: no challenge, no submission
+        self_rejected = True
+        why = {"challenger": f"unavailable:{type(_cx).__name__}", "generated_by": "colony.challenger"}
+    if kind in ("hard_enable", "hard_check") and not self_rejected:
+        from colony.trust.diffscope import enable_diff_ok
+        _ds = enable_diff_ok(src, new_src, chosen or "")
+        if not _ds["ok"]:
+            self_rejected = True
+            why = {**(why or {}), "diff_scope": _ds}
+            rose = False
+            oracle_note = f" | DIFF-SCOPE KILL: {_ds['reason']} {_ds.get('extra_diff', [])[:3]}; withheld from the Oracle"
+    if self_rejected and not oracle_note:
+        rose = False
+        oracle_note = (f" | SELF-REJECT: {why.get('challenger') if why else 'challenger'}; "
+                       f"withheld from the Oracle (nothing scored)")
+    try:
+        if self_rejected:
+            raise _Withheld()
+        from colony.oracle import gate_keep as oracle_gate
+        tentative = "keep" if rose else "revert"
+        final_dec, ov = oracle_gate(
+            tentative_decision=tentative,
+            mutation=chosen or "",
+            kind=kind or "",
+            claim_text=(f"lemma mutation {chosen} {before_score}->{after_score}"
+                        + (f" (compared {round(_cmp_before, 4)}->{round(_cmp_after, 4)}; {_speed_note})"
+                           if _speed_note else "")),
+            source="conjecture_desk",
+            cycle_id=cycle_id,
+            after_snapshot=after,
+            hard_pass_delta=(n_hard_after - n_hard_before),
+            # score check sees wall-clock-noise-neutral scores; held-out/stripped/collective unchanged
+            before_score=_cmp_before,
+            after_score=_cmp_after,
+            before_src=src,
+        )
+        _desk_verdict = ov
+        oracle_passed = bool(ov.passed and ov.fitness_credit)
+        oracle_note = (
+            f" | oracle={'PASS' if ov.passed else 'KILL'} "
+            f"fitness_credit={ov.fitness_credit} kills={ov.kills}"
+        )
+        if tentative == "keep" and final_dec != "keep":
+            rose = False  # Oracle killed keep
+    except _Withheld:
+        pass
+    except Exception as _oracle_exc:  # noqa: BLE001
+        # Fail-closed: cannot keep without Oracle
+        if rose:
+            rose = False
+            oracle_note = f" | oracle=ERROR_fail_closed:{_oracle_exc}"
+    from colony.trust.promotion import classify_promotion
+    # promotion judges the same noise-neutral scores (a speed blip is neither a fall nor a rise)
+    promotion = classify_promotion(before={**before, "score": _cmp_before},
+                                   after={**after, "score": _cmp_after}, oracle_passed=oracle_passed,
+                                   challenger_blocked=self_rejected)
+    if rose and oracle_passed and not promotion["eligible"]:
+        rose = False
+        oracle_note += f" | promotion=none ({promotion['explanation']})"
+    # Athanor gate (James Jackson's ATHANOR 3.0.0). Default COLONY_ATHANOR_GATE=shadow:
+    # report-only, it logs what it would gate and never changes this decision.
+    if _ath_guard and _ath_guard.get("block"):
+        oracle_note += f" | athanor_gate=BLOCK (guarded run: {_ath_guard.get('reason')}; candidate not run in-process)"
+    if not self_rejected and kind != "stem_easy_pad":
+        try:
+            from colony.trust.athanor_gate import gate_desk_change
+            _ath = gate_desk_change(before=before, after=after, src=src, new_src=new_src,
+                                    before_score=_cmp_before, after_score=_cmp_after,
+                                    mutation=chosen or "", kind=kind or "", cycle_id=cycle_id,
+                                    tentative_keep=bool(rose and oracle_passed), guard=_ath_guard)
+            if _ath and _ath.get("block"):
+                rose = False
+                oracle_note += f" | athanor_gate=BLOCK ({_ath.get('verdict')}: {_ath.get('block_reason') or _ath.get('reason')})"
+        except Exception:  # noqa: BLE001
+            pass
+    release_name = ""
+    if rose and oracle_passed:
+        from colony.authoring import coverage_keep_takes_no_slot
+        if coverage_keep_takes_no_slot(str(promotion.get("category") or ""), chosen or ""):
+            # Coverage adds a machine check and leaves the lemma score flat.
+            # Do not spend an authored-check slot on it. The enable is reverted
+            # below, then the authored tuple is removed so the cap does not move.
+            rose = False
+            release_name = chosen or ""
+            oracle_note += (" | coverage_slot_refused: lemma score flat; "
+                            "authored slot released (not a capability gain)")
+    if rose and oracle_passed:
+        decision = "keep"
+        oracle_note += f" | promotion={promotion['category']}: {promotion['explanation']}"
+        note = (f"Kept `{chosen}` ({kind}): lemma score {before_score}→{after_score} "
+                f"checks {n_before}→{n_after} hard_pass {n_hard_before}→{n_hard_after} "
+                f"(machine-checked + Oracle pass; not novel discovery).{oracle_note}")
+    else:
+        decision = "revert"
+        if kind != "stem_easy_pad":
+            shutil.copy2(backup, target_impl); _invalidate_pyc(target_impl)
+        if release_name:
+            try:
+                from colony.authoring import release_authored_slot
+                if release_authored_slot(target_impl, release_name):
+                    oracle_note += " | slot_released"
+                else:
+                    oracle_note += " | slot_release_failed"
+            except Exception:
+                oracle_note += " | slot_release_failed"
+            try:
+                from colony.lessons import write_lesson
+                write_lesson(
+                    decision="revert", check="authoring",
+                    what=(f"coverage keep of `{release_name}` refused: lemma score flat, "
+                          "authored slot released"),
+                    source="conjecture_desk", cycle_id=cycle_id, mutation=release_name,
+                    lesson_type="authoring_reject", family="hard_tier",
+                    tags=["authoring", "authoring_reject", "coverage_slot"],
+                )
+            except Exception:
+                pass
+        note = (f"Reverted `{chosen}` ({kind}): score {before_score}→{after_score} "
+                f"ok={after.get('ok')} hard_pass {n_hard_before}→{n_hard_after} "
+                f"— Oracle/hard-tier required for keep; easy pads die on Oracle."
+                f"{oracle_note}")
+        after_score = before_score; delta = 0.0
+        promotion = {**promotion, "category": "none", "eligible": False}
+    _journal_close()  # keep or revert has landed on disk
+    # Autonomy mile B: novelty gate (new-to-commons only) on THIS judgment. Runs on its own —
+    # it used to sit behind `from colony.external_mind import record_desk_outcome`, which
+    # raised ImportError from 2026-09-26 until external_mind became plain code, so the gate
+    # silently never ran for desk outcomes. Inputs are the desk's own Oracle verdict
+    # (no second Oracle run, no extra Oracle rows) and the real stripped baseline (`src`, the
+    # impl before this candidate). The gate's conditions are unchanged.
+    try:
+        if self_rejected:
+            raise _Withheld()  # nothing was submitted, so there is no judgment to gate
+        from colony.novelty_gate import evaluate as novelty_evaluate
+        _nov = novelty_evaluate(
+            mutation=chosen or "",
+            kind=kind or "",
+            claim_text=note,
+            cycle_id=cycle_id,
+            oracle_verdict=_desk_verdict,
+            oracle_verdict_required=True,
+            baseline_src=src,
+        )
+        note = note + (
+            f" | novelty_gate novel={_nov.get('novel_to_commons')} kills={_nov.get('kills')}"
+        )
+    except Exception:
+        pass
+    finding_ids = [p.get("finding_id") for p in proposals if p.get("finding_id")]
+    if ledger is not None:
+        try:
+            ledger.set_extra_roles({"spark", "geometer", "tribute_keeper"})
+        except Exception:
+            pass
+        fnd = ledger.create(
+            role="spark",
+            claim=(f"LEMMA MUTATION({decision}): `{chosen}` kind={kind} score {before_score}→{after_score}. "
+                   f"Machine-checked lemma bench. Not novel theorem. Needs authorize."),
+            evidence_urls=["society/benchmarks/lemma_microbench.py",
+                           "society/benchmarks/artifacts/lemma_impl.py", f"cycle:{cycle_id}"],
+            provenance="conjecture_desk", status="candidate",
+            tags=["lemma", "conjecture", "bench", "compute-useful-math", "not_discovery", decision, kind or "mutation"],
+            notes=note, topic_id="compute-useful-math",
+            title=f"Lemma mutation {decision}: {chosen}",
+            meta={"kind": "lemma_mutation", "decision": decision, "mutation": chosen,
+                  "mutation_kind": kind, "before_score": before_score, "after_score": after_score,
+                  "cycle_id": cycle_id, "not_discovery": True, "why_believe": why,
+                  "self_rejected": self_rejected, "promotion": promotion},
+        )
+        finding_ids.append(fnd.id)
+    result = ConjectureResult(
+        ts=_utc(), decision=decision, before_score=before_score, after_score=after_score,
+        delta=delta, mutation=chosen, kind=kind,
+        themes=[t.get("title", "")[:60] for t in themes[:4]], proposals=proposals, note=note,
+        finding_ids=[x for x in finding_ids if x], why_believe=why, self_rejected=self_rejected,
+        promotion=promotion,
+    )
+    _cex: list[Any] = []
+    if why and why.get("challenger_blocked"):
+        _cex.append({"by": "challenger", "detail": str(why.get("challenger"))[:240]})
+    try:
+        _sw = ((_desk_verdict.sense or {}).get("held_out") or {}).get("shifted_window") if _desk_verdict else None
+        if _sw and not _sw.get("ok"):
+            _cex.append({"by": "oracle_shifted_window", "reason": _sw.get("reason"), "window": _sw.get("window_expr")})
+    except Exception:  # noqa: BLE001
+        pass
+    _record_desk_bookkeeping(
+        decision=decision, chosen=chosen or "", kind=kind or "", before_score=before_score,
+        after_score=after_score, note=note, cycle_id=cycle_id, proposals=proposals,
+        counterexamples=_cex,
+    )
+    _append_history(result); _write_witness([result]); return result
+
+
+def _record_desk_bookkeeping(
+    *, decision: str, chosen: str, kind: str, before_score: float | None,
+    after_score: float | None, note: str, cycle_id: str, proposals: list[dict[str, Any]],
+    counterexamples: list[Any] | None = None,
+) -> dict[str, Any]:
+    """Commons row + keep/revert lesson + exploration budget for one desk judgment.
+
+    Each step is independent so one failure cannot silently disable the others (all three sat
+    in one try behind a broken external_mind import from 2026-09-26). Never raises.
+    """
+    written: dict[str, Any] = {"outcome": None, "lesson": None, "budget": None, "lesson_cites": []}
+    cites: list[str] = []
+    for pr in proposals or []:
+        if pr.get("arxiv_id"):
+            cites.append(f"arxiv:{pr['arxiv_id']}")
+        if pr.get("url"):
+            cites.append(pr["url"])
+    lesson_cites: list[str] = []
+    try:
+        from colony.external_mind import lineage_lesson_ids
+        # Real prior lessons that named this exact mutation (its authoring record, the hint /
+        # human guide that asked for it). Empty when there are none; never padded.
+        lesson_cites = lineage_lesson_ids(chosen, exclude_cycle=cycle_id)
+    except Exception:
+        lesson_cites = []
+    written["lesson_cites"] = list(lesson_cites)
+    try:
+        from colony.external_mind import record_desk_outcome
+        written["outcome"] = record_desk_outcome(
+            decision=decision, mutation=chosen, before_score=before_score,
+            after_score=after_score, kind=kind, note=note, cycle_id=cycle_id,
+            paper_cites=cites, lesson_cites=lesson_cites,
+        )
+    except Exception:
+        pass
+    # Lift 2: lesson ledger from keep/revert only
+    if decision in ("keep", "revert"):
+        try:
+            from colony.lessons import write_lesson
+            written["lesson"] = write_lesson(
+                decision=decision,
+                check="lemma_microbench",
+                what=note,
+                source="conjecture_desk",
+                cycle_id=cycle_id,
+                mutation=chosen,
+                before_score=before_score,
+                after_score=after_score,
+                family="easy_pad" if kind == "easy_pad" else ("hard_enable" if kind == "hard_enable" else "outcome"),
+                skill_bias={
+                    "geometer.gather": 0.08 if decision == "keep" else -0.04,
+                    "improver.improve": 0.06 if decision == "keep" else -0.03,
+                    "spark.emergence": 0.04 if decision == "keep" else -0.02,
+                },
+                tags=["lemma", kind or "mutation", decision],
+                evidence=["society/benchmarks/lemma_microbench.py", "artifacts:lemma_impl"]
+                + [f"lesson:{i}" for i in lesson_cites],
+                counterexamples=list(counterexamples or []),
+            )
+        except Exception:
+            pass
+    # Autonomy mile D: exploration budget — distribution MUST change after reverts
+    try:
+        from colony.exploration_budget import record_outcome
+        written["budget"] = record_outcome(chosen, decision, kind=kind)
+    except Exception:
+        pass
+    return written
+
+
+def _append_history(r: ConjectureResult) -> None:
+    HISTORY.parent.mkdir(parents=True, exist_ok=True)
+    entry = {"ts": r.ts, "decision": r.decision, "before_score": r.before_score,
+             "after_score": r.after_score, "delta": r.delta, "mutation": r.mutation,
+             "kind": r.kind, "note": r.note, "themes": r.themes}
+    if r.promotion is not None:
+        entry["promotion"] = r.promotion
+    if r.why_believe is not None:
+        entry["why_believe"] = r.why_believe
+        entry["self_rejected"] = r.self_rejected
+    with HISTORY.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry) + "\n")
+
+
+def _write_witness(results: list[ConjectureResult]) -> None:
+    lines = [
+        f"# Conjecture desk witness — {_utc()}", "",
+        "Hard-tier mutations; keep only if lemma score/hard_pass rises AND Oracle passes. Easy pads die on Oracle. "
+        "Not discovery. Not AGI. Not Millennium.", "",
+    ]
+    for r in results:
+        lines.append(
+            f"- `{r.mutation or 'none'}` ({r.kind or '-'}) → **{r.decision}** "
+            f"{r.before_score}→{r.after_score} ({r.delta:+.4f}) — {r.note}"
+        )
+        if r.themes:
+            lines.append(f"  - themes: {', '.join(r.themes[:3])}")
+    lines += ["", "## Honesty", "",
+              "- Classical textbook identities != novel mathematics.", ""]
+    WITNESS_NOTE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+# Item 86: once the authored-check cap has free slots and the stall perturb hands its
+# generated checks to the desk, one enable per cycle is the bottleneck. After a pick the
+# Oracle passed, the desk takes up to DESK_EXTRA_PICKS more hard_enable picks in the same
+# cycle (self-mod arm only; control keeps one). Each extra pick goes through the same
+# bench, Challenger, diff-scope and Oracle (shifted-window held-out) as the first.
+DESK_EXTRA_PICKS = 2
+DESK_EXTRA_BUDGET_S = 150.0
+
+
+def oracle_passed_pick(r: ConjectureResult) -> bool:
+    """A hard_enable pick the Oracle passed (kept, or reverted afterwards by the desk's own
+    coverage-slot rule: 4 of 4 Oracle passes on Nov 16 were then reverted as 'score flat')."""
+    return r.kind == "hard_enable" and (r.decision == "keep" or "oracle=PASS" in (r.note or ""))
+
+
+def run_from_growth(cycle_id: str, ledger=None):
+    first = improve_once(ledger=ledger, cycle_id=cycle_id)
+    if not _self_mod():
+        return first
+    import time as _time
+    t0 = _time.monotonic()
+    last = first
+    for _ in range(DESK_EXTRA_PICKS):
+        if not oracle_passed_pick(last):
+            break
+        if _time.monotonic() - t0 > DESK_EXTRA_BUDGET_S:
+            first.extras.append({"stopped": "budget"})
+            break
+        last = improve_once(ledger=ledger, cycle_id=cycle_id, extra_pick=True)
+        first.extras.append({"mutation": last.mutation, "kind": last.kind, "decision": last.decision})
+    return first
+
+
+if __name__ == "__main__":
+    r = improve_once()
+    print(json.dumps({"decision": r.decision, "mutation": r.mutation, "kind": r.kind,
+                      "before": r.before_score, "after": r.after_score, "delta": r.delta,
+                      "note": r.note, "n_proposals": len(r.proposals)}, indent=2))

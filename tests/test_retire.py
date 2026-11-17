@@ -1,0 +1,277 @@
+"""colony.retire: rule-based retirement of low-value authored checks (report-only by default)."""
+from __future__ import annotations
+
+import ast
+import json
+from datetime import datetime, timezone
+
+from colony import retire as R
+from colony.authoring import FALLBACK_MARKER, _entries
+
+SRC = f'''
+def check_alpha(n):
+    return n >= 0
+
+
+def check_beta(n):
+    return n + 1 > n
+
+
+def check_authored_alpha__beta_w1() -> bool:
+    """pair"""
+    return all((check_alpha(n) for n in range(10, 20))) and all((check_beta(n) for n in range(5, 9)))
+
+
+def check_authored_alpha__beta_w2() -> bool:
+    """pair on a receipt"""
+    return all((check_alpha(n) for n in range(30, 40))) and all((check_beta(n) for n in range(50, 59)))
+
+
+def check_authored_linked() -> bool:
+    return all(check_alpha(n) and check_beta(n) and n == n for n in range(3))
+''' + "".join(f'''
+
+def check_authored_sieve_fam_g{{g}}_w1() -> bool:
+    return True
+'''.format(g=g) for g in (2, 4, 6, 8, 10)) + f'''
+
+{FALLBACK_MARKER}
+BASIC: list = [("alpha", lambda: check_alpha(3), True)]
+HARD_TIER_LEMMAS: list = [
+    ("beta", lambda: check_beta(3), True),
+    ("authored_alpha__beta_w1", check_authored_alpha__beta_w1, True),
+    ("authored_alpha__beta_w2", check_authored_alpha__beta_w2, True),
+    ("authored_linked", check_authored_linked, True),
+''' + "".join(f'    ("authored_sieve_fam_g{g}_w1", check_authored_sieve_fam_g{g}_w1, True),\n' for g in (2, 4, 6, 8, 10)) + "]\n"
+
+NOW = datetime(2026, 10, 18, 3, 0, tzinfo=timezone.utc)
+
+
+def _oracle():
+    rows = []
+    for i, g in enumerate((2, 4, 6, 8, 10)):
+        rows.append({"mutation": f"authored_sieve_fam_g{g}_w1", "passed": True, "ts": f"2026-10-17T0{i}:00:00Z"})
+    rows.append({"mutation": "authored_alpha__beta_w1", "passed": True, "ts": "2026-10-17T05:00:00Z"})
+    return rows
+
+
+def _plan(**kw):
+    args = dict(src=SRC, oracle_rows=_oracle(), deps=set(), receipts={"authored_alpha__beta_w2"}, guides=set(),
+                code=set(), k_prior=0.10921, now=NOW, frontier_new=lambda n: True)
+    args.update(kw)
+    return R.plan(**args)
+
+
+def test_rule_categories_and_protections():
+    p = _plan()
+    names = {c["name"]: c for c in p["candidates"]}
+    # newest sweeps go first; KEEP_MIN (3) earliest members stay
+    assert {n for n, c in names.items() if c["category"] == "sweep"} == {
+        "authored_sieve_fam_g8_w1", "authored_sieve_fam_g10_w1"}
+    assert names["authored_alpha__beta_w1"]["category"] == "textbook_pair"
+    assert "authored_alpha__beta_w2" not in names and "receipt" in p["protected"]["authored_alpha__beta_w2"]
+    assert "authored_linked" not in names          # not a plain pairing: it links the two facts
+    assert all(not n.startswith(("alpha", "beta")) for n in names)  # catalog lemmas never considered
+
+
+def test_bar_guide_code_grace_and_fail_closed_protect():
+    p = _plan(deps={"authored_sieve_fam_g10_w1"}, guides={"authored_alpha__beta_w1"})
+    names = {c["name"] for c in p["candidates"]}
+    assert "authored_sieve_fam_g10_w1" not in names and "authored_alpha__beta_w1" not in names
+    assert "authored_sieve_fam_g6_w1" in names     # the next sweep member takes its place
+    p = _plan(now=datetime(2026, 10, 17, 5, 30, tzinfo=timezone.utc))
+    assert "authored_alpha__beta_w1" in p["protected"]  # verdict 30 min ago: grace
+    assert _plan(deps=None)["n_candidates"] == 0      # shortlist unavailable -> retire nothing
+
+
+def test_trivial_frontier_category():
+    src = SRC.replace(FALLBACK_MARKER, 'def check_authored_frontier_le_xabc_w1() -> bool:\n    return True\n\n\n'
+                      + FALLBACK_MARKER).replace(
+        "HARD_TIER_LEMMAS: list = [\n", 'HARD_TIER_LEMMAS: list = [\n    ("authored_frontier_le_xabc_w1", check_authored_frontier_le_xabc_w1, True),\n')
+    rows = _oracle() + [{"mutation": "authored_frontier_le_xabc_w1", "passed": True, "ts": "2026-10-17T05:00:00Z"}]
+    p = _plan(src=src, oracle_rows=rows, frontier_new=lambda n: False)
+    assert any(c["name"] == "authored_frontier_le_xabc_w1" and c["category"] == "trivial_frontier"
+               for c in p["candidates"])
+    p = _plan(src=src, oracle_rows=rows, frontier_new=lambda n: None)  # cannot tell -> keep
+    assert not any(c["category"] == "trivial_frontier" for c in p["candidates"])
+
+
+def test_apply_archives_and_restore_comes_back_disabled(tmp_path):
+    lemma = tmp_path / "lemma_impl.py"
+    lemma.write_text(SRC)
+    rec = tmp_path / "retired.json"
+    p = _plan()
+    out = R.apply(p, cycle_id="c1", path=lemma, record=rec, check_bench=False, state_path=None)
+    assert out["applied"] == len(p["candidates"])
+    new = lemma.read_text()
+    left = {n for n, _c, _f in _entries(ast.parse(new))}
+    assert not left & {c["name"] for c in p["candidates"]}
+    assert "def check_authored_alpha__beta_w1" not in new and "check_alpha" in new
+    data = json.loads(rec.read_text())
+    row = next(r for r in data["records"] if r["name"] == "authored_alpha__beta_w1")
+    assert row["category"] == "textbook_pair" and row["enabled"] is True and "def check_" in row["fn_src"]
+    assert R.retired_names(rec) >= {"authored_alpha__beta_w1"}
+    assert R.retired_pair_families(rec) == {"authored_alpha__beta"}
+    assert R.restore("authored_alpha__beta_w1", path=lemma, record=rec, state_path=None)
+    ents = {n: f for n, _c, f in _entries(ast.parse(lemma.read_text()))}
+    assert ents["authored_alpha__beta_w1"] is False      # back, disabled: must pass the Oracle again
+    assert "authored_alpha__beta_w1" not in R.retired_names(rec)
+
+
+def test_mode_flag(monkeypatch):
+    monkeypatch.delenv("COLONY_RETIRE", raising=False)
+    assert R.mode() == "shadow"
+    monkeypatch.setenv("COLONY_RETIRE", "off")
+    assert R.run_cycle("x") == {"skipped": "COLONY_RETIRE=off"}
+
+
+def test_authoring_never_reauthors_retired(monkeypatch, tmp_path):
+    import colony.authoring as A
+    import colony.retire as RR
+    lemma = tmp_path / "lemma_impl.py"
+    lemma.write_text(SRC)
+    monkeypatch.setattr(A, "_lemma_impl", lambda: lemma)
+    monkeypatch.setattr(A, "MAX_AUTHORED_TOTAL", 10 ** 6)
+    seen = {}
+
+    def fake_build(a, b, k):
+        name = f"authored_{a['lemma']}__{b['lemma']}_w{k}"
+        seen[name] = k
+        return name, f"def check_{name}() -> bool:\n    return True\n", ast.parse("x").body[0], "x"
+    monkeypatch.setattr(A, "_build_candidate", fake_build)
+    monkeypatch.setattr(A, "eligible_components", lambda src: [{"lemma": "alpha", "function": "check_alpha"},
+                                                                 {"lemma": "beta", "function": "check_beta"}])
+    monkeypatch.setattr(A, "oeis_candidates", lambda src, comps: [])
+    monkeypatch.setattr(RR, "retired_names", lambda: {"authored_alpha__beta_w3"})
+    monkeypatch.setattr(RR, "retired_pair_families", lambda: {"authored_alpha__beta"})
+    out = A.author_checks(max_new=2, write=False)
+    # the only pair was retired as a textbook pairing: never re-authored (other sources may still author)
+    assert not [r for r in out if r["name"].startswith("authored_alpha__beta")]
+
+
+def test_hard_tier_delta_adds_back_retired(monkeypatch):
+    import colony.fitness as F
+    snaps = iter([{"score": 0.86, "n_hard": 213, "n_hard_pass": 213, "ok": True, "n_retired": 11}])
+    monkeypatch.setattr(F, "hard_tier_snapshot", lambda: dict(next(snaps)))
+    data = {"hard_tier_history": [{"score": 0.86, "n_hard": 224, "n_hard_pass": 224, "ok": True}]}
+    assert F.hard_tier_delta(data) == 0.0
+
+
+def test_shortlist_drops_frontier_target_flagged_trivial(monkeypatch):
+    from colony import frontier_checks as FK, shortlist as SL
+    monkeypatch.setattr(FK, "trivial_now", lambda name, src=None: True)
+    e = SL.evaluate({"id": "p1", "cycle_id": "c"}, oracle_rows=[{"mutation": "authored_frontier_le_xabc_w1",
+                                                               "cycle_id": "c", "passed": True}],
+                    novelty_rows=[], athanor_rows=[], resolve=lambda p: "authored_frontier_le_xabc_w1",
+                    reuse=lambda p: 0.0, p_rule=lambda p: 0.9)
+    assert not e["meets_bar"] and "trivial_by_filter" in e["why_not"]
+
+
+def test_apply_withdraws_proposals_and_restore_brings_them_back(tmp_path):
+    lemma = tmp_path / "lemma_impl.py"
+    lemma.write_text(SRC)
+    rec = tmp_path / "retired.json"
+    state = tmp_path / "state.json"
+    state.write_text(json.dumps({"improvement_proposals": [
+        {"id": "p1", "status": "candidate_measured", "title": "Chain `authored_alpha__beta_w1` citing X",
+         "action": "hard_enable authored_alpha__beta_w1"},
+        {"id": "p2", "status": "candidate_measured", "title": "Chain `authored_linked` citing Y",
+         "action": "hard_enable authored_linked"}], "improvement_proposals_archived": []}))
+    p = _plan()
+    out = R.apply(p, path=lemma, record=rec, check_bench=False, state_path=state)
+    assert out["withdrawn"] == ["p1"]
+    st = json.loads(state.read_text())
+    p1 = next(x for x in st["improvement_proposals"] if x["id"] == "p1")
+    assert p1["status"] == R.WITHDRAWN and p1["withdrawn"]["prior_status"] == "candidate_measured"
+    assert "textbook_pair" in p1["withdrawn"]["reason"]
+    assert next(x for x in st["improvement_proposals"] if x["id"] == "p2")["status"] == "candidate_measured"
+    assert R.restore("authored_alpha__beta_w1", path=lemma, record=rec, state_path=state)
+    p1 = next(x for x in json.loads(state.read_text())["improvement_proposals"] if x["id"] == "p1")
+    assert p1["status"] == "candidate_measured" and p1["withdrawn"]["restored_at"]
+
+
+def test_unjudged_checks_are_never_retired():
+    rows = [r for r in _oracle() if r["mutation"] != "authored_alpha__beta_w1"]
+    p = _plan(oracle_rows=rows)
+    assert "authored_alpha__beta_w1" not in {c["name"] for c in p["candidates"]}
+    assert p["protected"]["authored_alpha__beta_w1"] == "not judged by the Oracle yet"
+
+
+def test_receipt_provenance_machine_vs_human(tmp_path):
+    cron = ("# Authorize receipt\n\n**Authorizer:** James Paul Jackson  \n**Delegated via:** GitHub Actions cron "
+            "(standing trust P>=0.70 selective; never accept-all)  \n- `authored_alpha__beta_w2` accepted\n")
+    chat = ("# Authorize receipt\n\n**Authorizer:** James Jackson  \n**Delegated via:** Grok Bot (explicit human "
+            "authorize by James in chat 2026-10-17)  \n- `authored_linked` accepted\n")
+    bare = "- `authored_sieve_fam_g2_w1` decided\n"
+    js = json.dumps({"delegated_via": "GitHub Actions cron", "items": ["authored_sieve_fam_g4_w1"]})
+    assert R.receipt_provenance(cron) == "machine" and R.receipt_provenance(js) == "machine"
+    assert R.receipt_provenance(chat) == "human" and R.receipt_provenance(bare) == "human"   # fail closed
+    mixed = json.dumps([{"delegated_via": "GitHub Actions cron"}, {"delegated_via": "Grok Bot (James in chat)"}])
+    assert R.receipt_provenance(mixed) == "human"
+    for i, t in enumerate((cron, chat, bare)):
+        (tmp_path / f"r{i}.md").write_text(t)
+    (tmp_path / "r.json").write_text(js)
+    assert R.receipt_names(tmp_path) == {"authored_alpha__beta_w2", "authored_linked",
+                                         "authored_sieve_fam_g2_w1", "authored_sieve_fam_g4_w1"}
+    assert R.receipt_names(tmp_path, protective_only=True) == {"authored_linked", "authored_sieve_fam_g2_w1"}
+    assert (tmp_path / "r0.md").read_text() == cron     # receipts are read, never changed
+
+
+def test_machine_receipt_modes(monkeypatch, tmp_path):
+    (tmp_path / "r.md").write_text("**Delegated via:** GitHub Actions cron  \n`authored_alpha__beta_w2`\n")
+    monkeypatch.setattr(R, "RECEIPTS", tmp_path)
+    monkeypatch.setattr(R, "receipt_names", lambda root=tmp_path, protective_only=False:
+                        set() if protective_only else {"authored_alpha__beta_w2"})
+    judged = _oracle() + [{"mutation": "authored_alpha__beta_w2", "passed": True, "ts": "2026-10-17T05:00:00Z"}]
+    args = dict(src=SRC, oracle_rows=judged, deps=set(), guides=set(), code=set(), k_prior=0.10921,
+                now=NOW, frontier_new=lambda n: True)
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_RECEIPTS", "shadow")
+    sh = R.plan(**args)
+    assert "authored_alpha__beta_w2" in sh["protected"]
+    assert "authored_alpha__beta_w2" in sh["machine_receipts_shadow"]["names"]
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_RECEIPTS", "live")
+    lv = R.plan(**args)
+    assert "authored_alpha__beta_w2" not in lv["protected"]
+    assert "authored_alpha__beta_w2" in {c["name"] for c in lv["candidates"]}
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_RECEIPTS", "off")
+    assert "authored_alpha__beta_w2" in R.plan(**args)["protected"]
+
+
+def test_machine_release_limit_needs_recorded_approval(monkeypatch, tmp_path):
+    """Above MACHINE_RELEASE_LIMIT, checks freed only by CI-only receipts are held until an
+    approval (count + note) is given; the note lands in the retirement record."""
+    name = "authored_alpha__beta_w2"
+    monkeypatch.setattr(R, "receipt_names", lambda root=tmp_path, protective_only=False:
+                        set() if protective_only else {name})
+    judged = _oracle() + [{"mutation": name, "passed": True, "ts": "2026-10-17T05:00:00Z"}]
+    args = dict(src=SRC, oracle_rows=judged, deps=set(), guides=set(), code=set(), k_prior=0.10921,
+                now=NOW, frontier_new=lambda n: True)
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_RECEIPTS", "live")
+    monkeypatch.delenv("COLONY_RETIRE_MACHINE_APPROVED", raising=False)
+    monkeypatch.setattr(R, "MACHINE_RELEASE_LIMIT", 0)
+    held = R.plan(**args)
+    assert name not in {c["name"] for c in held["candidates"]}
+    assert held["protected"][name].startswith("held:")
+    assert held["machine_receipts_held"]["names"] == [name]
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_APPROVED", "garbage")   # malformed: still held
+    assert name in R.plan(**args)["protected"]
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_APPROVED", "0:too small")  # count below the batch
+    assert name in R.plan(**args)["protected"]
+    monkeypatch.setenv("COLONY_RETIRE_MACHINE_APPROVED", "1:James test approval")
+    ok = R.plan(**args)
+    c = next(c for c in ok["candidates"] if c["name"] == name)
+    assert c["approval"] == "James test approval" and "CI-only" in c["released_from"]
+    monkeypatch.setattr(R, "MACHINE_RELEASE_LIMIT", 40)   # under the limit: no approval needed
+    monkeypatch.delenv("COLONY_RETIRE_MACHINE_APPROVED")
+    c = next(c for c in R.plan(**args)["candidates"] if c["name"] == name)
+    assert "approval" not in c
+    # the approval note is kept in the record
+    lem = tmp_path / "lem.py"
+    lem.write_text(SRC)
+    rec = tmp_path / "rec.json"
+    out = R.apply({"candidates": [dict(c, approval="James test approval")]}, path=lem, record=rec,
+                  check_bench=False, state_path=None)
+    assert out["applied"] == 1
+    row = json.loads(rec.read_text())["records"][0]
+    assert row["approval"] == "James test approval" and row["fn_src"]
+    assert name in R.retired_names(rec)

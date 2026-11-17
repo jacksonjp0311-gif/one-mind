@@ -1,0 +1,30 @@
+{
+  "comment": "Default policy and hard bounds for colony-owned search and healing knobs. Bounds in colony/self_heal.py are authoritative; this file cannot widen them, touch the Oracle, the P >= 0.70 gate, the 150 authored-check cap, Athanor math, human authorize, or the witness log. Runtime adopted values live in society/systems/self_heal.json and are not this file.",
+  "knobs": {
+    "park_cycles": {"default": 6, "lo": 3, "hi": 18, "kind": "int", "group": "search", "doc": "Cycles a repeated proposal stays parked."},
+    "block_streak_to_park": {"default": 2, "lo": 2, "hi": 5, "kind": "int", "group": "search", "doc": "Consecutive repeat-blocks before a proposal is parked."},
+    "stall_cycles": {"default": 6, "lo": 4, "hi": 12, "kind": "int", "group": "search", "doc": "Flat Oracle-pass cycles before STALL fires."},
+    "stall_dead_end_cycles": {"default": 3, "lo": 2, "hi": 6, "kind": "int", "group": "search", "doc": "All-dead-end cycles before STALL fires."},
+    "perturb_max_cycles": {"default": 9, "lo": 4, "hi": 15, "kind": "int", "group": "search", "doc": "PERTURB exits after this many cycles if nothing new is found."},
+    "perturb_epsilon": {"default": 0.3, "lo": 0.1, "hi": 0.7, "kind": "float", "group": "search", "doc": "Epsilon-greedy exploration rate in PERTURB."},
+    "perturb_wide_epsilon": {"default": 0.5, "lo": 0.2, "hi": 0.9, "kind": "float", "group": "search", "doc": "Wider exploration rate after a PERTURB timeout. Must be >= perturb_epsilon."},
+    "perturb_min_targets": {"default": 2, "lo": 1, "hi": 5, "kind": "int", "group": "search", "doc": "Minimum distinct targets a PERTURB turn should draw."},
+    "perturb_cooldown_cycles": {"default": 6, "lo": 3, "hi": 18, "kind": "int", "group": "search", "doc": "Cycles to wait after a no-progress PERTURB timeout before re-entry."},
+    "perturb_zero_pick_cycles": {"default": 1, "lo": 1, "hi": 3, "kind": "int", "group": "search", "doc": "Consecutive 0-pick PERTURB cycles (after mutation-first escalation) before exiting to the no-progress cooldown with a no_candidates lesson."},
+    "unused_menu_cycles": {"default": 20, "lo": 8, "hi": 40, "kind": "int", "group": "search", "doc": "How far back PERTURB looks to treat a target as already tried."},
+    "family_rotation_penalty": {"default": 0.85, "lo": 0.5, "hi": 0.95, "kind": "float", "group": "selection", "doc": "Score multiplier for the claim form just attempted (lower means stronger rotation)."},
+    "quarantine_cycles": {"default": 6, "lo": 2, "hi": 12, "kind": "int", "group": "healing", "doc": "Cycles a failing optional step stays quarantined."},
+    "quarantine_fail_threshold": {"default": 2, "lo": 1, "hi": 4, "kind": "int", "group": "healing", "doc": "Failures of one step before it is quarantined."},
+    "step_size": {"default": 0.15, "lo": 0.05, "hi": 0.4, "kind": "float", "group": "meta", "doc": "Fraction of a knob's range used as one adjustment step. Tunable by the same evidence rule."},
+    "evaluation_window": {"default": 6, "lo": 3, "hi": 12, "kind": "int", "group": "meta", "doc": "Cycles of trial vs baseline compared before adopt or revert. Tunable by the same evidence rule."},
+    "gf_term_cap": {"default": 1200, "lo": 600, "hi": 8000, "kind": "int", "group": "caps", "doc": "Slow series-arithmetic term cap (algebraic / EGF / fallback g.f.)."},
+    "deep_term_cap": {"default": 20000, "lo": 5000, "hi": 40000, "kind": "int", "group": "caps", "doc": "Term cap for non-C-finite deep search (relations, properties)."},
+    "fast_term_cap": {"default": 8000, "lo": 2000, "hi": 20000, "kind": "int", "group": "caps", "doc": "Term cap used when a C-finite exact iterator applies."},
+    "deep_digits": {"default": 5000, "lo": 3000, "hi": 12000, "kind": "int", "group": "caps", "doc": "Decimal-digit budget for exact integer terms."},
+    "deep_seconds": {"default": 8.0, "lo": 4.0, "hi": 16.0, "kind": "float", "group": "caps", "doc": "Time budget in seconds for one evaluator call. Kept inside CI limits."},
+    "desk_budget": {"default": 2, "lo": 1, "hi": 6, "kind": "int", "group": "policy", "doc": "Max method cards the research desk may author in one cycle."},
+    "curriculum_pace": {"default": 0.5, "lo": 0.1, "hi": 0.9, "kind": "float", "group": "policy", "doc": "Share of attention that prefers new work over review (curriculum)."},
+    "retry_policy_cycles": {"default": 3, "lo": 1, "hi": 12, "kind": "int", "group": "policy", "doc": "Retries of a failed attempt before it is parked."},
+    "routing_explore_weight": {"default": 0.3, "lo": 0.05, "hi": 0.8, "kind": "float", "group": "policy", "doc": "Bounded routing weight toward less-used desks."}
+  }
+}

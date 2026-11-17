@@ -1,0 +1,315 @@
+"""Frontier desk: bounded evidence on open statements — never proof, never auto-disproof."""
+from __future__ import annotations
+
+import json
+
+import pytest
+
+import colony.frontier as FR
+
+
+@pytest.fixture
+def impl():
+    return FR.load_impl()
+
+
+@pytest.fixture
+def sandbox(tmp_path, monkeypatch):
+    import colony.exploration_budget as B
+    import colony.lessons as L
+
+    monkeypatch.setattr(L, "LESSONS_JSONL", tmp_path / "lessons.jsonl")
+    monkeypatch.setattr(L, "LEDGER_SYSTEM", tmp_path / "lesson_ledger.json")
+    monkeypatch.setattr(B, "BUDGET_PATH", tmp_path / "exploration_budget.json")
+    cat = json.loads(FR.CATALOG.read_text())
+    monkeypatch.setattr(FR, "CATALOG", tmp_path / "frontier.json")
+    monkeypatch.setattr(FR, "LOG", tmp_path / "frontier.jsonl")
+    monkeypatch.setattr(FR, "SYSTEM", tmp_path / "frontier_system.json")
+    for t in cat["targets"]:  # tests start from the seed state, independent of live colony progress
+        t.update(verified=None, status="open", stall_streak=0, extensions=[], last_run=None)
+        t.pop("review", None)
+    cat["targets"] = [t for t in cat["targets"] if not t["id"].startswith("oeis_")]
+    (tmp_path / "frontier.json").write_text(json.dumps(cat))
+    monkeypatch.setattr("colony.feeds.conj_sequence_items", lambda: [])
+    return tmp_path
+
+
+def _guide():
+    from colony.lessons import write_human_guide
+    write_human_guide(what="frontier", author="James Jackson", tags=["human_guide", "frontier"],
+                      catalog_hint={"prefer": ["frontier"]})
+
+
+def _target(cat, tid):
+    return next(t for t in cat["targets"] if t["id"] == tid)
+
+
+# ---------------------------------------------------------------- catalog + labeling
+
+def test_catalog_is_labeled_evidence_not_proof():
+    cat = json.loads(FR.CATALOG.read_text())
+    assert cat["label"] == "bounded evidence, not proof" and cat["proof"] is False
+    fams = {t["family"] for t in cat["targets"]}
+    assert {"goldbach", "collatz", "legendre", "lehmer_totient", "erdos_straus", "twin_hl"} <= fams
+    for t in cat["targets"]:
+        assert t["proof"] is False and t["label"] == "bounded evidence, not proof"
+        v = t.get("verified")  # seeded empty; only ranges the colony checked itself are recorded
+        assert v is None or (v["by"] == "colony" and v["label"] == "bounded evidence, not proof")
+
+
+def test_frontier_is_not_in_any_proof_scored_tier():
+    from society.benchmarks.lemma_microbench import run as run_lemma
+    names = " ".join(run_lemma()["checks"])
+    # Classical PROVEN theorems that merely share a frontier family's name prefix (Legendre's
+    # duplication formula, Legendre's formula for v_p(n!)) are not the open Legendre conjecture.
+    # Explicit list: any other family-prefixed name in a proof-scored tier still fails.
+    proven_namesakes = ("legendre_duplication", "legendre_factorial_valuation")
+    scrubbed = names
+    for nm in proven_namesakes:
+        scrubbed = scrubbed.replace(nm, "")
+    for t in json.loads(FR.CATALOG.read_text())["targets"]:
+        assert t["id"] not in names and t["family"] + "_" not in scrubbed
+    assert FR.IMPL.parent.name != "artifacts"  # out of the lemma/artifact scans
+    import colony.fitness as F
+    assert "frontier" not in open(F.__file__, encoding="utf-8").read()
+
+
+# ---------------------------------------------------------------- generation + guards
+
+def test_task_generation_beyond_catalog_and_dedupe(sandbox):
+    cat = FR.load_catalog()
+    t = _target(cat, "goldbach_even")
+    task, why = FR.make_task(t, done=set())
+    assert why == "" and task["lo"] == 4 and task["hi"] == 4 + t["window"] - 1
+    assert task["enabled"] is False and task["label"] == "bounded evidence, not proof"
+    t["verified"] = {"lo": 4, "hi": 1000}
+    task2, _ = FR.make_task(t, done=set())
+    assert task2["lo"] == 1001  # strictly beyond the recorded range
+    _, why2 = FR.make_task(t, done={task2["fingerprint"]})
+    assert why2 == "dedupe"
+    t["window"] = 5
+    _, why3 = FR.make_task(t, done=set())
+    assert why3.startswith("trivial")
+
+
+def test_time_budget_reports_partial_prefix(impl):
+    d = impl.Deadline(0.0)  # already expired
+    r = impl.check_collatz(1, 10**7, d)
+    assert r["complete"] is False and r["budget_hit"] is True and r["checked_hi"] < 10**7
+    assert r["proof"] is False
+
+
+def test_run_task_extends_and_spot_checks(sandbox, impl):
+    cat = FR.load_catalog()
+    t = _target(cat, "legendre_square_gap")
+    task, _ = FR.make_task(t, done=set())
+    res = FR.run_task(task, t, impl)
+    assert res["outcome"] == "extended" and res["verified_hi"] == task["hi"]
+    assert res["independent_spots"] >= 2 and res["proof"] is False
+    FR.apply_result(t, res)
+    assert t["verified"]["hi"] == task["hi"] and t["verified"]["label"] == "bounded evidence, not proof"
+
+
+# ---------------------------------------------------------------- counterexample path
+
+class _FakeImpl:
+    """Primary checker that reports a 'counterexample' at n=50; independent verifier decides."""
+
+    def __init__(self, real, independent_agrees: bool):
+        self.real = real
+        self.Deadline = real.Deadline
+        agrees = independent_agrees
+
+        def check(lo, hi, deadline):
+            return real._result(lo, hi, 49, counterexample=50, deadline=deadline)
+
+        def holds(n):
+            return not agrees if n == 50 else True
+
+        self.FAMILIES = {"goldbach": (check, holds)}
+
+
+def test_counterexample_requires_independent_reverify_and_never_claims(sandbox, impl):
+    cat = FR.load_catalog()
+    t = _target(cat, "goldbach_even")
+    task, _ = FR.make_task(t, done=set())
+    # independent verifier disagrees → the Challenger catches the false alarm before the recheck
+    # (self-rejected: withheld, nothing claimed, nothing frozen) — a checker bug, NOT a counterexample
+    res = FR.run_task(task, t, _FakeImpl(impl, independent_agrees=False))
+    assert res["outcome"] == "self_rejected" and res["verified_hi"] is None
+    assert res["challenger"]["reason"].startswith("primary_false_alarm")
+    assert res["why_believe"]["generated_by"] == "colony.challenger"
+    # independent verifier agrees → candidate flagged for review, still not a claim
+    t2 = _target(FR.load_catalog(), "goldbach_even")
+    res2 = FR.run_task(task, t2, _FakeImpl(impl, independent_agrees=True))
+    assert res2["outcome"] == "counterexample_candidate" and res2["proof"] is False
+    FR.apply_result(t2, res2)
+    assert t2["status"] == "counterexample_review"
+    assert "NOT a disproof" in t2["review"]["note"]
+    assert t2["verified"]["hi"] == 49  # only the checked prefix before n counts
+
+    class W:
+        rows = []
+
+        def record(self, **kw):
+            self.rows.append(kw)
+
+    w = W()
+    FR._witness(w, "c", t2, res2)
+    assert w.rows[0]["kind"] == "frontier_counterexample_candidate"
+    assert "NOT a disproof claim" in w.rows[0]["summary"] and "⚠" in w.rows[0]["summary"]
+
+
+def test_review_status_blocks_target_and_cooldown_respected(sandbox):
+    from colony.lessons import MutationCooldown
+    cat = FR.load_catalog()
+    cd = MutationCooldown(blocked={}, avoided={"frontier_collatz_descent"})
+    _target(cat, "goldbach_even")["status"] = "counterexample_review"
+    t, blocked = FR.pick_target(cat, cd)
+    assert blocked["goldbach_even"] == "counterexample_review"
+    assert blocked["collatz_descent"].startswith("guide_avoid")
+    assert t is not None and t["id"] not in ("goldbach_even", "collatz_descent")
+
+
+# ---------------------------------------------------------------- OEIS feed path
+
+def test_oeis_recurrence_on_unused_terms_and_reverify(impl):
+    terms = [0, 3]
+    for _ in range(30):
+        terms.append(6 * terms[-1] - 4 * terms[-2])
+    r = impl.check_oeis_recurrence(terms, impl.Deadline(1))
+    assert r["holds"] and r["order"] == 2 and r["unused_verified"] >= 6 and r["proof"] is False
+    assert impl.reverify_oeis_recurrence(terms, r["order"], r["coeffs"])
+    bad = terms[:]
+    bad[-1] += 1  # one unused term off → no fit (honest negative)
+    assert not impl.check_oeis_recurrence(bad, impl.Deadline(1))["holds"] or \
+        impl.check_oeis_recurrence(bad, impl.Deadline(1))["order"] != 2
+
+
+def test_feed_parser_keeps_ints_only_and_discovery(sandbox, monkeypatch):
+    from colony.feeds import parse_oeis_conj
+    body = ('[{"number": 69429, "data": "' + ",".join(str(x) for x in range(1, 30)) +
+            '", "name": "Half the number <b>x</b>", "keyword": "nonn,easy", '
+            '"formula": ["Empirical G.f.: __import__(\\"os\\")"]}]')
+    hits = parse_oeis_conj(body, "q")
+    assert hits and hits[0]["oeis_id"] == "A069429" and hits[0]["conj_flag"] == "conjectured_formula"
+    assert all(isinstance(x, int) for x in hits[0]["terms"])
+    assert "formula" not in hits[0] and "__import__" not in json.dumps(hits[0])
+    monkeypatch.setattr("colony.feeds.conj_sequence_items",
+                        lambda: [{"oeis_id": "A069429", "terms": hits[0]["terms"], "conj_flag": "conjectured_formula"},
+                                 {"oeis_id": "A000004", "terms": [0] * 30, "conj_flag": "x"}])
+    cat = FR.load_catalog()
+    added = FR.discover_oeis_targets(cat)
+    assert added == ["oeis_A069429"]  # constant data rejected as trivial
+    assert FR.discover_oeis_targets(cat) == []  # dedupe
+
+
+def test_fetch_oeis_conj_builds_items(monkeypatch):
+    """Regression: CI hit TypeError (query passed twice to _item)."""
+    import colony.feeds as F
+    body = ('[{"number": 69429, "data": "' + ",".join(str(x) for x in range(1, 30)) +
+            '", "name": "Conjecture: x", "keyword": "nonn"}]')
+    monkeypatch.setattr(F, "_http_get", lambda url, *a, **k: (True, body))
+    ok, items, err = F.fetch_oeis_conj(["q"])
+    assert ok and not err and items[0]["oeis_id"] == "A069429"
+    assert items[0]["kind"] == "conj_sequence" and items[0]["provenance"]["query"] == "q"
+    assert all(isinstance(x, int) for x in items[0]["terms"])
+
+
+# ---------------------------------------------------------------- cycle
+
+def test_run_cycle_needs_guide_then_runs_and_logs(sandbox):
+    assert FR.run_cycle("c0")["skipped"] == "no_frontier_guide"
+    _guide()
+    out = FR.run_cycle("c1")
+    assert out["ran"] == 1 and out["results"][0]["outcome"] in ("extended", "no_progress")
+    rows = [json.loads(x) for x in FR.LOG.read_text().splitlines()]
+    assert rows[0]["proof"] is False and rows[0]["label"] == "bounded evidence, not proof"
+    sysj = json.loads(FR.SYSTEM.read_text())
+    assert sysj["proof"] is False
+    # second cycle picks a different (least recently run) target
+    out2 = FR.run_cycle("c2")
+    assert out2["results"][0]["target"] != out["results"][0]["target"]
+
+
+# ---------------------------------------------------------------- open targets past the published record
+
+def _prt(**kw):
+    t = {"id": "prt", "family": "prime_run_count", "offsets": [6, 12, 18], "start": 2,
+         "index_thresholds": [200, 2000, 20000], "known_terms": {"200": 1, "2000": 12},
+         "window": 300_000, "min_window": 1000, "max_window": 300_000, "budget_s": 5.0, "status": "open",
+         "beyond_record": True, "label": "bounded evidence, not proof", "proof": False}
+    t.update(kw)
+    return t
+
+
+def test_prime_run_scan_reproduces_published_a104062_and_is_window_invariant(impl):
+    T = [20 * 10 ** n for n in range(1, 5)]
+    whole = impl.prime_run_scan(2, 3_000_000, [6, 12, 18], 0, 0, T)
+    assert {k: v["count"] for k, v in whole["terms_hit"].items()} == {"200": 1, "2000": 12, "20000": 64, "200000": 416}
+    a = impl.prime_run_scan(2, 1_234_567, [6, 12, 18], 0, 0, T)
+    b = impl.prime_run_scan(1_234_568, 3_000_000, [6, 12, 18], a["pi"], a["count"], T)
+    assert (b["pi"], b["count"]) == (whole["pi"], whole["count"])
+    assert impl.prime_run_count_sieve(10 ** 6, 10 ** 6 + 5000, [6, 12, 18]) == impl.prime_run_count_mr(10 ** 6, 10 ** 6 + 5000, [6, 12, 18])
+
+
+def test_prime_run_new_term_is_candidate_only_and_published_terms_must_match(sandbox, impl):
+    t = _prt()
+    task, why = FR.make_task(t, done=set())
+    assert task and task["lo"] == 2 and task["label"] == "bounded evidence, not proof"
+    res = FR.run_task(task, t, impl, cycle_id="c1")
+    assert res["outcome"] == "new_term_candidate" and res["proof"] is False
+    assert res["published_reproduced"] == ["200", "2000"] and set(res["new_term_candidates"]) == {"20000"}
+    assert res["new_term_candidates"]["20000"]["count"] == 64
+    FR.apply_result(t, res)
+    assert t["new_term_review"]["20000"]["count"] == 64 and "CANDIDATE" in t["new_term_review"]["20000"]["note"]
+    assert t["status"] == "done"  # past the largest threshold
+    bad = _prt(known_terms={"200": 1, "2000": 13})
+    res2 = FR.run_task(FR.make_task(bad, done=set())[0], bad, impl, cycle_id="c2")
+    assert res2["outcome"] == "disagreement" and res2["verified_hi"] is None
+    FR.apply_result(bad, res2)
+    assert bad["status"] == "disagreement_review"
+
+
+def test_beyond_record_targets_run_first(sandbox):
+    from colony.lessons import mutation_cooldown
+    cat = {"targets": [{"id": "a", "family": "goldbach", "status": "open", "last_run": None},
+                       {"id": "z", "family": "prime_run_count", "status": "open", "last_run": "2026-10-16T00:00:00Z",
+                        "beyond_record": True}]}
+    t, _ = FR.pick_target(cat, mutation_cooldown())
+    assert t["id"] == "z"
+
+
+def test_catalog_open_targets_cite_published_record():
+    cat = json.loads(FR.CATALOG.read_text())
+    for t in cat["targets"]:
+        if t.get("beyond_record"):
+            rec = t.get("published_record") or {}
+            assert rec.get("limit") and str(rec.get("source", "")).startswith("https://oeis.org/")
+            assert t["label"] == "bounded evidence, not proof" and t["proof"] is False
+
+
+def test_numpy_engine_matches_pure_python_reference(impl):
+    if impl._np is None:
+        pytest.skip("numpy not installed")
+    T = [200, 2000, 20000, 200000]
+    for lo, hi in ((2, 3_000_000), (1_234_567, 2_500_001), (10 ** 9, 10 ** 9 + 400_000)):
+        a = impl.prime_run_scan(lo, hi, [6, 12, 18], 0, 0, T, engine="python")
+        b = impl.prime_run_scan(lo, hi, [6, 12, 18], 0, 0, T)
+        a.pop("engine"), b.pop("engine")
+        assert a == b
+
+
+def test_burst_runs_many_windows_and_stops_on_freeze(sandbox, monkeypatch):
+    cat = json.loads(FR.CATALOG.read_text())
+    cat["targets"].append(_prt(id="prt", window=40_000, max_window=40_000))
+    FR.CATALOG.write_text(json.dumps(cat))
+    out = FR.burst("prt", budget_s=60)
+    assert out["windows"] >= 2 and out["status"] == "done" and out["colony_terms"]["20000"] == 64
+    assert out["proof"] is False and set(out["new_term_review"]) == {"20000"}
+    cat = json.loads(FR.CATALOG.read_text())
+    cat["targets"] = [t for t in cat["targets"] if t["id"] != "prt"] + [_prt(id="prt", known_terms={"200": 2})]
+    FR.CATALOG.write_text(json.dumps(cat))
+    out = FR.burst("prt", budget_s=60)
+    assert out["windows"] == 1 and out["stop"] == "outcome:disagreement" and out["status"] == "disagreement_review"
+    assert FR.burst("goldbach_even", budget_s=5)["windows"] == 0  # only counting targets burst

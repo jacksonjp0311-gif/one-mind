@@ -1,0 +1,92 @@
+{
+  "ranked": [
+    {
+      "topic": "compute-useful-math",
+      "priority": 1.15,
+      "reason": "accepted_compute_finding",
+      "finding_id": "fnd_20d46d1b739b",
+      "title": "Authorize accepted: Lemma mutation keep: authored_sieve_hl_within_g6_6_4_w1"
+    },
+    {
+      "topic": "open-math-problems",
+      "priority": 1.05,
+      "reason": "follow_on_from_compute",
+      "from_topic": "compute-useful-math"
+    },
+    {
+      "topic": "software-engineering",
+      "priority": 1.05,
+      "reason": "follow_on_from_compute",
+      "from_topic": "compute-useful-math"
+    },
+    {
+      "topic": "emergent-technology",
+      "priority": 1.05,
+      "reason": "follow_on_from_compute",
+      "from_topic": "compute-useful-math"
+    },
+    {
+      "topic": "$2$-factor",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$3$-distance",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$\\ell_2$-norm",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$k$-connected",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$k_k$-free",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$k_t$-minor-free",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$l$-functions",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "$l$-values",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "`meta-learning`",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "ai-enabled",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "artifact-first",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "ceiling-aware]",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    }
+  ],
+  "source": "growth_refresh+findings_coupling",
+  "updated_at": "2026-11-17T02:07:55Z",
+  "updated_cycle": "20261117T020714Z_c2459c"
+}

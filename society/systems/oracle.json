@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-17T00:32:34Z",
+  "passes": 590,
+  "kills": 394,
+  "easy_pad_kills": 32,
+  "kill_rate": 0.4004,
+  "kill_rate_scope": "full_log",
+  "recent_window": {
+    "rows": 60,
+    "passes": 60,
+    "kills": 0,
+    "easy_pad_kills": 0,
+    "kill_rate": 0.0
+  },
+  "bus_ok_rate": 0.0,
+  "unique_mutations_pass": [
+    "authored_mut_swap_related_sequence_2d4852ce385c",
+    "authored_mut_swap_related_sequence_3c874f89f994",
+    "authored_mut_swap_related_sequence_52a5162a7db1",
+    "authored_mut_swap_related_sequence_539c6e5aed66",
+    "authored_mut_swap_related_sequence_6086023df475",
+    "authored_mut_swap_related_sequence_6ed44acf6664",
+    "authored_mut_swap_related_sequence_780ec4e5fee0",
+    "authored_mut_swap_related_sequence_8d6d6a34114b",
+    "authored_mut_swap_related_sequence_a3d177b50be9",
+    "authored_mut_swap_related_sequence_a6110dabd1ce",
+    "authored_mut_swap_related_sequence_b9ccb7463b3e",
+    "authored_mut_swap_related_sequence_d7641743d5d4",
+    "dedekind_reciprocity",
+    "jacobi_four_squares",
+    "jacobi_two_squares",
+    "korselt_criterion",
+    "kummer_carries",
+    "legendre_factorial_valuation",
+    "oeis_a000032_lucas_norm",
+    "oeis_a000085_involutions",
+    "oeis_a000111_zigzag_boustrophedon",
+    "oeis_a000172_franel_recurrence",
+    "oeis_a000262_lah_row_sums",
+    "oeis_a000957_fine_no_hills",
+    "oeis_a001003_little_schroeder",
+    "oeis_a001006_motzkin_ballot_sum",
+    "oeis_a001045_jacobsthal_sum",
+    "oeis_a001764_ternary_trees",
+    "oeis_a001850_central_delannoy",
+    "oeis_a002426_central_trinomial",
+    "oeis_a002893_hexagonal_walks",
+    "oeis_a005043_riordan_motzkin",
+    "oeis_a005259_apery_recurrence",
+    "oeis_a006318_schroeder_paths",
+    "pisano_prime_period",
+    "primitive_root_count",
+    "ramanujan_partition_congruences",
+    "stem_elastic_collision",
+    "stem_isothermal_work",
+    "stem_kepler_third_law"
+  ],
+  "unique_mutations_kill": [],
+  "domain_packs": {
+    "packs": {
+      "math_lemmas": {
+        "label": "Math lemmas (beyond current catalog)",
+        "bench": "lemma_microbench",
+        "kinds": [
+          "hard_enable",
+          "easy_pad",
+          "hard_check"
+        ],
+        "note": "Classical coded identities. Not theorem discovery."
+      },
+      "stem_kinematics": {
+        "label": "STEM kinematics (non-math physics microbench)",
+        "bench": "kinematics_microbench",
+        "kinds": [
+          "stem_enable",
+          "stem_easy_pad",
+          "stem_check"
+        ],
+        "note": "Classical 1D/2D motion. Not novel physics."
+      }
+    },
+    "stem_mutations": [
+      "energy_work",
+      "stem_elastic_collision",
+      "stem_kepler_third_law",
+      "stem_shm_energy",
+      "stem_resistor_power_balance",
+      "stem_isothermal_work",
+      "stem_snell_least_time",
+      "stem_rc_discharge",
+      "stem_thin_lens_matrix",
+      "stem_velocity_addition",
+      "stem_wheatstone_balance",
+      "stem_easy_pad_units"
+    ],
+    "note": "Widen Oracle mutate distribution. Fail kills keep. Not discovery."
+  },
+  "latest": {
+    "ts": "2026-11-17T00:32:34Z",
+    "passed": true,
+    "kills": [],
+    "hear": {
+      "heard": true,
+      "bus_ok": false,
+      "is_easy_pad": false,
+      "attack_weight": 0.35,
+      "support_weight": 0.55,
+      "msg_ids": [],
+      "propose": "PROPOSE for Oracle HEAR: `authored_mut_swap_related_sequence_d7641743d5d4` kind=hard_enable. lemma mutation authored_mut_swap_related_sequence_d7641743d5d4 0.8682->0.868 (compared 0.857->0.857; speed_",
+      "attack": "WEIGH: `authored_mut_swap_related_sequence_d7641743d5d4` (hard_enable) \u2014 require held-out harder + stripped baseline fail + CAS probe. No Oracle pass \u2192 no keep."
+    },
+    "sense": {
+      "stripped": {
+        "already_enabled": true,
+        "in_catalog": true,
+        "hard_pass": 188,
+        "hard_n": 188,
+        "score": 0.8681,
+        "stripped_fails_usefulness": true,
+        "ok_for_oracle": true,
+        "reason": "pre_apply_disabled_and_delta=1",
+        "hard_pass_delta": 1,
+        "pre_apply_flag": false,
+        "basis": "before_src"
+      },
+      "held_out": {
+        "survives": true,
+        "ok_for_oracle": true,
+        "hard_pass": 188,
+        "hard_n": 188,
+        "ok": true,
+        "score": 0.868,
+        "shifted_window": {
+          "ok": true,
+          "status": "pass",
+          "reason": "shift_window_pass",
+          "applied": true,
+          "ranges_shifted": 0,
+          "probes": 3,
+          "windows_shifted": 1,
+          "shifted": [
+            {
+              "from": [
+                [
+                  40,
+                  80
+                ],
+                [
+                  80,
+                  120
+                ],
+                [
+                  120,
+                  160
+                ]
+              ],
+              "to": [
+                [
+                  161,
+                  190
+                ],
+                [
+                  191,
+                  220
+                ],
+                [
+                  221,
+                  252
+                ]
+              ]
+            }
+          ],
+          "seconds": 0.533,
+          "window_expr": "all((type((c := frontier_holds({'kind': 'cong', 'lhs': 'D(gcd(cheb4,oxa056971))', 'params': {'m': 2, 'q': 3, 'r': 0, 's': 2}, 'rhs': ''}, a, b))) is int and c > 0 for a, b in _oracle_shifted_windows([(161, 190), (191, 220), (221, 252)])))",
+          "scope": "finite_shifted_window_only_not_universal_proof"
+        },
+        "reason": "held_out_hard_green",
+        "hard_pass_delta": 1,
+        "delta_override": false
+      },
+      "cas": {
+        "cas_ok": true,
+        "ok_for_oracle": true,
+        "engine": "sympy",
+        "reason": "cas_pass",
+        "checks": [
+          {
+            "label": "binomial_symmetry",
+            "ok": true
+          },
+          {
+            "label": "pascal",
+            "ok": true
+          },
+          {
+            "label": "square_expand",
+            "ok": true
+          },
+          {
+            "label": "hard_enable_probes",
+            "ok": true
+          }
+        ]
+      },
+      "kills": [],
+      "sense_pass": true
+    },
+    "collective": {
+      "decision": "keep_candidate",
+      "sense_pass": true,
+      "keep_weight": 0.363,
+      "kill_weight": 0.2285,
+      "votes": {
+        "geometer": {
+          "weight": 0.28,
+          "vote": "keep_candidate",
+          "lean_keep": 0.55,
+          "lean_kill": 0.45
+        },
+        "improver": {
+          "weight": 0.22,
+          "vote": "keep_candidate",
+          "lean_keep": 0.55,
+          "lean_kill": 0.45
+        },
+        "legislator": {
+          "weight": 0.18,
+          "vote": "kill",
+          "lean_keep": 0.375,
+          "lean_kill": 0.625
+        },
+        "spark": {
+          "weight": 0.16,
+          "vote": "keep_candidate",
+          "lean_keep": 0.55,
+          "lean_kill": 0.45
+        },
+        "tribute_keeper": {
+          "weight": 0.1,
+          "vote": "kill",
+          "lean_keep": 0.275,
+          "lean_kill": 0.725
+        },
+        "builder": {
+          "weight": 0.06,
+          "vote": "kill",
+          "lean_keep": 0.275,
+          "lean_kill": 0.725
+        }
+      },
+      "still_candidate_until_authorize": true,
+      "mutation": "authored_mut_swap_related_sequence_d7641743d5d4",
+      "kind": "hard_enable",
+      "note": "Collective keep weight only if Oracle SENSE passes. Durable accepted still needs human authorize P\u22650.70 selective."
+    },
+    "fitness_credit": true,
+    "mutation": "authored_mut_swap_related_sequence_d7641743d5d4",
+    "kind": "hard_enable",
+    "source": "conjecture_desk",
+    "cycle_id": "20261117T003050Z_3512b6",
+    "note": "Oracle PASS \u2014 keep as candidate until authorize.",
+    "not_agi": true,
+    "not_discovery": true
+  },
+  "note": "Oracle HEAR/SENSE/collective. FAIL kills keep. No pass \u2192 no fitness credit. Not AGI. Not novel theorems."
+}

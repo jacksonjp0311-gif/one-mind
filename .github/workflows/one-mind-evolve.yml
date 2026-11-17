@@ -1,0 +1,33 @@
+name: One Mind evolve
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "Number of cycles"
+        required: false
+        default: "3"
+
+permissions:
+  contents: write
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run cycles
+        run: |
+          PYTHONPATH=. python3 -m colony evolve --cycles ${{ github.event.inputs.cycles || 3 }} --offline || true
+      - name: Commit traces
+        run: |
+          git config user.name "one-mind"
+          git config user.email "one-mind@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "one-mind cycle $(date -u +%Y-%m-%dT%H%MZ)"
+          git push || true

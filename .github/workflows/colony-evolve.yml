@@ -1,0 +1,615 @@
+# Agent Colony — production self-run loop (GitHub Actions cron)
+# gather → claim → hard bench → keep/revert → lesson → selective authorize → slim push
+# Failure noisy; success quiet. CI never silent-accept-all. Not AGI. Not Millennium.
+name: Colony evolve
+
+on:
+  schedule:
+    - cron: "26 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "Number of evolve cycles"
+        required: false
+        default: "3"
+      offline:
+        description: "Offline seed-only (true/false)"
+        required: false
+        default: "false"
+      authorize:
+        description: "Run selective standing-trust authorize (true/false). Off unless a human dispatches with true; scheduled runs never authorize."
+        required: false
+        default: "false"
+      run_control:
+        description: "Also run the control arm for the same number of cycles (true/false). Scheduled runs always do."
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: colony-evolve
+  cancel-in-progress: false
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Start from main as it is when the job actually starts, not the event SHA: a cron run
+          # queued behind a dispatch (concurrency group) otherwise evolves stale state and its
+          # slim-output push conflicts with the run that finished first (run 39046578411).
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # sieve instrument C backend (optional; falls back to pure Python if this fails)
+          sudo apt-get install -y -qq libprimesieve-dev primesieve || echo "::warning::primesieve not installed; sieve instrument uses Python fallback"
+
+      - name: Sense — external feeds + internal sensors (fail-soft; outage never fails the run)
+        if: ${{ github.event.inputs.offline != 'true' }}
+        continue-on-error: true
+        timeout-minutes: 6
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          export PYTHONPATH=.
+          python -m colony feeds || echo "::warning::feeds step non-fatal"
+
+      - name: Trust gate — pre-evolve (full suite, isolation, benches, holdout manifest; FATAL on fail)
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python -m colony.trust gate --report society/receipts/TRUST_GATE_pre.json
+
+      - name: Hard benches (noisy on fail)
+        id: benches
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python -m society.benchmarks.run_benchmarks
+          python -m colony bench-improve || echo "::warning::bench-improve non-fatal"
+          python - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          latest = json.loads(Path("society/benchmarks/latest.json").read_text())
+          ok = bool(latest.get("ok_all"))
+          print(json.dumps({"ok_all": ok, "aggregate_score": latest.get("aggregate_score")}, indent=2))
+          if not ok:
+              print("::error::HARD BENCH FAIL ok_all=false — mandatory; failing the job (trust loop 2026-10-11)")
+              sys.exit(2)
+          else:
+              # success quiet
+              print("benches ok (quiet)")
+          PY
+
+      - name: Novelty shadow corpus key (OEIS names, monthly)
+        id: oeiskey
+        run: echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Novelty shadow corpus cache (report-only; free; no per-cycle download)
+        id: oeiscache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/colony/oeis
+          key: oeis-names-terms-v2-${{ steps.oeiskey.outputs.month }}
+
+      - name: OEIS b-file cache (new-data frontier; polite fetches are cached for the month)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/colony/bfiles
+          key: oeis-bfiles-v1-${{ steps.oeiskey.outputs.month }}-${{ github.run_id }}
+          restore-keys: |
+            oeis-bfiles-v1-${{ steps.oeiskey.outputs.month }}-
+
+      - name: Build novelty shadow corpus on cache miss (OEIS names, CC BY-SA 4.0; fail-soft)
+        if: ${{ steps.oeiscache.outputs.cache-hit != 'true' && github.event.inputs.offline != 'true' }}
+        continue-on-error: true
+        timeout-minutes: 7
+        run: |
+          export PYTHONPATH=.
+          python -m colony.novelty_shadow build || echo "::warning::novelty shadow corpus unavailable (report-only; live novelty unaffected)"
+          python -m colony.oeis_terms build || echo "::warning::OEIS terms index unavailable (frontier conjectures will say OEIS unchecked)"
+
+      - name: Gather → claim → evolve (keep/revert + lessons)
+        env:
+          # Athanor gate (James Jackson's ATHANOR 3.0.0) on lemma-desk self-edits.
+          # live = a keep needs Athanor APPROVE. Set to "shadow" to restore report-only behaviour.
+          COLONY_ATHANOR_GATE: live
+          COLONY_ATHANOR_PROBE: state
+          # per-area hard veto beside the verdict; shadow = log only, off = not computed
+          COLONY_ATHANOR_VETO: live
+          # hunt guidance: live = order/reward exploration by the hunt rules (never kills, never
+          # touches the Oracle, P or the authorize bar); shadow = report only (old behaviour)
+          COLONY_HUNT: live
+          # frontier conjectures (self-chosen, held-out falsification): shadow = report only;
+          # live = surviving surprises also become authored checks the Oracle judges; off = none
+          COLONY_FRONTIER: live
+          # retire low-value authored checks (colony/retire.py): shadow = report only
+          # (society/systems/retire_report.json); live = also retire + archive; off = none
+          COLONY_RETIRE: live
+          # receipts delegated only via GitHub Actions cron stop protecting checks from retirement (report-only first)
+          COLONY_RETIRE_MACHINE_RECEIPTS: live   # >40 per run held unless COLONY_RETIRE_MACHINE_APPROVED (James)
+          COLONY_AUTHOR_PAIRS: "off"
+          COLONY_FRONTIER_MENU: wide
+          # new data past the OEIS frontier (colony/new_data.py): shadow = compute + ledger only;
+          # live = verified terms also become authored checks the Oracle judges by recomputation
+          COLONY_NEWDATA: live
+          COLONY_NEWDATA_SPARSE: live
+          COLONY_REFCHECK: live
+          # Stage 3: hunt/selection credit = unlikely x effort, 0 when explained (colony/surprise_credit.py)
+          COLONY_SURPRISE: live
+          # Stage 4: proof path with checker-verified certificates (colony/proof_path.py)
+          COLONY_PROOF: live
+          # idle fix: up to 3 frontier checks waiting for the Oracle at once (code default 1)
+          COLONY_FRONTIER_INFLIGHT: "3"
+          COLONY_RETEST_FALLBACK: "live"
+          # new generator ingredients (graph invariants, restricted partitions, matrix sequences)
+          COLONY_FRONTIER_INGREDIENTS: live
+          # strong known-results check before surprise credit (colony/known_check.py)
+          COLONY_REFCHECK_STRONG: live
+          # less-studied OEIS entries offered in the generator menu (colony/obscure_pool.py)
+          COLONY_OBSCURE: live
+          # arithmetic claims re-checked to n = 10^6 before surprise credit (colony/deep_range.py)
+          COLONY_DEEP: live
+          # new domains: automatic sequences (words) and partition q-series (colony/frontier_domains.py)
+          COLONY_DOMAINS: live
+          # compositional triviality check: congruences implied by component residue facts are
+          # known in principle and earn no surprise credit (colony/compositional.py)
+          COLONY_COMPOSITIONAL: live
+          # open OEIS problems (unproved conjectures, no known formula) in the menu with a sampling
+          # bonus and a surprise-credit weight; needs COLONY_OBSCURE live (colony/open_targets.py)
+          COLONY_OPEN_TARGETS: live
+          # stated OEIS conjectures as targets: attempt_disprove (two independent code paths) and
+          # attempt_prove (proof_check.check_oeis); results flagged for review only (colony/oeis_conjectures.py)
+          COLONY_OEIS_CONJ: live
+          CYCLES: ${{ github.event.inputs.cycles || '3' }}
+          OFFLINE: ${{ github.event.inputs.offline || 'false' }}
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          # Optional live gather pulse (pointers only; raw scrape ≠ discovery)
+          python - <<'PY' || echo "::warning::claim pipeline preflight non-fatal"
+          from colony.claim_pipeline import run_pipeline
+          import json
+          out = run_pipeline(live_gather=False, cycle_id="ci_preflight")
+          print(json.dumps({k: out.get(k) for k in ("n_extracted","n_hard_checked","n_proposed","note")}, indent=2))
+          PY
+          ARGS=(evolve --cycles "$CYCLES")
+          if [ "$OFFLINE" = "true" ]; then ARGS+=(--offline); fi
+          python -m colony "${ARGS[@]}"
+          python -m colony dashboard || true
+          python -m colony status > society/CI_STATUS.json || true
+
+      - name: Trust gate — post-evolve (benches + rollback journal + manifest; FATAL before authorize/commit)
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python -m colony.trust gate --skip-tests --report society/receipts/TRUST_GATE_post.json
+
+      - name: Preserve trust-gate reports (also on failure)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: trust-gate-reports
+          path: society/receipts/TRUST_GATE_*.json
+          if-no-files-found: warn
+
+      - name: Selective authorize (standing trust P≥0.70 — never accept-all)
+        # Standing trust is off by default: only a human workflow_dispatch with authorize=true runs it.
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.authorize == 'true' }}
+        env:
+          AUTHORIZE_REQUESTED: ${{ github.event.inputs.authorize }}
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python - <<'PY'
+          """Selective standing-trust authorize for machine-checked keeps only.
+          Never accept-all. P≥0.70. UNKNOWN stays UNKNOWN. Not AGI.
+          """
+          import json
+          from pathlib import Path
+          from colony.authorize import AuthorizeItem, Authorizer
+          from colony.ledger import Ledger
+          from colony.society_state import SocietyState
+
+          root = Path(".")
+          state = SocietyState.load(root / "data" / "society_state.json")
+          ledger = Ledger(root / "data" / "ledger.jsonl", extra_roles=state.role_names())
+          from colony.selective_authorize import select_candidates
+          import os
+          selected = select_candidates(
+              ledger, state, event_name=os.environ.get("GITHUB_EVENT_NAME", ""),
+              requested=os.environ.get("AUTHORIZE_REQUESTED", ""),
+          )
+          items = [AuthorizeItem(e["finding_id"], "accepted", e["rationale"]) for e in selected]
+          rejected = []
+          rejected = rejected[:12]
+          batch = items + rejected
+          if not batch:
+              print("authorize: nothing selective this run (quiet success)")
+              Path("society/receipts/AUTHORIZE_DECISIONS_spark3_ci.json").write_text(
+                  json.dumps({"items": [], "policy": "standing_trust_P>=0.70_selective_never_accept_all", "mile": "spark3-port"}, indent=2)+"\n"
+              )
+          else:
+              decisions = {
+                  "items": [{"finding_id": i.finding_id, "decision": i.decision, "rationale": i.rationale} for i in batch],
+                  "policy": "standing_trust_P>=0.70_selective_never_accept_all",
+                  "mile": "spark3-port",
+              }
+              dec_path = Path("society/receipts/AUTHORIZE_DECISIONS_spark3_ci.json")
+              dec_path.write_text(json.dumps(decisions, indent=2) + "\n")
+              result = Authorizer(root=root, ledger=ledger, state=state).apply(
+                  batch,
+                  authorizer="James Paul Jackson",
+                  delegated_via="Explicit human workflow_dispatch (standing trust P>=0.70 selective; never accept-all)",
+              )
+              print(json.dumps({
+                  "accepted": len(result.accepted),
+                  "rejected": len(result.rejected),
+                  "skipped": len(result.skipped),
+                  "receipt": str(result.receipt_path),
+              }, indent=2))
+          PY
+
+      - name: Slim receipts (skip giant JSONL rewrite)
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from colony.dashboard import refresh_dashboard
+          refresh_dashboard()
+          # Slim society mirror — do NOT rewrite multi-MB ledger/witness JSONL in CI commit noise
+          latest = {}
+          lp = Path("society/benchmarks/latest.json")
+          if lp.exists():
+              latest = json.loads(lp.read_text())
+          bus = {}
+          sp = Path("data/society_state.json")
+          cycle_count = None
+          fit = None
+          if sp.exists():
+              # Avoid loading entire multi-MB state if possible — still needed for metrics
+              d = json.loads(sp.read_text())
+              cycle_count = d.get("cycle_count")
+              fit = (d.get("fitness_history") or [None])[-1]
+              bus = d.get("bus_metrics_latest") or {}
+          nov = {}
+          np = Path("society/systems/novelty_gate.json")
+          if np.exists():
+              nov = json.loads(np.read_text())
+          deb = {}
+          dp = Path("society/systems/debate_multihop.json")
+          if dp.exists():
+              deb = json.loads(dp.read_text())
+          bud = {}
+          bp = Path("society/systems/exploration_budget.json")
+          if bp.exists():
+              bud = json.loads(bp.read_text())
+          ora = {}
+          try:
+              from colony.oracle import counts as oracle_counts
+              ora = oracle_counts()
+          except Exception as e:
+              ora = {"error": str(e)}
+          honest = {}
+          honest_line = "unavailable"
+          try:
+              from colony.oeis_conjectures import format_honest_scoreboard, honest_scoreboard
+              honest = honest_scoreboard()
+              honest_line = format_honest_scoreboard(honest)
+          except Exception as e:
+              honest = {"error": str(e)}
+          receipt = {
+              "when": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "mile": "spark3-port",
+              "cycle_count": cycle_count,
+              "fitness_latest": fit,
+              "honest_scoreboard": honest,
+              "bus_metrics": bus,
+              "benches": {"ok_all": latest.get("ok_all"), "aggregate_score": latest.get("aggregate_score")},
+              "novelty_gate": {"hits": nov.get("hits"), "kills": nov.get("kills")},
+              "debate_multihop": {k: deb.get(k) for k in ("action_changed", "code_touched", "bus_metrics") if k in deb or True},
+              "exploration_budget_fp": (bud.get("last_outcome") or {}),
+              "oracle": ora,
+              "easy_pad_dies": bool(ora.get("easy_pad_kills")),
+              "note": "Slim CI receipt. Giant JSONL not rewritten. Spark3 Athanor+PulseMesh port mile. Not AGI. Not novel theorems.",
+          }
+          Path("society/receipts").mkdir(parents=True, exist_ok=True)
+          Path("society/receipts/SOCIETY_SLIM_SPARK3.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          Path("society/EVOLVE_STATUS.md").write_text(
+              "# Evolve Status — Spark3 Athanor+PulseMesh port mile\n\n"
+              "> We light the spark and witness. We do not micromanage the city.\n\n"
+              "![Spark and witness](../docs/assets/spark_witness_city.jpg)\n\n"
+              f"- cycle_count: `{cycle_count}`\n"
+              f"- benches ok_all: `{latest.get('ok_all')}` score `{latest.get('aggregate_score')}`\n"
+              f"- novelty hits/kills: `{nov.get('hits')}` / `{nov.get('kills')}`\n"
+              f"- honest scoreboard: {honest_line}\n"
+              f"- debate action_changed: `{deb.get('action_changed')}`\n"
+              f"- oracle passes/kills/easy_kills: `{ora.get('passes')}` / `{ora.get('kills')}` / `{ora.get('easy_pad_kills')}`\n"
+              "- CI: gather→claim→bench→evolve→lesson→selective authorize P≥0.70→slim push\n"
+              "- Spark3: Athanor H7 inform-only + PulseMesh feeds; pressure reply_rate via load-bear multi-hop; Oracle kill easy_pad; lessons→genome; spawn on Oracle-pass lift; P≥0.70. Failure noisy; success quiet. Not AGI. Not Millennium.\n"
+          )
+          print("slim receipts written (quiet)")
+          PY
+
+      - name: Commit slim society outputs
+        run: |
+          set -euo pipefail
+          git config user.name "agent-colony-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Prefer slim paths; still allow data/society but avoid forcing giant churn messages
+          git add -A data/commons society/systems society/benchmarks society/receipts society/frontier \
+            society/EVOLVE_STATUS.md society/DASHBOARD.html society/WITNESS_SUMMARY.md \
+            society/BULLETIN.md society/report.md society/CI_STATUS.json \
+            society/LEARNING.md \
+            society/genomes society/briefs society/shortlist docs .github || true
+          # Include society_state only if changed size reasonable — always add but message notes slim
+          git add data/society_state.json data/ledger.jsonl data/witness.jsonl society/WITNESS.md 2>/dev/null || true
+          # Treatment live society-state and its segment manifest / JSONL
+          # (item 52). Control already commits these under control/ via
+          # `git add control/`. Do not rewrite the frozen 44 MiB snapshot.
+          git add data/society_state.live.json data/society_state.segments.json 2>/dev/null || true
+          git add data/society_state/ 2>/dev/null || true
+          # Rotated append-only segments and their manifests (item 42).
+          git add data/witness data/ledger data/witness.segments.json data/ledger.segments.json 2>/dev/null || true
+          # Shard archive of proposals/fitness rows flushed out of the 50-entry inline window: without it
+          # measured, accepted proposals vanished from the shortlist between runs (James 2026-10-23).
+          git add data/society_shards 2>/dev/null || true
+          # Feed cache + fetch state (append-only, size-bounded) so dedupe/TTL persist across runs
+          git add data/research_cache/feeds.jsonl data/research_cache/feeds_state.json 2>/dev/null || true
+          # Hive snapshots (library, calibration, rules, learning state). Force-add
+          # in case a stale ignore still lists them. JSONL logs stay gitignored.
+          git add -f society/systems/swarm_learn.json society/systems/swarm_rules.json \
+            society/systems/swarm_library.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No society changes to commit (quiet success)"
+          else
+            git commit -m "ci(colony): spark loop benches+evolve+selective $(date -u +%Y-%m-%dT%H%MZ)"
+            # main may have moved during the run (human push): rebase onto it and retry; never force
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase --autostash && git push; then ok=1; break; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error::push failed after 3 rebase attempts"; exit 1; }
+          fi
+
+
+  # Control arm: identical evolve pipeline, self-modification frozen at
+  # defaults, all state under control/. Never authorizes. Skips the trust
+  # gate and benches (those are about the shared code, already run on
+  # the treatment job). Same cycle count, same schedule, same Oracle.
+  evolve-control:
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.run_control != 'false' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          sudo apt-get install -y -qq libprimesieve-dev primesieve || echo "::warning::primesieve not installed; sieve instrument uses Python fallback"
+
+      - name: Novelty shadow corpus key (OEIS names, monthly)
+        id: oeiskey
+        run: echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Novelty shadow corpus cache
+        id: oeiscache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/colony/oeis
+          key: oeis-names-terms-v2-${{ steps.oeiskey.outputs.month }}
+
+      - name: OEIS b-file cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/colony/bfiles
+          key: oeis-bfiles-v1-${{ steps.oeiskey.outputs.month }}-${{ github.run_id }}
+          restore-keys: |
+            oeis-bfiles-v1-${{ steps.oeiskey.outputs.month }}-
+
+      - name: Seed control tree (first run only; later runs keep their own history)
+        env:
+          COLONY_ARM: control
+          COLONY_SEED_CONTROL: "1"
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          # Seed must fail loud (nonzero) if nothing was copied or
+          # required files are missing. Source paths bypass the
+          # COLONY_ARM Path hook so this copies treatment data/, not
+          # the empty control dest. Idempotent when already seeded.
+          python -m colony seed-control
+
+      - name: Commit seeded control tree
+        run: |
+          set -euo pipefail
+          git config user.name "agent-colony-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add control/ || true
+          if git diff --staged --quiet; then
+            echo "Control already seeded (no seed commit)"
+          else
+            git commit -m "ci(colony): seed control arm $(date -u +%Y-%m-%dT%H%MZ)"
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase --autostash && git push; then ok=1; break; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error::control seed push failed after 3 rebase attempts"; exit 1; }
+          fi
+
+      - name: Evolve (control arm — self-mod off)
+        env:
+          COLONY_ARM: control
+          COLONY_ATHANOR_GATE: live
+          COLONY_ATHANOR_PROBE: state
+          COLONY_ATHANOR_VETO: live
+          COLONY_HUNT: live
+          COLONY_FRONTIER: live
+          COLONY_RETIRE: live
+          COLONY_RETIRE_MACHINE_RECEIPTS: live
+          COLONY_AUTHOR_PAIRS: "off"
+          COLONY_FRONTIER_MENU: wide
+          COLONY_NEWDATA: live
+          COLONY_NEWDATA_SPARSE: live
+          COLONY_REFCHECK: live
+          COLONY_SURPRISE: live
+          COLONY_PROOF: live
+          COLONY_FRONTIER_INFLIGHT: "3"
+          COLONY_RETEST_FALLBACK: "live"
+          COLONY_FRONTIER_INGREDIENTS: live
+          COLONY_REFCHECK_STRONG: live
+          COLONY_OBSCURE: live
+          COLONY_DEEP: live
+          COLONY_DOMAINS: live
+          COLONY_COMPOSITIONAL: live
+          COLONY_OPEN_TARGETS: live
+          COLONY_OEIS_CONJ: live
+          CYCLES: ${{ github.event.inputs.cycles || '3' }}
+          OFFLINE: ${{ github.event.inputs.offline || 'false' }}
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          ARGS=(evolve --arm control --cycles "$CYCLES")
+          if [ "$OFFLINE" = "true" ]; then ARGS+=(--offline); fi
+          python -m colony "${ARGS[@]}"
+          python -m colony dashboard || true
+
+      - name: Commit control state only (never treatment data/ or society/)
+        run: |
+          set -euo pipefail
+          git config user.name "agent-colony-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Only the isolated control tree. The twin scoreboard is written
+          # by the scoreboard job after both arms finish.
+          git add control/ || true
+          if git diff --staged --quiet; then
+            echo "No control-arm changes to commit (quiet success)"
+          else
+            git commit -m "ci(colony): control arm evolve $(date -u +%Y-%m-%dT%H%MZ)"
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase --autostash && git push; then ok=1; break; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error::control push failed after 3 rebase attempts"; exit 1; }
+          fi
+
+  # After both arms have pushed, record treatment-minus-control and
+  # refresh the growth chart. Does not authorize. Does not evolve.
+  twin-scoreboard:
+    needs: [evolve, evolve-control]
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 20
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Pull both arms' latest commits
+        run: git pull --rebase --autostash || git pull --ff-only
+
+      - name: Update twin scoreboard and growth chart
+        env:
+          COLONY_ARM: treatment
+          CYCLES: ${{ github.event.inputs.cycles || '3' }}
+        run: |
+          set -euo pipefail
+          export PYTHONPATH=.
+          python -m colony twin-scoreboard --cycles "$CYCLES" \
+            --treatment-result "${{ needs.evolve.result }}" \
+            --control-result "${{ needs.evolve-control.result }}"
+          python -m colony dashboard || true
+
+      - name: Commit scoreboard and dashboard
+        run: |
+          set -euo pipefail
+          git config user.name "agent-colony-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add society/systems/twin_scoreboard.json society/DASHBOARD.html society/WITNESS_SUMMARY.md \
+            society/LEARNING.md society/systems/learning_loop.json data/commons/learning_loop.jsonl || true
+          if git diff --staged --quiet; then
+            echo "No scoreboard changes to commit (quiet success)"
+          else
+            git commit -m "ci(colony): twin scoreboard $(date -u +%Y-%m-%dT%H%MZ)"
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase --autostash && git push; then ok=1; break; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error::scoreboard push failed after 3 rebase attempts"; exit 1; }
+          fi
+
+
+  # After this run finishes on main, dispatch the next evolve so trials
+  # keep moving with minimal gaps. Kill switch: repo variable
+  # COLONY_CHAIN=off (unset defaults to on). Skips if another evolve
+  # run is already queued or in progress. Chains after failures too,
+  # but stops after 3 consecutive evolve-job failures. Never authorize.
+  chain-next:
+    needs: [evolve, evolve-control, twin-scoreboard]
+    if: ${{ always() && !cancelled() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Dispatch next evolve (authorize=false)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COLONY_CHAIN: ${{ vars.COLONY_CHAIN }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          EVOLVE_RESULT: ${{ needs.evolve.result }}
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          python3 -m colony.chain_next

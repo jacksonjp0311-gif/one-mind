@@ -1,0 +1,100 @@
+# A104062 sharded count (manual dispatch only; no schedule; free GitHub-hosted runners).
+# Counts consecutive prime quadruples p,p+6,p+12,p+18 fully inside the first N primes.
+# Pass A: tools/a104062/qs_range.c (primesieve iterator), 20 shards of [0, P].
+# Pass B: tools/a104062/qk_range.c (primesieve array API), 19 shards with DIFFERENT boundaries.
+# Each shard counts quadruples whose FIRST prime lies in its range and reads past its end for the
+# next 3 primes, so quadruples crossing shard edges are counted exactly once. Results are summed in
+# the "combine" job and shown in the run summary; nothing is committed. Computed, not proof.
+name: A104062 shards
+
+on:
+  workflow_dispatch:
+    inputs:
+      n_primes:
+        description: "N (count quadruples inside the first N primes)"
+        required: false
+        default: "2000000000000"
+      shards:
+        description: "Pass A shard count S (pass B uses S-1 with different boundaries); keep S+S-1 <= 256"
+        required: false
+        default: "20"
+
+permissions:
+  contents: read
+
+jobs:
+  nth:
+    runs-on: ubuntu-latest
+    outputs:
+      P: ${{ steps.p.outputs.P }}
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq primecount
+      - id: p
+        # primecount's nth prime (combinatorial pi(x)) is seconds; `primesieve -n` at 2e12 takes hours on a runner.
+        # p(N) is re-confirmed independently: both passes must count exactly N primes <= P (and P is prime).
+        run: |
+          primecount --version | head -1
+          P=$(primecount --nth-prime "${{ github.event.inputs.n_primes }}")
+          echo "p(N)=$P"; echo "P=$P" >> "$GITHUB_OUTPUT"
+      - id: m
+        run: |
+          S=${{ github.event.inputs.shards || '20' }}
+          python3 -c "import json; S=int('$S'); assert 2<=S<=128; print('matrix='+json.dumps({'include':[{'pass':'A','i':i,'S':S} for i in range(S)]+[{'pass':'B','i':i,'S':S-1} for i in range(S-1)]}))" >> "$GITHUB_OUTPUT"
+
+  shard:
+    needs: nth
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.nth.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq libprimesieve-dev
+      - name: Count shard
+        env:
+          P: ${{ needs.nth.outputs.P }}
+        run: |
+          set -euo pipefail
+          S=${{ matrix.S }}
+          I=${{ matrix.i }}
+          LO=$(python3 -c "print($P*$I//$S)"); HI=$(python3 -c "print($P+1 if $I==$S-1 else $P*($I+1)//$S)")
+          gcc -O2 -fopenmp tools/a104062/qs_range.c -o qs -lprimesieve
+          gcc -O2 -fopenmp tools/a104062/qk_range.c -o qk -lprimesieve
+          if [ "${{ matrix.pass }}" = A ]; then ./qs "$LO" "$HI" "$P" "$(nproc)" > out.json; else ./qk "$LO" "$HI" "$P" > out.json; fi
+          cat out.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.pass }}-${{ matrix.i }}
+          path: out.json
+
+  combine:
+    needs: [nth, shard]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: shards
+      - name: Sum
+        env:
+          P: ${{ needs.nth.outputs.P }}
+          N: ${{ github.event.inputs.n_primes }}
+          S: ${{ github.event.inputs.shards || '20' }}
+        run: |
+          python3 - <<'PY' | tee result.json
+          import json, os, glob
+          P, N = int(os.environ["P"]), int(os.environ["N"])
+          res = {"N": N, "p_N": P}
+          SA = int(os.environ["S"])
+          for ps, S in (("A", SA), ("B", SA - 1)):
+              rows = sorted((json.load(open(f)) for f in glob.glob(f"shards/shard-{ps}-*/out.json")), key=lambda r: r["lo"])
+              assert len(rows) == S, (ps, len(rows))
+              assert rows[0]["lo"] == 0 and rows[-1]["hi"] == P + 1 and all(a["hi"] == b["lo"] for a, b in zip(rows, rows[1:]))
+              res[ps] = {"primes": sum(r["primes"] for r in rows), "quads": sum(r["quads"] for r in rows)}
+          res["primes_ok"] = res["A"]["primes"] == N == res["B"]["primes"]
+          res["agree"] = res["A"]["quads"] == res["B"]["quads"]
+          print(json.dumps(res, indent=1))
+          assert res["primes_ok"] and res["agree"]
+          PY
+          { echo '```json'; cat result.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
