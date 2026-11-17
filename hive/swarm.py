@@ -833,8 +833,12 @@ def propose_for_role(
             delta = int(getattr(biased.match, "score", 0)) - int(getattr(prop.match, "score", 0))
         foreign = 0
         try:
+            from colony.tools.reciprocal_exchange import merge_remote
+            merge_remote("one-mind")
             from colony.tools.symbiotic_exchange import foreign_fingerprints
-            foreign = len(foreign_fingerprints("one-mind", limit=50))
+            foreign = len(foreign_fingerprints("one-mind", limit=200))
+            from colony.tools.crystallize import crystallize_stable
+            crystallize_stable("one-mind", min_count=2)
         except Exception:
             foreign = 0
         emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=foreign,

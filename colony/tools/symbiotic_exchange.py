@@ -35,7 +35,7 @@ def append_receipt(source: str, kind: str, fingerprint: str, outcome: str, extra
     except Exception:
         pass
 
-def foreign_fingerprints(my_source: str, limit: int = 50) -> List[str]:
+def foreign_fingerprints(my_source: str, limit: int = 200) -> List[str]:
     """Fingerprints written by any source other than my_source."""
     if not EXCHANGE.exists():
         return []
