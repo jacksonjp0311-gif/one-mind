@@ -601,7 +601,10 @@ def decide_keep(
         try:
             from colony.tools.crystallize import crystallize
             from colony.tools.surgical_implants import transactional_crystallize
-            transactional_crystallize(lambda: crystallize(treatment, source="one-mind"))
+            transactional_crystallize(
+                lambda: crystallize(treatment, source="one-mind"),
+                verify=lambda r: bool(r),
+            )
         except Exception:
             pass
     reason = "kept" if keep else (
