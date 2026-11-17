@@ -3,6 +3,9 @@ name: One Mind evolve
 on:
   schedule:
     - cron: "*/30 * * * *"
+  workflow_run:
+    workflows: ["One Mind watch"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       cycles:
