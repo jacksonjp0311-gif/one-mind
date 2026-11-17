@@ -835,6 +835,13 @@ def propose_for_role(
             foreign = 0
         emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=foreign,
              bias_delta=delta, outcome="proposed")
+        try:
+            from colony.tools.symbiotic_exchange import append_receipt
+            if prop and getattr(prop, "fingerprint", ""):
+                append_receipt("one-mind", "proposal", prop.fingerprint, "reverted",
+                               {"bias_delta": delta})
+        except Exception:
+            pass
     except Exception:
         pass
     return biased
