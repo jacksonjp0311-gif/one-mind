@@ -815,7 +815,7 @@ def propose_for_role(
         delta = 0
         if biased and biased.match and prop and prop.match:
             delta = int(getattr(biased.match, "score", 0)) - int(getattr(prop.match, "score", 0))
-        emit("colony", cycle_id="", residual_max=0.0, foreign_fps=0,
+        emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=0,
              bias_delta=delta, outcome="proposed")
     except Exception:
         pass
