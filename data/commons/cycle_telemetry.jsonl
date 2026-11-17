@@ -60,3 +60,11 @@
 {"ts": "2026-11-17T11:59:45.123528+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 0, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}
 {"ts": "2026-11-17T12:07:06.544283+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 0, "bias_delta": 150, "outcome": "proposed", "adoption_notes": 0}
 {"ts": "2026-11-17T12:07:06.574585+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 0, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T13:57:06.099068+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 12, "bias_delta": 100, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T13:57:06.169971+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 24, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T13:57:15.031767+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 36, "bias_delta": 80, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T13:57:15.095285+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 48, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T14:01:35.723341+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 60, "bias_delta": 80, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T14:01:35.798492+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 72, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T14:01:45.092764+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 84, "bias_delta": 80, "outcome": "proposed", "adoption_notes": 0}
+{"ts": "2026-11-17T14:01:45.209854+00:00", "source": "one-mind", "lineage": "one-mind", "cycle_id": "", "residual_max": 0.0, "foreign_fps": 96, "bias_delta": 0, "outcome": "proposed", "adoption_notes": 0}

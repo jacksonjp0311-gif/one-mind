@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-17T12:01:41Z",
-  "cycle_id": "20261117T120111Z_86bdfa",
+  "ts": "2026-11-17T13:58:57Z",
+  "cycle_id": "20261117T135829Z_547b7b",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -114,8 +114,8 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8386,
-      "slope": -3e-06,
+      "last": 0.8383,
+      "slope": 2e-05,
       "min": 0.8379,
       "max": 0.8386
     },
@@ -278,23 +278,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 0.923,
+      "ratio": 0.881,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 0.912,
+      "ratio": 0.873,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 1.021,
+      "ratio": 1.004,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 1.633,
-      "drift": true
+      "ratio": 1.422,
+      "drift": false
     },
     "kinematics_microbench": {
-      "ratio": 0.981,
+      "ratio": 0.964,
       "drift": false
     }
   },
@@ -302,10 +302,10 @@
     "n_targets": 31,
     "verified": {
       "goldbach_even": 545148611,
-      "collatz_descent": 582200000,
+      "collatz_descent": 585400000,
       "legendre_square_gap": 2972607,
       "lehmer_totient": 275800001,
-      "erdos_straus": 1514127,
+      "erdos_straus": 1519127,
       "twin_primes_hl": 730200000,
       "oeis_A104062_next": 518690000001
     },
@@ -447,7 +447,6 @@
   "signals": [
     "revert_streaks: stem_elastic_collision, stem_isothermal_work, stem_kepler_third_law, stem_rc_discharge → deprioritize in seek",
     "feeds: 5 OEIS sequence(s) cached → candidate cross-checks for authored checks",
-    "bench_timing_drift: lemma_microbench",
     "instruments: 4 available (sieve.count_pattern, sieve.forecast_and_count, sieve.hl_constant, sieve.hl_predict) → measure, then let the Oracle judge"
   ],
   "note": "Sensors inform priors only; they never accept, enable, authorize or change a gate."
