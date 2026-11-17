@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-17T07:05:04Z",
-  "cycle_id": "20261117T070435Z_de4261",
+  "ts": "2026-11-17T08:14:05Z",
+  "cycle_id": "20261117T081332Z_618de9",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -12,7 +12,6 @@
       "stem_snell_least_time"
     ],
     "oracle_kills_by_theme": {
-      "authored_mut_swap_related_sequence_58aacc9fceff": 2,
       "stem_thin_lens_matrix": 1,
       "stem_velocity_addition": 1,
       "stem_elastic_collision": 1,
@@ -23,7 +22,8 @@
       "authored_mut_swap_related_sequence_6086023df475": 1,
       "authored_mut_swap_related_sequence_6ed44acf6664": 1,
       "authored_mut_swap_related_sequence_780ec4e5fee0": 1,
-      "authored_mut_swap_related_sequence_8d6d6a34114b": 1
+      "authored_mut_swap_related_sequence_8d6d6a34114b": 1,
+      "authored_mut_swap_related_sequence_b9ccb7463b3e": 1
     },
     "recent": {
       "oeis_a001003_little_schroeder": {
@@ -115,10 +115,10 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8383,
-      "slope": -0.001017,
+      "last": 0.838,
+      "slope": -1.4e-05,
       "min": 0.8379,
-      "max": 0.8562
+      "max": 0.8384
     },
     "novelty": {
       "last": 0.6786,
@@ -279,33 +279,33 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 0.789,
+      "ratio": 0.868,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 0.781,
+      "ratio": 0.855,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 0.899,
+      "ratio": 0.955,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 3.818,
+      "ratio": 2.647,
       "drift": true
     },
     "kinematics_microbench": {
-      "ratio": 1.124,
+      "ratio": 1.087,
       "drift": false
     }
   },
   "frontier": {
     "n_targets": 31,
     "verified": {
-      "goldbach_even": 538834115,
+      "goldbach_even": 542034115,
       "collatz_descent": 579000000,
-      "legendre_square_gap": 2940607,
-      "lehmer_totient": 272600001,
+      "legendre_square_gap": 2956607,
+      "lehmer_totient": 274200001,
       "erdos_straus": 1509127,
       "twin_primes_hl": 722200000,
       "oeis_A104062_next": 518690000001
