@@ -63,7 +63,7 @@ def crystallize(treatment: Any = None, fingerprint: str = "", source: str = "one
                 text=f"kept {fp} from {source}",
                 category=category,
                 action_key=fp,
-                positive=True,
+                positive=(category == "kept"),
                 source_id=source,
                 proto_key=key,
             )
@@ -101,7 +101,7 @@ def reload_into(router: Any = None) -> int:
                 text=f"kept {rec['fingerprint']} from {rec['source']}",
                 category=rec.get("category", "kept"),
                 action_key=rec["fingerprint"],
-                positive=True,
+                positive=(rec.get("category") == "kept"),
                 source_id=rec["source"],
                 proto_key=rec["key"],
             )
@@ -136,7 +136,7 @@ def crystallize_stable(source: str = "one-mind", min_count: int = 2) -> int:
         for line in ex.read_text(encoding="utf-8").splitlines()[-200:]:
             try:
                 rec = json.loads(line)
-                if rec.get("outcome") in ("reverted", "failed", "failure") and rec.get("fingerprint"):
+                if rec.get("outcome") in ("observed", "kept", "adopted") and rec.get("fingerprint"):
                     counts[str(rec["fingerprint"])] += 1
             except Exception:
                 continue
