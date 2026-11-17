@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-17T11:39:44Z",
-  "cycle_id": "20261117T113911Z_2cf511",
+  "ts": "2026-11-17T12:01:41Z",
+  "cycle_id": "20261117T120111Z_86bdfa",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -12,8 +12,6 @@
       "stem_snell_least_time"
     ],
     "oracle_kills_by_theme": {
-      "stem_thin_lens_matrix": 1,
-      "stem_velocity_addition": 1,
       "stem_elastic_collision": 1,
       "stem_kepler_third_law": 1,
       "authored_mut_swap_related_sequence_2d4852ce385c": 1,
@@ -23,7 +21,8 @@
       "authored_mut_swap_related_sequence_6ed44acf6664": 1,
       "authored_mut_swap_related_sequence_780ec4e5fee0": 1,
       "authored_mut_swap_related_sequence_8d6d6a34114b": 1,
-      "authored_mut_swap_related_sequence_b9ccb7463b3e": 1
+      "authored_mut_swap_related_sequence_b9ccb7463b3e": 1,
+      "authored_mut_swap_related_sequence_d7641743d5d4": 1
     },
     "recent": {
       "oeis_a001003_little_schroeder": {
@@ -115,10 +114,10 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.838,
-      "slope": -2.9e-05,
+      "last": 0.8386,
+      "slope": -3e-06,
       "min": 0.8379,
-      "max": 0.8384
+      "max": 0.8386
     },
     "novelty": {
       "last": 0.6786,
@@ -147,7 +146,7 @@
   },
   "stall": {
     "stalled": false,
-    "aggregate_range": 0.0004,
+    "aggregate_range": 0.0007,
     "novelty_max": 0.6786,
     "window": 6,
     "reason": "moving"
@@ -279,23 +278,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 0.919,
+      "ratio": 0.923,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 0.914,
+      "ratio": 0.912,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 0.95,
+      "ratio": 1.021,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 1.875,
+      "ratio": 1.633,
       "drift": true
     },
     "kinematics_microbench": {
-      "ratio": 1.037,
+      "ratio": 0.981,
       "drift": false
     }
   },
@@ -305,9 +304,9 @@
       "goldbach_even": 545148611,
       "collatz_descent": 582200000,
       "legendre_square_gap": 2972607,
-      "lehmer_totient": 274200001,
+      "lehmer_totient": 275800001,
       "erdos_straus": 1514127,
-      "twin_primes_hl": 726200000,
+      "twin_primes_hl": 730200000,
       "oeis_A104062_next": 518690000001
     },
     "reviews": [],

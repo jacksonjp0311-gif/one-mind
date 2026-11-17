@@ -15,8 +15,8 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **7**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **17** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 79, correct 0, pending 121, accuracy 0‰
+- Hive decision deferred **18** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 78, correct 0, pending 122, accuracy 0‰
 
 ## Per method card
 
@@ -51,7 +51,7 @@ _None yet._
 
 ## Reading breadth (knowledge library)
 
-knowledge: 178 papers across 14/14 fields, 97 concepts, 41 cards formed, 0 tested, 0 kept.
+knowledge: 178 papers across 14/14 fields, 97 concepts, 42 cards formed, 0 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -63,7 +63,7 @@ knowledge: 178 papers across 14/14 fields, 97 concepts, 41 cards formed, 0 teste
 | meta_learning | 8 | 7 | 0 | 0 | 0 |
 | multi_agent_systems | 9 | 4 | 1 | 0 | 0 |
 | neural_architecture | 14 | 12 | 5 | 0 | 0 |
-| open_endedness | 11 | 11 | 10 | 0 | 0 |
+| open_endedness | 11 | 11 | 11 | 0 | 0 |
 | optimization_search | 15 | 16 | 9 | 0 | 0 |
 | physics_complex_systems | 15 | 4 | 1 | 0 | 0 |
 | recursive_self_improvement | 9 | 1 | 2 | 0 | 0 |

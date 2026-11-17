@@ -1,0 +1,6 @@
+{"ts": "2026-11-17T11:59:37.433759+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "set_knob:direction=up:name=park_cycles:value=12", "outcome": "reverted", "extra": {"bias_delta": 150}}
+{"ts": "2026-11-17T11:59:37.462934+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "add_park_rule:cycles=12:target_kind=dead_end", "outcome": "reverted", "extra": {"bias_delta": 0}}
+{"ts": "2026-11-17T11:59:45.096677+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "set_knob:direction=up:name=gf_term_cap:value=4259", "outcome": "reverted", "extra": {"bias_delta": 150}}
+{"ts": "2026-11-17T11:59:45.123592+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "set_knob:direction=up:name=park_cycles:value=12", "outcome": "reverted", "extra": {"bias_delta": 0}}
+{"ts": "2026-11-17T12:07:06.544393+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "add_family_rotation:family=algebraic", "outcome": "reverted", "extra": {"bias_delta": 150}}
+{"ts": "2026-11-17T12:07:06.574646+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "add_park_rule:cycles=12:target_kind=dead_end", "outcome": "reverted", "extra": {"bias_delta": 0}}
