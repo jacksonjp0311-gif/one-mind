@@ -88,7 +88,7 @@ def pulse(
 
     ok = 0
     try:
-        from colony.tools.surgical_implants import share_or_solo
+        from colony.tools.surgical_implants import share_or_solo, refractory
         if share_or_solo(0.5):  # residual proxy; share when signal present
             pass  # receipts already emitted below
     except Exception:
