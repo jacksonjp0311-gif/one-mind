@@ -44,7 +44,9 @@ def foreign_fingerprints(my_source: str, limit: int = 50) -> List[str]:
         for line in EXCHANGE.read_text(encoding="utf-8").splitlines()[-limit:]:
             try:
                 rec = json.loads(line)
-                if rec.get("source") != my_source and rec.get("fingerprint"):
+                if (rec.get("source") != my_source
+                        and rec.get("fingerprint")
+                        and rec.get("outcome") in ("reverted", "failed", "failure")):
                     out.append(str(rec["fingerprint"]))
             except Exception:
                 continue
