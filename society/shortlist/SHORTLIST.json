@@ -1,5 +1,5 @@
 {
-  "ts": "2026-11-17T01:42:31Z",
+  "ts": "2026-11-17T02:51:19Z",
   "view_only": true,
   "n_considered": 178,
   "n_meet_bar": 36,
@@ -29,8 +29,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_cong_xb5f19c6e",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -70,8 +70,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_divides_x318ee14a",
         "siblings_passed": 1,
         "expected": 0.9015,
@@ -112,8 +112,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.5,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_le_x10223e69",
         "siblings_passed": 1,
         "expected": 0.9015,
@@ -153,8 +153,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_cong_xa8371e31",
         "siblings_passed": 2,
         "expected": 0.9482,
@@ -195,8 +195,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_divides_x0c5f5f5b",
         "siblings_passed": 1,
         "expected": 0.9015,
@@ -236,8 +236,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_cong_x41b05781",
         "siblings_passed": 2,
         "expected": 0.9482,
@@ -279,8 +279,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.5,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_le_x423b0686",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -320,8 +320,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_cong_x29d14f44",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -361,8 +361,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_cong_x2f9c7891",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -402,8 +402,8 @@
       "hunt": {
         "unknown": true,
         "in_oeis": false,
-        "oeis_reuse": 0.3333,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "authored_frontier_divides_xc90ee275",
         "siblings_passed": 1,
         "expected": 0.9015,
@@ -444,8 +444,8 @@
       "hunt": {
         "unknown": false,
         "in_oeis": false,
-        "oeis_reuse": 0.5,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "kummer_carries",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -482,9 +482,9 @@
       "rank": 0.5264,
       "hunt": {
         "unknown": false,
-        "in_oeis": true,
-        "oeis_reuse": 1.0,
-        "oeis_checked": true,
+        "in_oeis": false,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "pisano_prime_period",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -522,8 +522,8 @@
       "hunt": {
         "unknown": false,
         "in_oeis": false,
-        "oeis_reuse": 0.5,
-        "oeis_checked": true,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "jacobi_two_squares",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -560,9 +560,9 @@
       "rank": 0.495,
       "hunt": {
         "unknown": false,
-        "in_oeis": true,
-        "oeis_reuse": 1.0,
-        "oeis_checked": true,
+        "in_oeis": false,
+        "oeis_reuse": null,
+        "oeis_checked": false,
         "family": "zeckendorf_unique",
         "siblings_passed": 0,
         "expected": 0.0,
@@ -582,12 +582,12 @@
     }
   ],
   "hunt_shadow": {
-    "ts": "2026-11-17T01:42:31Z",
-    "cycle_id": "20261117T013746Z_5ba9c8",
+    "ts": "2026-11-17T02:51:19Z",
+    "cycle_id": "20261117T024700Z_a7bd50",
     "mode": "report_only",
     "guidance": {
-      "mode": "live",
-      "strength": 0.25,
+      "mode": "shadow",
+      "strength": null,
       "K_PRIOR": 0.10921
     },
     "n_meet_bar_actual": 36,
@@ -615,7 +615,7 @@
       "authored_frontier_divides_xba575886_w2",
       "authored_frontier_divides_xc90ee275_w1"
     ],
-    "n_unknown_oeis_unchecked": 0,
+    "n_unknown_oeis_unchecked": 33,
     "drop_out_of_bar": [
       "imp_a201b5_50",
       "imp_6a3c68_50",
@@ -804,5 +804,5 @@
     "building_blocks": "novelty=0 for ranking; listed separately"
   },
   "note": "View only. Does not authorize or change anything. Only James authorizes.",
-  "cycle_id": "20261117T013746Z_5ba9c8"
+  "cycle_id": "20261117T024700Z_a7bd50"
 }

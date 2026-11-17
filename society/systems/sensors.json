@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-17T02:07:53Z",
-  "cycle_id": "20261117T020714Z_c2459c",
+  "ts": "2026-11-17T02:47:29Z",
+  "cycle_id": "20261117T024700Z_a7bd50",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -13,7 +13,6 @@
     ],
     "oracle_kills_by_theme": {
       "authored_mut_swap_related_sequence_58aacc9fceff": 3,
-      "authored_mut_swap_related_sequence_a6110dabd1ce": 1,
       "stem_thin_lens_matrix": 1,
       "stem_velocity_addition": 1,
       "stem_elastic_collision": 1,
@@ -23,7 +22,8 @@
       "authored_mut_swap_related_sequence_539c6e5aed66": 1,
       "authored_mut_swap_related_sequence_6086023df475": 1,
       "authored_mut_swap_related_sequence_6ed44acf6664": 1,
-      "authored_mut_swap_related_sequence_780ec4e5fee0": 1
+      "authored_mut_swap_related_sequence_780ec4e5fee0": 1,
+      "authored_mut_swap_related_sequence_8d6d6a34114b": 1
     },
     "recent": {
       "oeis_a001003_little_schroeder": {
@@ -115,26 +115,26 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8562,
-      "slope": -0.000647,
-      "min": 0.8386,
+      "last": 0.8383,
+      "slope": -0.001517,
+      "min": 0.8383,
       "max": 0.8591
     },
     "novelty": {
       "last": 0.6786,
-      "slope": -0.003994,
+      "slope": -0.002497,
       "min": 0.6786,
       "max": 0.7143
     },
     "kill_rate": {
       "last": 0.4004,
-      "slope": -4.5e-05,
+      "slope": -2.8e-05,
       "min": 0.4004,
       "max": 0.4008
     },
     "kill_rate_term": {
       "last": 0.9104,
-      "slope": -3.4e-05,
+      "slope": -2.1e-05,
       "min": 0.9104,
       "max": 0.9107
     },
@@ -147,7 +147,7 @@
   },
   "stall": {
     "stalled": false,
-    "aggregate_range": 0.0184,
+    "aggregate_range": 0.0183,
     "novelty_max": 0.6786,
     "window": 6,
     "reason": "moving"
@@ -265,7 +265,7 @@
       "authored_sum_first_n_odds__bell_triangle_recurrence_w1",
       "authored_vandermonde_conv__stirling_second_row_w1"
     ],
-    "exhausted_recent": 9
+    "exhausted_recent": 10
   },
   "guides": {
     "n_guides": 17,
@@ -279,23 +279,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 0.872,
+      "ratio": 0.861,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 0.855,
+      "ratio": 0.842,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 0.918,
+      "ratio": 0.89,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 2.552,
+      "ratio": 5.862,
       "drift": true
     },
     "kinematics_microbench": {
-      "ratio": 1.053,
+      "ratio": 0.965,
       "drift": false
     }
   },
@@ -303,11 +303,11 @@
     "n_targets": 31,
     "verified": {
       "goldbach_even": 535634115,
-      "collatz_descent": 572600000,
+      "collatz_descent": 575800000,
       "legendre_square_gap": 2924607,
       "lehmer_totient": 271000001,
       "erdos_straus": 1499127,
-      "twin_primes_hl": 714200000,
+      "twin_primes_hl": 718200000,
       "oeis_A104062_next": 518690000001
     },
     "reviews": [],

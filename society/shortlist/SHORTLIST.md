@@ -1,4 +1,4 @@
-# Proposal shortlist — 2026-11-16 08:42 PM ET
+# Proposal shortlist — 2026-11-16 09:51 PM ET
 
 View only: nothing here is authorized. Only James authorizes.
 
@@ -30,7 +30,7 @@ Textbook / classical lemmas (desk catalog incl. the 68954ec refill, or a classic
 
 ## Hunt shadow (view only — would-be ranking if the unknown were rewarded)
 
-Rules in colony/hunt_shadow.py. Would meet the bar: 14 (actual 36). Unknown claims (Oracle-surviving, not textbook, not in OEIS): 33 (0 with OEIS unchecked). Would drop out of the bar: 22; would enter: 0.
+Rules in colony/hunt_shadow.py. Would meet the bar: 14 (actual 36). Unknown claims (Oracle-surviving, not textbook, not in OEIS): 33 (33 with OEIS unchecked). Would drop out of the bar: 22; would enter: 0.
 
 | Shadow # | Proposal | Target | P → P_shadow | Shadow bar | Unknown | Expected | Actual # |
 |---:|---|---|---|---|---|---:|---:|
@@ -48,11 +48,11 @@ Rules in colony/hunt_shadow.py. Would meet the bar: 14 (actual 36). Unknown clai
 Excluded (reason: count): hearing: 2, no_oracle_pass_in_own_cycle: 23, novelty_killed: 26, oracle_killed_in_own_cycle: 8, status: 93, target_unresolved: 102
 
 
-## Frontier conjectures (self-chosen; LIVE)
+## Frontier conjectures (self-chosen; report-only)
 
-Mode `live`. Last cycle: 15 tested, 1 survived held-out, 14 falsified, 0 machine-checked, 0 surprises; dropped 12 duplicates, 105 trivial rewrites. OEIS index: available. Pre-registration Brier: 0.1026.
-Totals: tested 15521, survived 5769, surprises 152, false surprises (failed later re-test) 0.
-Reference check (Stage 2, `live`): last cycle 0 explained by a reference, 0 with no reference found.
+Mode `shadow`. Last cycle: 12 tested, 10 survived held-out, 2 falsified, 8 machine-checked, 0 surprises; dropped 7 duplicates, 104 trivial rewrites. OEIS index: absent (OEIS unchecked). Pre-registration Brier: 0.1028.
+Totals: tested 15615, survived 5836, surprises 152, false surprises (failed later re-test) 0.
+Reference check (Stage 2, `shadow`): last cycle 0 explained by a reference, 0 with no reference found.
 
 | Statement | Label | Reference check | OEIS | Hunt v |
 |---|---|---|---|---|
