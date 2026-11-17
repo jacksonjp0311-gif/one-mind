@@ -51,7 +51,7 @@ RULES_PATH = ROOT / "society" / "systems" / "swarm_rules.json"
 
 # At most this many accepted actions begin a trial on one cycle.
 # One is enough: self-heal already allows only one knob trial at a time.
-MAX_ACTIONS_PER_CYCLE = 3  # one-mind: faster growth
+MAX_ACTIONS_PER_CYCLE = 1
 
 # Existing colony personas used as swarm roles. Each has a focus.
 SWARM_ROLES: tuple[str, ...] = (
@@ -615,10 +615,9 @@ def drop_retired_proposals(state: dict[str, Any], proposals: list["Proposal"]) -
 
 
 def _failure_penalty(fingerprint: str, limit: int = 20) -> int:
-    # Reciprocal: pull remote receipts first (fail-open)
     try:
         from colony.tools.reciprocal_exchange import merge_remote
-        merge_remote("one-mind")
+        merge_remote("colony")
     except Exception:
         pass
 
@@ -656,13 +655,55 @@ def _failure_penalty(fingerprint: str, limit: int = 20) -> int:
         # Symbiotic: add penalty from foreign receipts if present
         try:
             from colony.tools.symbiotic_exchange import foreign_penalty
-            local += foreign_penalty(fp, my_source="one-mind")
+            local += foreign_penalty(fp, my_source="colony")
         except Exception:
             pass
         return max(local, -300)  # hard cap
     except Exception:
         return 0
 
+
+
+def _ucb_bonus(fingerprint: str, c: int = 80) -> int:
+    """UCB-style exploration bonus. Under-tried fingerprints get a lift.
+
+    Pure count over failure log + exchange. Fail-open returns 0.
+    """
+    try:
+        import math
+        from pathlib import Path
+        import json
+        if not fingerprint:
+            return 0
+        n_fp = 0
+        n_total = 1
+        log = Path(__file__).resolve().parent.parent / "data" / "commons" / "self_change_failures.jsonl"
+        if log.exists():
+            for line in log.read_text(encoding="utf-8").splitlines()[-100:]:
+                n_total += 1
+                try:
+                    rec = json.loads(line)
+                    fp = str(rec.get("fingerprint") or (rec.get("subject") or {}).get("knob") or "")
+                    if fp == fingerprint:
+                        n_fp += 1
+                except Exception:
+                    continue
+        # Also count exchange
+        ex = Path(__file__).resolve().parent.parent / "data" / "commons" / "exchange.jsonl"
+        if ex.exists():
+            for line in ex.read_text(encoding="utf-8").splitlines()[-50:]:
+                n_total += 1
+                try:
+                    rec = json.loads(line)
+                    if str(rec.get("fingerprint") or "") == fingerprint:
+                        n_fp += 1
+                except Exception:
+                    continue
+        n_fp = max(n_fp, 1)
+        bonus = int(c * math.sqrt(math.log(max(n_total, 2)) / n_fp))
+        return min(bonus, 150)
+    except Exception:
+        return 0
 
 def _apply_evolutionary_bias(proposal: "Proposal") -> "Proposal":
     """Fail-open score adjustment using existing failure log.
@@ -675,10 +716,12 @@ def _apply_evolutionary_bias(proposal: "Proposal") -> "Proposal":
     try:
         from dataclasses import replace
         pen = _failure_penalty(proposal.fingerprint)
-        if pen == 0:
+        bonus = _ucb_bonus(proposal.fingerprint)
+        delta = pen + bonus
+        if delta == 0:
             return proposal
         old = proposal.match
-        new_score = int(getattr(old, "score", 0)) + pen
+        new_score = int(getattr(old, "score", 0)) + delta
         new_match = replace(old, score=new_score)
         # Proposal may also be frozen or a simple namespace; try replace then fallback
         try:
@@ -772,7 +815,7 @@ def propose_for_role(
         delta = 0
         if biased and biased.match and prop and prop.match:
             delta = int(getattr(biased.match, "score", 0)) - int(getattr(prop.match, "score", 0))
-        emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=0,
+        emit("colony", cycle_id="", residual_max=0.0, foreign_fps=0,
              bias_delta=delta, outcome="proposed")
     except Exception:
         pass
