@@ -7,3 +7,17 @@
 {"key": "one-mind:set_knob:direction=up:name=park_cycles:value=11", "fingerprint": "set_knob:direction=up:name=park_cycles:value=11", "category": "stable", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T13:57:06.098434+00:00", "reactivated": true, "agreed": true}
 {"key": "one-mind:set_knob:direction=up:name=gf_term_cap:value=3618", "fingerprint": "set_knob:direction=up:name=gf_term_cap:value=3618", "category": "stable", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T13:57:06.098766+00:00", "reactivated": true, "agreed": true}
 {"key": "one-mind:set_knob:direction=down:name=step_size:value=0.05", "fingerprint": "set_knob:direction=down:name=step_size:value=0.05", "category": "stable", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T15:18:50.243486+00:00", "reactivated": true, "agreed": true}
+{"key": "one-mind:gf_term_cap:up:2310", "fingerprint": "gf_term_cap:up:2310", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.643132+00:00"}
+{"key": "one-mind:deep_digits:up:6350", "fingerprint": "deep_digits:up:6350", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.693924+00:00"}
+{"key": "one-mind:deep_digits:up:7700", "fingerprint": "deep_digits:up:7700", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.694245+00:00"}
+{"key": "one-mind:deep_digits:up:9050", "fingerprint": "deep_digits:up:9050", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.694555+00:00"}
+{"key": "one-mind:fast_term_cap:up:13400", "fingerprint": "fast_term_cap:up:13400", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.694848+00:00"}
+{"key": "one-mind:fast_term_cap:up:16100", "fingerprint": "fast_term_cap:up:16100", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.695134+00:00"}
+{"key": "one-mind:fast_term_cap:up:18800", "fingerprint": "fast_term_cap:up:18800", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.695417+00:00"}
+{"key": "one-mind:fast_term_cap:up:20000", "fingerprint": "fast_term_cap:up:20000", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.695870+00:00"}
+{"key": "one-mind:gf_term_cap:up:2865", "fingerprint": "gf_term_cap:up:2865", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.696153+00:00"}
+{"key": "one-mind:deep_digits:up:10400", "fingerprint": "deep_digits:up:10400", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.696488+00:00"}
+{"key": "one-mind:gf_term_cap:up:3149", "fingerprint": "gf_term_cap:up:3149", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.696796+00:00"}
+{"key": "one-mind:deep_digits:up:12000", "fingerprint": "deep_digits:up:12000", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.697075+00:00"}
+{"key": "one-mind:park_cycles:up:8", "fingerprint": "park_cycles:up:8", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.697407+00:00"}
+{"key": "one-mind:park_cycles:up:10", "fingerprint": "park_cycles:up:10", "category": "kept", "source": "one-mind", "lineage": "one-mind", "ts": "2026-11-17T19:20:16.697810+00:00"}
