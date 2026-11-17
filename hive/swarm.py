@@ -844,10 +844,17 @@ def propose_for_role(
         emit("one-mind", cycle_id="", residual_max=0.0, foreign_fps=foreign,
              bias_delta=delta, outcome="proposed")
         try:
-            from colony.tools.symbiotic_exchange import append_receipt
+            from colony.tools.symbiotic_exchange import append_receipt, foreign_fingerprints
             if prop and getattr(prop, "fingerprint", ""):
                 append_receipt("one-mind", "proposal", prop.fingerprint, "reverted",
                                {"bias_delta": delta})
+            # Phase 1: name the influence when the score moved down
+            if delta < 0 and prop and getattr(prop, "fingerprint", ""):
+                fps = foreign_fingerprints("one-mind", limit=200)
+                named = prop.fingerprint if prop.fingerprint in fps else (fps[0] if fps else "")
+                if named:
+                    from colony.tools.reciprocal_exchange import record_adoption
+                    record_adoption(named, helped=False, note=f"bias_delta={delta}")
         except Exception:
             pass
     except Exception:
