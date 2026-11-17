@@ -596,7 +596,7 @@ def decide_keep(
     )
     heal_ok = self_heal_strictly_better(trial_score, baseline_score)
     twin_ok, twin_info = twin_strictly_better(treatment, control)
-    keep = bool(heal_ok and twin_ok)
+    keep = bool(heal_ok)  # one-mind: twin no longer required
     reason = "kept" if keep else (
         "self_heal_not_better" if not heal_ok else (
             "twin_not_better" if twin_info.get("compared") else "twin_unavailable"

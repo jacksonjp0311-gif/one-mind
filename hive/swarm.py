@@ -51,7 +51,7 @@ RULES_PATH = ROOT / "society" / "systems" / "swarm_rules.json"
 
 # At most this many accepted actions begin a trial on one cycle.
 # One is enough: self-heal already allows only one knob trial at a time.
-MAX_ACTIONS_PER_CYCLE = 1
+MAX_ACTIONS_PER_CYCLE = 3  # one-mind: faster growth
 
 # Existing colony personas used as swarm roles. Each has a focus.
 SWARM_ROLES: tuple[str, ...] = (

@@ -29,11 +29,11 @@ It is not the governed colony. It is the open experiment that runs beside it.
 
 | Constraint | Colony | One Mind |
 |---|---|---|
-| Actions per cycle | 1 | 3 |
-| Wilson abstain | 700‰ | 400‰ |
-| Twin control required for keep | Yes | No |
-| Human authorize for durable accept | Yes | No |
-| Foreign failure penalty | Optional prior | Active |
+| Actions per cycle | 1 | **3** (enforced) |
+| Wilson abstain | 700‰ | **400‰** (enforced) |
+| Twin control required for keep | Yes | **No** (enforced) |
+| Human authorize machinery | Present | Present (not yet stripped) |
+| Foreign failure penalty | Local prior | Local prior (cross-repo sync pending) |
 
 Oracle, failure log, residuals, and the append-only witness remain.  
 The evolutionary bias now actually changes scores (immutable Match, exact fingerprints).  
