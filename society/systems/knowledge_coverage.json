@@ -105,17 +105,17 @@
       "cards_tested": 0,
       "concepts": 1,
       "distinct_concepts": 1,
-      "papers": 9,
-      "reads": 11
+      "papers": 13,
+      "reads": 12
     },
     "self_learning_loops": {
-      "cards_formed": 2,
+      "cards_formed": 3,
       "cards_kept": 0,
       "cards_tested": 0,
       "concepts": 10,
       "distinct_concepts": 4,
-      "papers": 12,
-      "reads": 12
+      "papers": 14,
+      "reads": 13
     },
     "swarm_collective_intelligence": {
       "cards_formed": 8,
@@ -264,11 +264,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 45,
+    "cards_formed": 46,
     "cards_kept": 0,
     "cards_tested": 0,
     "concepts": 106,
-    "papers": 191,
-    "reads": 180
+    "papers": 197,
+    "reads": 182
   }
 }

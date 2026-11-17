@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 177,
+ "cycle_index": 179,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -32,7 +32,7 @@
    "evidence": [
     "new_data_extra_push"
    ],
-   "weight": 0.73125,
+   "weight": 0.626786,
    "added": [
     {
      "component": "new_data_extra_push",
@@ -74,9 +74,9 @@
     ]
    }
   },
-  "opened_cycle_id": "20261117T171945Z_370e92",
-  "code_fp": "941a5e39d84e5c9b1bf19b7b444f812a03837cad0568c5c3b973134a2c29c303",
-  "opened_cycle_index": 176,
+  "opened_cycle_id": "20261117T200131Z_5268e2",
+  "code_fp": "295cd6ff917f75a10ec08b5ed8206b22d05e6a018889d0ea84cda660eacdc52d",
+  "opened_cycle_index": 179,
   "open_row": 153,
   "window_rows": 2,
   "baseline_gain": [
@@ -187,7 +187,7 @@
    "inconclusive": 0
   },
   "new_data_extra_push": {
-   "tried": 5,
+   "tried": 6,
    "kept": 0,
    "reverted": 0,
    "inconclusive": 0
@@ -195,60 +195,54 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261117T172546Z_b2af27",
-  "blueprint": "bp_37017bb494713065",
+  "cycle_id": "20261117T200131Z_5268e2",
+  "blueprint": "bp_1a40beac596f0ebe",
   "ran": [
-   {
-    "component": "new_data_extra_push",
-    "n": 1,
-    "actions": 0,
-    "error": "ModuleNotFoundError: No module named 'numpy'"
-   },
    {
     "component": "frontier_extra_batch",
     "n": 1,
     "actions": 1,
     "counts": {
      "expressions": 260,
-     "fitted": 124,
-     "duplicate": 6,
+     "fitted": 130,
+     "duplicate": 14,
      "trivial_formal": 1,
-     "trivial_shuffle_null": 4,
-     "trivial_idle_part": 15,
-     "trivial_implied_parts": 55,
-     "trivial_shared_operand": 7,
+     "trivial_shuffle_null": 5,
+     "trivial_idle_part": 10,
+     "trivial_implied_parts": 56,
+     "trivial_shared_operand": 2,
      "trivial_growth_dominance": 0,
-     "trivial_case_split": 2,
-     "trivial_parity_rules": 10,
+     "trivial_case_split": 1,
+     "trivial_parity_rules": 11,
      "trivial_running_sum_tail": 0,
      "trivial_basic_inequality": 1,
      "trivial_rewrite_closure": 0,
      "trivial_digit_rule": 0,
      "expected_by_closure": 8,
      "loose_inequality": 0,
-     "tested": 15,
-     "survived": 14,
-     "falsified": 1,
+     "tested": 20,
+     "survived": 12,
+     "falsified": 8,
      "machine_checked": 8,
      "surprises": 0,
      "known_result": 0,
      "oeis_known": 0,
-     "oeis_unchecked": 6,
+     "oeis_unchecked": 4,
      "retested": 0,
      "false_surprises": 0
     }
    }
   ],
   "actions": 1,
-  "cpu_s": 1.489
+  "cpu_s": 2.497
  },
  "last_skip": null,
  "kept_count": 1,
  "reverted_count": 3,
  "inconclusive_count": 0,
- "voided_count": 9,
+ "voided_count": 10,
  "heal_turn": null,
- "last_propose_cycle": "20261117T171945Z_370e92",
+ "last_propose_cycle": "20261117T200131Z_5268e2",
  "operator_stats": {
   "add": {
    "tried": 3,
