@@ -223,7 +223,7 @@
       "start": 1,
       "verified": {
         "lo": 1,
-        "hi": 2972607,
+        "hi": 2988607,
         "by": "colony",
         "label": "bounded evidence, not proof"
       },
@@ -235,15 +235,9 @@
       "literature": "Implied far beyond this range by published prime-gap computations; open in general.",
       "label": "bounded evidence, not proof",
       "proof": false,
-      "last_run": "2026-11-17T11:36:09Z",
-      "runs": 186,
+      "last_run": "2026-11-17T15:17:42Z",
+      "runs": 187,
       "extensions": [
-        {
-          "ts": "2026-11-16T19:02:04Z",
-          "lo": 2812608,
-          "hi": 2828607,
-          "seconds": 1.9393
-        },
         {
           "ts": "2026-11-16T20:00:39Z",
           "lo": 2828608,
@@ -297,10 +291,16 @@
           "lo": 2956608,
           "hi": 2972607,
           "seconds": 1.724
+        },
+        {
+          "ts": "2026-11-17T15:17:42Z",
+          "lo": 2972608,
+          "hi": 2988607,
+          "seconds": 1.7636
         }
       ],
       "last_data": {
-        "max_first_prime_offset": 264
+        "max_first_prime_offset": 258
       },
       "stall_streak": 0,
       "recipe_use": {
@@ -328,7 +328,7 @@
       "start": 2,
       "verified": {
         "lo": 2,
-        "hi": 275800001,
+        "hi": 277400001,
         "by": "colony",
         "label": "bounded evidence, not proof"
       },
@@ -340,15 +340,9 @@
       "literature": "Published work rules out small counterexamples (e.g. Cohen & Hagis: any counterexample has many prime factors); open in general.",
       "label": "bounded evidence, not proof",
       "proof": false,
-      "last_run": "2026-11-17T11:41:26Z",
-      "runs": 186,
+      "last_run": "2026-11-17T15:22:42Z",
+      "runs": 187,
       "extensions": [
-        {
-          "ts": "2026-11-16T19:22:34Z",
-          "lo": 259800002,
-          "hi": 261400001,
-          "seconds": 2.1038
-        },
         {
           "ts": "2026-11-16T20:21:58Z",
           "lo": 261400002,
@@ -402,6 +396,12 @@
           "lo": 274200002,
           "hi": 275800001,
           "seconds": 2.1688
+        },
+        {
+          "ts": "2026-11-17T15:22:42Z",
+          "lo": 275800002,
+          "hi": 277400001,
+          "seconds": 2.2599
         }
       ],
       "stall_streak": 0,
@@ -2673,5 +2673,5 @@
       }
     }
   ],
-  "updated_at": "2026-11-17T14:00:25Z"
+  "updated_at": "2026-11-17T15:22:45Z"
 }
