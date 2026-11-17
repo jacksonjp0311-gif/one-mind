@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 152,
+ "cycle_index": 154,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -103,7 +103,7 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261117T062915Z_2bfd30",
+  "cycle_id": "20261117T070435Z_de4261",
   "blueprint": "bp_1a40beac596f0ebe",
   "ran": [
    {
@@ -112,40 +112,40 @@
     "actions": 1,
     "counts": {
      "expressions": 260,
-     "fitted": 145,
-     "duplicate": 15,
-     "trivial_formal": 5,
+     "fitted": 148,
+     "duplicate": 14,
+     "trivial_formal": 4,
      "trivial_shuffle_null": 3,
-     "trivial_idle_part": 14,
-     "trivial_implied_parts": 59,
-     "trivial_shared_operand": 0,
+     "trivial_idle_part": 12,
+     "trivial_implied_parts": 64,
+     "trivial_shared_operand": 4,
      "trivial_growth_dominance": 0,
-     "trivial_case_split": 2,
-     "trivial_parity_rules": 10,
+     "trivial_case_split": 0,
+     "trivial_parity_rules": 9,
      "trivial_running_sum_tail": 0,
-     "trivial_basic_inequality": 2,
+     "trivial_basic_inequality": 3,
      "trivial_rewrite_closure": 0,
      "trivial_digit_rule": 0,
      "expected_by_closure": 8,
-     "loose_inequality": 0,
-     "tested": 26,
-     "survived": 16,
+     "loose_inequality": 1,
+     "tested": 23,
+     "survived": 13,
      "falsified": 10,
      "machine_checked": 9,
      "surprises": 0,
      "known_result": 0,
-     "oeis_known": 1,
-     "oeis_unchecked": 7,
+     "oeis_known": 0,
+     "oeis_unchecked": 4,
      "retested": 0,
      "false_surprises": 0
     }
    }
   ],
   "actions": 1,
-  "cpu_s": 3.292
+  "cpu_s": 2.6
  },
  "last_skip": {
-  "cycle_id": "20261117T062915Z_2bfd30",
+  "cycle_id": "20261117T070435Z_de4261",
   "reason": "no_candidate_passed_self_test",
   "rejected": [
    {
@@ -215,7 +215,7 @@
  "inconclusive_count": 0,
  "voided_count": 5,
  "heal_turn": null,
- "last_propose_cycle": "20261117T062915Z_2bfd30",
+ "last_propose_cycle": "20261117T070435Z_de4261",
  "operator_stats": {
   "add": {
    "tried": 3,
