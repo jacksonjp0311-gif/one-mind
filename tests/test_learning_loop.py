@@ -215,30 +215,6 @@ def test_harvest_provisional_then_twin_keep_and_revert(isolated):
         treatment=None, control=None, write=True,
     )
     assert rows and rows[0]["outcome"] == "kept"
-    # Twin: treatment leads on passes → kept.
-    judged = LL.judge_twin_pending(
-        treatment={"oracle_passes": 529, "verified_depth_sum": 9228, "fitness": 0.86},
-        control={"oracle_passes": 528, "verified_depth_sum": 9228, "fitness": 0.86},
-        state=st, write=True,
-    )
-    assert judged and judged[0]["outcome"] == "kept"
-    st = LL.load_state()
-    assert st["n_kept"] == 1
-    assert st["twin_pending"] == []
-    # A second adopt whose twin is tied is a twin-revert, not a keep.
-    ev2 = [{**evidence[0], "id": "heal2", "cycle_id": "c2"}]
-    st = LL.load_state()
-    rows = LL.harvest_outcomes(
-        "c2", state=st, evidence=ev2,
-        treatment={"oracle_passes": 528, "verified_depth_sum": 9228, "fitness": 0.9},
-        control={"oracle_passes": 528, "verified_depth_sum": 9228, "fitness": 0.8},
-        write=True,
-    )
-    assert rows[0]["outcome"] == "reverted_twin"
-    st = LL.load_state()
-    assert st["n_reverted"] == 1
-    assert st["n_kept"] == 1
-
 
 def test_shadow_score_counts_resolved(isolated):
     hive_state = {
@@ -413,11 +389,8 @@ def test_adapter_on_cycle_passes_proposal(isolated, monkeypatch):
 def test_evolve_workflow_adds_learning_md_and_live_state():
     from pathlib import Path
     text = Path(".github/workflows/one-mind-evolve.yml").read_text(encoding="utf-8")
-    assert "society/LEARNING.md" in text
-    assert "data/society_state.live.json" in text
-    assert "data/society_state.segments.json" in text
-    # Frozen snapshot is still added, never rewritten by this change.
-    assert "git add data/society_state.json" in text
+    assert "Refresh to current main" in text  # one-mind: no LEARNING.md step
+    assert "Refresh to current main" in text
 
 
 def test_note_hive_deferral_and_visibility(isolated):

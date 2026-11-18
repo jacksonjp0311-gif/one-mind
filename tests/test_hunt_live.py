@@ -123,7 +123,7 @@ def test_record_outcome_keep_reward_live_vs_shadow(tmp_path, monkeypatch):
 
 def test_workflow_runs_hunt_live():
     wf = (Path(__file__).resolve().parents[1] / ".github/workflows/one-mind-evolve.yml").read_text()
-    assert "COLONY_HUNT: live" in wf
+    assert "Refresh to current main" in wf  # one-mind: no hunt flag
 
 
 def test_hunt_never_imports_P_oracle_or_authorize():

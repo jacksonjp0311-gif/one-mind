@@ -644,31 +644,11 @@ def test_prepare_arm_treatment_is_noop_for_seed(monkeypatch, tmp_path):
 
 
 def test_workflow_runs_control_on_same_schedule():
+    # One Mind has no control arm and no twin scoreboard.
     wf = (REPO / ".github" / "workflows" / "one-mind-evolve.yml").read_text(encoding="utf-8")
-    assert "cron: \"26 */6 * * *\"" in wf
-    assert "evolve-control" in wf
-    assert "COLONY_ARM: control" in wf or "COLONY_ARM=control" in wf
-    assert "twin-scoreboard" in wf
-    # Control never authorizes.
-    # Split jobs; the control job must not contain Authorizer.
-    # A crude but honest check: after the evolve-control job header,
-    # there is no Authorizer before the next job or end.
-    i = wf.index("evolve-control")
-    rest = wf[i:]
-    nxt = rest.find("\n  twin-scoreboard:")
-    control_job = rest[:nxt] if nxt != -1 else rest
-    assert "Authorizer(" not in control_job
-    assert "authorize=true" not in control_job
-    # Same cycle count input.
-    assert "github.event.inputs.cycles" in control_job or "CYCLES" in control_job
-    # Seed is committed in the control job, and the job rebases before push.
-    assert "seed-control" in control_job
-    assert "git pull --rebase" in control_job
-    assert "Commit seeded control tree" in control_job
-    # Scoreboard still runs when an arm fails, and records job results.
-    assert "always()" in wf
-    assert "--control-result" in wf
-    assert "swarm_library.json" in wf
+    assert 'cron: "*/30 * * * *"' in wf
+    assert "evolve-control" not in wf
+    assert "twin-scoreboard" not in wf
 
 
 def _run_seed_script(src, dest, env_extra=None, timeout=60):

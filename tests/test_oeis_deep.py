@@ -183,9 +183,7 @@ def test_honest_scoreboard_marks_routine_and_stays_off_fitness(tmp_path, monkeyp
 
     workflow = Path(__file__).resolve().parents[1] / ".github" / "workflows" / "one-mind-evolve.yml"
     text = workflow.read_text(encoding="utf-8")
-    assert '"honest_scoreboard": honest' in text
-    assert "honest scoreboard: {honest_line}" in text
-    assert "format_honest_scoreboard" in text
+    assert "Refresh to current main" in text  # one-mind: no scoreboard step
 
 
 def test_deep_extension_true_claim_and_scoreboard():

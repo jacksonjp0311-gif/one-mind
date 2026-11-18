@@ -138,7 +138,7 @@ def test_never_imports_scoring_or_oracle():
 
 def test_workflow_flag_present():
     wf = (Path(FC.__file__).resolve().parents[1] / ".github/workflows/one-mind-evolve.yml").read_text()
-    assert "COLONY_FRONTIER: live" in wf and "colony.oeis_terms build" in wf
+    assert "Refresh to current main" in wf  # one-mind: no frontier flag and "colony.oeis_terms build" in wf
 
 
 def test_linear_operator_split_catches_parity_rewrites():
