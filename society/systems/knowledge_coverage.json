@@ -52,7 +52,7 @@
       "concepts": 8,
       "distinct_concepts": 3,
       "papers": 10,
-      "reads": 14
+      "reads": 15
     },
     "multi_agent_systems": {
       "cards_formed": 1,
@@ -64,13 +64,13 @@
       "reads": 13
     },
     "neural_architecture": {
-      "cards_formed": 6,
+      "cards_formed": 8,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 18,
+      "concepts": 24,
       "distinct_concepts": 7,
-      "papers": 22,
-      "reads": 13
+      "papers": 30,
+      "reads": 14
     },
     "open_endedness": {
       "cards_formed": 11,
@@ -124,13 +124,38 @@
       "concepts": 9,
       "distinct_concepts": 2,
       "papers": 10,
-      "reads": 13
+      "reads": 14
     }
   },
   "fields_with_papers": 14,
   "n_fields": 14,
   "note": "Breadth of reading. Cards are kept only by self-heal windows + twin control. Not AGI.",
   "top_architecture_ideas": [
+    {
+      "description": "A gating step that sends each target to a specialist desk (mixture-of-experts style routing).",
+      "examples": [
+        {
+          "arxiv_id": "2611.17879",
+          "field": "neural_architecture",
+          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
+        },
+        {
+          "arxiv_id": "2611.17857",
+          "field": "neural_architecture",
+          "title": "Fuse-All MoE Inference Kernel with Load Balancing on TPUs"
+        },
+        {
+          "arxiv_id": "2611.17472",
+          "field": "neural_architecture",
+          "title": "Do Mixture-of-Experts Routers Benefit from Ensembling?"
+        }
+      ],
+      "fields": [
+        "neural_architecture"
+      ],
+      "idea": "specialist_routing",
+      "n_papers": 16
+    },
     {
       "description": "Keep an archive of behaviourally different claim forms and prefer under-explored ones (novelty/quality-diversity archive).",
       "examples": [
@@ -158,31 +183,6 @@
       ],
       "idea": "novelty_archive",
       "n_papers": 14
-    },
-    {
-      "description": "A gating step that sends each target to a specialist desk (mixture-of-experts style routing).",
-      "examples": [
-        {
-          "arxiv_id": "2611.17879",
-          "field": "neural_architecture",
-          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
-        },
-        {
-          "arxiv_id": "2611.17857",
-          "field": "neural_architecture",
-          "title": "Fuse-All MoE Inference Kernel with Load Balancing on TPUs"
-        },
-        {
-          "arxiv_id": "2611.17472",
-          "field": "neural_architecture",
-          "title": "Do Mixture-of-Experts Routers Benefit from Ensembling?"
-        }
-      ],
-      "fields": [
-        "neural_architecture"
-      ],
-      "idea": "specialist_routing",
-      "n_papers": 11
     },
     {
       "description": "Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).",
@@ -264,11 +264,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 47,
+    "cards_formed": 49,
     "cards_kept": 0,
     "cards_tested": 0,
-    "concepts": 106,
-    "papers": 200,
-    "reads": 197
+    "concepts": 112,
+    "papers": 208,
+    "reads": 200
   }
 }
