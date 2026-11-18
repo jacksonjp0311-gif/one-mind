@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-11-17T21:12:36Z",
+  "updated_at": "2026-11-18T01:25:28Z",
   "label": "bounded evidence, not proof",
   "proof": false,
   "targets": {
@@ -15,7 +15,7 @@
     "collatz_descent": {
       "family": "collatz",
       "status": "open",
-      "verified_hi": 595000000,
+      "verified_hi": 598200000,
       "literature": "Published computations report verification far beyond this range (e.g. Barina, to 2^68).",
       "window": 3200000,
       "result": null
@@ -39,7 +39,7 @@
     "erdos_straus": {
       "family": "erdos_straus",
       "status": "open",
-      "verified_hi": 1534127,
+      "verified_hi": 1539127,
       "literature": "Published computer searches reach far beyond this range; open in general.",
       "window": 5000,
       "result": null
@@ -272,12 +272,12 @@
   },
   "reviews": [],
   "last": {
-    "target": "twin_primes_hl",
-    "lo": 742200001,
-    "hi": 746200000,
+    "target": "erdos_straus",
+    "lo": 1534128,
+    "hi": 1539127,
     "outcome": "extended",
-    "verified_hi": 746200000,
-    "cycle_id": "20261117T211012Z_934eeb"
+    "verified_hi": 1539127,
+    "cycle_id": "20261118T012345Z_b6818f"
   },
   "note": "Frontier evidence is bounded evidence, not proof; it is never scored as a proof."
 }
