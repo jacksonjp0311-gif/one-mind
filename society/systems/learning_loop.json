@@ -2107,7 +2107,7 @@
       "voided": 1
     }
   },
-  "last_cycle": "20261118T013650Z_df09fb",
+  "last_cycle": "20261118T021731Z_b7e33a",
   "last_hive_deferral": {
     "action": {
       "direction": "up",
@@ -2118,14 +2118,14 @@
     "applied_to_live_oracle": false,
     "authorized": false,
     "card_id": "",
-    "cycle_id": "20261118T013650Z_df09fb",
-    "deferred_count": 39,
+    "cycle_id": "20261118T021252Z_26d7fa",
+    "deferred_count": 40,
     "deferred_under": "37030afa648a051f0c7c2036d2941610df7a9f5dbcc17c5a4b9c1e666daf7f03",
     "event": "hive_deferred",
     "fingerprint": "set_knob:direction=up:name=park_cycles:value=14",
     "label": "dead_end_streak",
     "method": "",
-    "ts": "2026-11-18T01:39:35Z"
+    "ts": "2026-11-18T02:16:10Z"
   },
   "n_inconclusive": 6,
   "n_kept": 14,
@@ -2287,11 +2287,11 @@
   "shadow": {
     "accuracy_permille": 0,
     "correct": 0,
-    "incorrect": 71,
-    "pending": 129,
-    "resolved": 71,
+    "incorrect": 70,
+    "pending": 130,
+    "resolved": 70,
     "source": "hive_shadows",
-    "ts": "2026-11-18T01:40:29Z",
+    "ts": "2026-11-18T02:26:04Z",
     "unlabeled": 0
   },
   "twin_pending": [],

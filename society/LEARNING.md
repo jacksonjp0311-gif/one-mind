@@ -15,8 +15,8 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **8**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **39** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 71, correct 0, pending 129, accuracy 0‰
+- Hive decision deferred **40** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 70, correct 0, pending 130, accuracy 0‰
 
 ## Per method card
 
@@ -51,7 +51,7 @@ _None yet._
 
 ## Reading breadth (knowledge library)
 
-knowledge: 197 papers across 14/14 fields, 106 concepts, 46 cards formed, 0 tested, 0 kept.
+knowledge: 200 papers across 14/14 fields, 106 concepts, 47 cards formed, 0 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -66,8 +66,8 @@ knowledge: 197 papers across 14/14 fields, 106 concepts, 46 cards formed, 0 test
 | open_endedness | 11 | 11 | 11 | 0 | 0 |
 | optimization_search | 15 | 16 | 9 | 0 | 0 |
 | physics_complex_systems | 15 | 4 | 1 | 0 | 0 |
-| recursive_self_improvement | 13 | 1 | 2 | 0 | 0 |
-| self_learning_loops | 14 | 10 | 3 | 0 | 0 |
+| recursive_self_improvement | 15 | 1 | 2 | 0 | 0 |
+| self_learning_loops | 15 | 10 | 4 | 0 | 0 |
 | swarm_collective_intelligence | 10 | 9 | 8 | 0 | 0 |
 
 ## Architecture ideas (proposals for a human-built PR; never auto-executed)
