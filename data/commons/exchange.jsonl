@@ -2211,3 +2211,17 @@
 {"ts": "2026-11-18T16:13:26.568693+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "add_park_rule:cycles=12:target_kind=dead_end", "outcome": "proposed", "extra": {"bias_delta": 50}}
 {"ts": "2026-11-18T16:13:34.807555+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "set_knob:direction=up:name=gf_term_cap:value=4259", "outcome": "proposed", "extra": {"bias_delta": 123}}
 {"ts": "2026-11-18T16:13:35.001183+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "proposal", "fingerprint": "set_knob:direction=up:name=park_cycles:value=12", "outcome": "proposed", "extra": {"bias_delta": 10}}
+{"ts": "2026-11-18T17:02:32.874768+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "gf_term_cap:up:2310", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.876978+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "deep_digits:up:6350", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.879041+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "deep_digits:up:7700", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.880761+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "deep_digits:up:9050", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.882994+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "fast_term_cap:up:13400", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.884928+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "fast_term_cap:up:16100", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.886658+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "fast_term_cap:up:18800", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.888321+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "fast_term_cap:up:20000", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.890175+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "gf_term_cap:up:2865", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.891841+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "deep_digits:up:10400", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.893585+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "gf_term_cap:up:3149", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.895412+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "deep_digits:up:12000", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.897074+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "park_cycles:up:8", "outcome": "kept", "extra": {"backfill": true}}
+{"ts": "2026-11-18T17:02:32.898803+00:00", "source": "one-mind", "lineage": "one-mind", "kind": "keep", "fingerprint": "park_cycles:up:10", "outcome": "kept", "extra": {"backfill": true}}
