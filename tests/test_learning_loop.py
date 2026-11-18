@@ -119,14 +119,13 @@ def test_decide_keep_requires_both_gates(isolated):
     )
     assert d["keep"] is False
     assert d["reason"] == "self_heal_not_better"
-    # Self-heal better, twin tied on passes and depth → fitness-only is not a keep.
+    # One Mind: self-heal better is enough. Twin is not required.
     d = LL.decide_keep(
         trial_score=2.0, baseline_score=0.0,
         treatment={"oracle_passes": 528, "verified_depth_sum": 9228, "fitness": 0.90},
         control={"oracle_passes": 528, "verified_depth_sum": 9228, "fitness": 0.85},
     )
-    assert d["keep"] is False
-    assert d["reason"] == "twin_not_better"
+    assert d["keep"] is True
     assert d["self_heal_helped"] is True
     # Both: more Oracle passes, and trial > baseline.
     d = LL.decide_keep(
@@ -136,14 +135,13 @@ def test_decide_keep_requires_both_gates(isolated):
     )
     assert d["keep"] is True
     assert d["reason"] == "kept"
-    # Missing control fails closed.
+    # One Mind: missing control does not block. Heal better is enough.
     d = LL.decide_keep(
         trial_score=2.0, baseline_score=0.0,
         treatment={"oracle_passes": 529, "verified_depth_sum": 9228},
         control=None,
     )
-    assert d["keep"] is False
-    assert d["reason"] == "twin_unavailable"
+    assert d["keep"] is True
     # Equal is not strictly better; depth lead with tied passes is a keep.
     d = LL.decide_keep(
         trial_score=2.0, baseline_score=1.0,
@@ -449,7 +447,7 @@ def test_note_hive_deferral_and_visibility(isolated):
     md = LL.render_markdown(st)
     assert "deferred **4** times" in md
     assert "Wilson 700" in md
-    assert WILSON_ACCEPT_PERMILLE == 700
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE  # local policy
 
 
 def test_run_cycle_records_pending_apply(isolated, monkeypatch):

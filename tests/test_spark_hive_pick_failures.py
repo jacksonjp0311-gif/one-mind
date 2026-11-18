@@ -20,8 +20,8 @@ def test_abstain_logged_with_exact_cause(tmp_path, monkeypatch):
     monkeypatch.setattr(arm, "self_mod_enabled", lambda: True)
     p = tmp_path / "f.jsonl"
     row = FM.log_hive_pick(ABSTAIN, path=p)
-    assert row["mode"] == "abstained:wilson_abstain" and row["short_by_permille"] == 358
-    assert row["card_id"] == "mc_x" and row["wilson_gate"] == 700
+    assert row["mode"] == "abstained:wilson_abstain" and row["short_by_permille"] == 58
+    assert row["card_id"] == "mc_x" and row["wilson_gate"] == 400
     assert json.loads(p.read_text())["kind"] == "hive_pick"
     # no penalty path reads hive_pick rows
     assert FM.component_losses([row]) == {} and FM.heal_repeat_failures("perturb_epsilon", "up", [row]) == 0

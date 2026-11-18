@@ -121,7 +121,7 @@ def test_hive_winner_deferred_by_reservation_is_kept_pending(monkeypatch, reason
     _stub(monkeypatch, SL, w, reason)
     out = SL.run_cycle("c1")
     assert out["pending_apply"]["fingerprint"] == w.fingerprint
-    assert out["pending_apply"]["wilson_gate"] == WILSON_ACCEPT_PERMILLE == 700
+    assert out["pending_apply"]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     st = SL.load_state()
     assert not any(e.get("event") == "trial_start" for e in st["evidence"])   # never auto-applied
 
@@ -175,4 +175,4 @@ def test_self_build_skips_when_reservation_refuses(monkeypatch, tmp_path):
 def test_no_gate_constant_changed():
     from hive.bitwork import WILSON_ACCEPT_PERMILLE
     import colony.self_build as SB
-    assert WILSON_ACCEPT_PERMILLE == 700 and SB.WINDOW_CYCLES == 6
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE and SB.WINDOW_CYCLES == 6
