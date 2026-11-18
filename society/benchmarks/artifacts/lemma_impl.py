@@ -2479,6 +2479,15 @@ def check_authored_mut_swap_related_sequence_3b3fef4a07b3() -> bool:
     return all(type(c := frontier_holds({'kind': 'divides', 'lhs': 'cheb3[oxa055394]', 'params': {}, 'rhs': '(oxa056971*oxa009191)'}, a, b)) is int and c > 0 for a, b in [(40, 80), (80, 120), (120, 160)])
 
 
+def check_authored_sieve_two_counter_g2_6_w1() -> bool:
+    """Authored instrument check (desk): C/primesieve and pure-Python counters agree exactly on pattern (2, 6).
+    Windows [(10000000, 10050000), (10050000, 10100000), (10100000, 10150000)] (disjoint, capped). Uses colony.instruments.sieve via the bridges
+    sieve_count / sieve_hl. HL is a conjectural heuristic; counts are bounded evidence, not proof.
+    Disabled until the Oracle passes it.
+    """
+    return all(type(c := sieve_count((2, 6), a, b)) is int and c > 0 and c == sieve_count((2, 6), a, b, backend='python') for a, b in [(10000000, 10050000), (10050000, 10100000), (10100000, 10150000)])
+
+
 # Adversarial aliases used by Oracle theme held-out windows (same callables)
 check_adversarial_vandermonde_asymmetric = check_vandermonde_asymmetric
 check_adversarial_hockey_deep = check_binomial_hockey_deep
@@ -2723,6 +2732,7 @@ HARD_TIER_LEMMAS: list[tuple[str, Callable[[], bool], bool]] = [
     ("oeis_a000172_franel_recurrence", lambda: all(check_oeis_a000172_franel_recurrence(n) for n in range(0, 40)), True),
     ("oeis_a002893_hexagonal_walks", lambda: all(check_oeis_a002893_hexagonal_walks(n) for n in range(0, 40)), True),
     ("authored_mut_swap_related_sequence_3b3fef4a07b3", check_authored_mut_swap_related_sequence_3b3fef4a07b3, False),
+    ("authored_sieve_two_counter_g2_6_w1", check_authored_sieve_two_counter_g2_6_w1, False),
 ]
 
 
