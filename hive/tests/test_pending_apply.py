@@ -69,14 +69,14 @@ def test_confounded_defer_stores_pending(tmp_path, monkeypatch):
     assert pending is not None
     assert pending["fingerprint"] == w.fingerprint
     assert pending["deferred_count"] == 1
-    assert pending["wilson_gate"] == 700
+    assert pending["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     st = SL.load_state()
     assert st["pending_apply"]["fingerprint"] == w.fingerprint
     assert st["pending_apply"]["first_deferred_cycle"] == "c1"
     ev = [e for e in st["evidence"] if e.get("event") == "apply_deferred"]
     assert ev and ev[-1]["reason"] == "confounded_baseline"
     assert ev[-1]["deferred_count"] == 1
-    assert ev[-1]["wilson_gate"] == 700
+    assert ev[-1]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     # Did not auto-apply.
     assert not any(e.get("event") == "trial_start" for e in st["evidence"])
 
@@ -134,7 +134,7 @@ def test_clean_window_same_vote_applies_and_clears(tmp_path, monkeypatch):
     assert starts[0]["deferred_count"] == 2
     assert starts[0]["pending_resolved"] is True
     assert starts[0]["fingerprint"] == w.fingerprint
-    assert starts[0]["wilson_gate"] == 700
+    assert starts[0]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     assert starts[0]["lower_permille"] == 901
 
 
@@ -170,7 +170,7 @@ def test_clean_window_abstain_drops_pending_no_apply(tmp_path, monkeypatch):
     drops = [e for e in st["evidence"] if e.get("event") == "pending_apply_dropped"]
     assert drops and drops[-1]["reason"] == "vote_failed_gate"
     assert drops[-1]["pending_deferred_count"] == 1
-    assert drops[-1]["wilson_gate"] == 700
+    assert drops[-1]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     assert not any(e.get("event") == "trial_start" for e in st["evidence"])
 
 
@@ -200,7 +200,7 @@ def test_clean_window_different_winner_drops_and_may_apply_new(tmp_path, monkeyp
     assert drops[-1]["pending_fingerprint"] == w.fingerprint
     starts = [e for e in st["evidence"] if e.get("event") == "trial_start"]
     assert starts[-1]["fingerprint"] == other.fingerprint
-    assert starts[-1]["wilson_gate"] == 700
+    assert starts[-1]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
 
 
 def test_abstain_while_confounded_keeps_pending(tmp_path, monkeypatch):

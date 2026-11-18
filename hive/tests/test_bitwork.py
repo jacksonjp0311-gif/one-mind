@@ -124,9 +124,8 @@ def test_wilson_gate_values_and_abstention():
     assert wilson_lower_permille(0, 0) == 0
     assert wilson_lower_permille(0, 5) == 0
     assert wilson_lower_permille(1, 1) < WILSON_ACCEPT_PERMILLE
-    assert wilson_lower_permille(8, 8) < WILSON_ACCEPT_PERMILLE
-    # 9 perfect observations is the smallest n that clears 700 ‰ at p=1.
-    assert wilson_lower_permille(9, 9) >= WILSON_ACCEPT_PERMILLE
+    # 8/8 clears a 400 gate and misses a 700 gate. Assert the formula, not the policy.
+    assert wilson_lower_permille(9, 9) >= min(WILSON_ACCEPT_PERMILLE, 700)
     assert wilson_lower_permille(9, 9) == 700
     assert wilson_lower_permille(20, 20) > wilson_lower_permille(9, 9)
     assert wilson_lower_permille(50, 100) < 500

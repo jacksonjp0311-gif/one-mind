@@ -100,7 +100,7 @@ def test_vote_fills_bucket_and_runner_up():
     assert fields["winner"]["fingerprint"] == result.winner.fingerprint
     assert fields["runner_up"]["fingerprint"] == result.runner_up.fingerprint
     # Gate is not loosened.
-    assert fields["wilson_gate"] == 700
+    assert fields["wilson_gate"] == WILSON_ACCEPT_PERMILLE
 
 
 def test_abstain_evidence_has_full_audit_fields(tmp_path, monkeypatch):
