@@ -31,10 +31,10 @@
       "cards_formed": 1,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 15,
+      "concepts": 17,
       "distinct_concepts": 3,
-      "papers": 13,
-      "reads": 13
+      "papers": 15,
+      "reads": 14
     },
     "mathematics": {
       "cards_formed": 0,
@@ -82,22 +82,22 @@
       "reads": 13
     },
     "optimization_search": {
-      "cards_formed": 9,
+      "cards_formed": 11,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 16,
+      "concepts": 23,
       "distinct_concepts": 3,
-      "papers": 15,
-      "reads": 13
+      "papers": 22,
+      "reads": 14
     },
     "physics_complex_systems": {
-      "cards_formed": 1,
+      "cards_formed": 3,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 4,
-      "distinct_concepts": 3,
-      "papers": 15,
-      "reads": 13
+      "concepts": 8,
+      "distinct_concepts": 5,
+      "papers": 19,
+      "reads": 14
     },
     "recursive_self_improvement": {
       "cards_formed": 2,
@@ -151,10 +151,11 @@
         }
       ],
       "fields": [
-        "neural_architecture"
+        "neural_architecture",
+        "physics_complex_systems"
       ],
       "idea": "specialist_routing",
-      "n_papers": 16
+      "n_papers": 17
     },
     {
       "description": "Keep an archive of behaviourally different claim forms and prefer under-explored ones (novelty/quality-diversity archive).",
@@ -206,10 +207,40 @@
       "fields": [
         "multi_agent_systems",
         "neural_architecture",
+        "physics_complex_systems",
         "swarm_collective_intelligence"
       ],
       "idea": "swarm_topology",
-      "n_papers": 10
+      "n_papers": 11
+    },
+    {
+      "description": "Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).",
+      "examples": [
+        {
+          "arxiv_id": "2611.17879",
+          "field": "neural_architecture",
+          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
+        },
+        {
+          "arxiv_id": "2610.37327",
+          "field": "cognitive_science",
+          "title": "Local learning is all you need: brain-aligned predictive coding networks"
+        },
+        {
+          "arxiv_id": "2611.16220",
+          "field": "physics_complex_systems",
+          "title": "Learning memory forces and bounding frequency errors in fractional Kuramoto grids"
+        }
+      ],
+      "fields": [
+        "cognitive_science",
+        "learning_theory",
+        "neural_architecture",
+        "optimization_search",
+        "physics_complex_systems"
+      ],
+      "idea": "prediction_error_routing",
+      "n_papers": 7
     },
     {
       "description": "A small per-cycle working-memory buffer of recent outcomes that every desk reads before choosing work.",
@@ -237,40 +268,14 @@
       ],
       "idea": "working_memory_buffer",
       "n_papers": 7
-    },
-    {
-      "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
-      "examples": [
-        {
-          "arxiv_id": "2611.17314",
-          "field": "meta_learning",
-          "title": "Linking Rapid Learning to Compositional Structure in Neural Networks: Evidence from Additive Analogies in Meta-Learned Parameter Spaces"
-        },
-        {
-          "arxiv_id": "2611.15923",
-          "field": "meta_learning",
-          "title": "Reinforcement Learning for Target Jerk Estimation in Interceptor Homing Phase"
-        },
-        {
-          "arxiv_id": "2611.15071",
-          "field": "meta_learning",
-          "title": "Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment"
-        }
-      ],
-      "fields": [
-        "meta_learning",
-        "self_learning_loops"
-      ],
-      "idea": "meta_controller",
-      "n_papers": 7
     }
   ],
   "totals": {
-    "cards_formed": 52,
+    "cards_formed": 56,
     "cards_kept": 0,
     "cards_tested": 0,
-    "concepts": 116,
-    "papers": 219,
-    "reads": 203
+    "concepts": 129,
+    "papers": 232,
+    "reads": 206
   }
 }
