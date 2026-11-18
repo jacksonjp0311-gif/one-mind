@@ -1,7 +1,7 @@
 {
- "ts": "2026-11-18T15:35:50Z",
+ "ts": "2026-11-18T16:11:06Z",
  "mode": "shadow",
- "n_authored": 102,
+ "n_authored": 103,
  "n_candidates": 0,
  "machine_receipts": "shadow",
  "machine_release_limit": 40,
@@ -12,9 +12,13 @@
  "dead_families": [],
  "machine_receipts_shadow": {
   "note": "report-only (COLONY_RETIRE_MACHINE_RECEIPTS=shadow): checks protected only by receipts delegated via GitHub Actions cron that the approved rule would retire; nothing retired",
-  "would_retire": 0,
-  "by_category": {},
-  "names": []
+  "would_retire": 1,
+  "by_category": {
+   "sweep": 1
+  },
+  "names": [
+   "authored_sieve_two_counter_g2_6_w1"
+  ]
  },
  "by_category": {},
  "candidates": [],
@@ -26,6 +30,6 @@
   "sieve_grace_hours": 0.25,
   "max_per_run": 60
  },
- "cycle_id": "20261118T153535Z_9424c4",
- "n_protected": 62
+ "cycle_id": "20261118T161055Z_59127c",
+ "n_protected": 63
 }
