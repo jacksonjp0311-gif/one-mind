@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 208,
+ "cycle_index": 211,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -15,24 +15,20 @@
  },
  "trial": {
   "blueprint": {
-   "id": "bp_b8870c8815e2f7b5",
-   "signature": "b8870c8815e2f7b5",
+   "id": "bp_da03713f61dccc63",
+   "signature": "da03713f61dccc63",
    "steps": [
-    {
-     "component": "frontier_extra_batch",
-     "n": 1
-    },
     {
      "component": "new_data_extra_push",
      "n": 1
     }
    ],
    "parent": "bp_1a40beac596f0ebe",
-   "operator": "add",
+   "operator": "replace",
    "evidence": [
     "new_data_extra_push"
    ],
-   "weight": 0.3,
+   "weight": 0.278571,
    "added": [
     {
      "component": "new_data_extra_push",
@@ -62,11 +58,6 @@
     "reason": "ok",
     "plan": [
      {
-      "component": "frontier_extra_batch",
-      "n": 1,
-      "planned": 1
-     },
-     {
       "component": "new_data_extra_push",
       "n": 1,
       "planned": 1
@@ -74,9 +65,9 @@
     ]
    }
   },
-  "opened_cycle_id": "20261118T160713Z_e8b3ca",
-  "code_fp": "b3725dd4e5482d7078a8fa66c06a1977c5cc7639fff87ac170ebefd6826b4f1c",
-  "opened_cycle_index": 207,
+  "opened_cycle_id": "20261118T190333Z_a70650",
+  "code_fp": "aaf8cfa5e48a00c157c573fa543091888bf77b6f0846e02d56be51c8bb5ecccb",
+  "opened_cycle_index": 210,
   "open_row": 153,
   "window_rows": 2,
   "baseline_gain": [
@@ -202,7 +193,7 @@
    "inconclusive": 0
   },
   "new_data_extra_push": {
-   "tried": 12,
+   "tried": 13,
    "kept": 0,
    "reverted": 0,
    "inconclusive": 1
@@ -210,43 +201,9 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261118T161055Z_59127c",
-  "blueprint": "bp_b8870c8815e2f7b5",
+  "cycle_id": "20261118T190820Z_995926",
+  "blueprint": "bp_da03713f61dccc63",
   "ran": [
-   {
-    "component": "frontier_extra_batch",
-    "n": 1,
-    "actions": 1,
-    "counts": {
-     "expressions": 260,
-     "fitted": 156,
-     "duplicate": 23,
-     "trivial_formal": 4,
-     "trivial_shuffle_null": 5,
-     "trivial_idle_part": 18,
-     "trivial_implied_parts": 63,
-     "trivial_shared_operand": 1,
-     "trivial_growth_dominance": 0,
-     "trivial_case_split": 0,
-     "trivial_parity_rules": 10,
-     "trivial_running_sum_tail": 0,
-     "trivial_basic_inequality": 4,
-     "trivial_rewrite_closure": 0,
-     "trivial_digit_rule": 0,
-     "expected_by_closure": 7,
-     "loose_inequality": 0,
-     "tested": 23,
-     "survived": 17,
-     "falsified": 6,
-     "machine_checked": 8,
-     "surprises": 0,
-     "known_result": 0,
-     "oeis_known": 2,
-     "oeis_unchecked": 8,
-     "retested": 0,
-     "false_surprises": 0
-    }
-   },
    {
     "component": "new_data_extra_push",
     "n": 1,
@@ -254,16 +211,16 @@
     "error": "ModuleNotFoundError: No module named 'numpy'"
    }
   ],
-  "actions": 1,
-  "cpu_s": 2.45
+  "actions": 0,
+  "cpu_s": 0.003
  },
  "last_skip": null,
  "kept_count": 1,
  "reverted_count": 3,
  "inconclusive_count": 1,
- "voided_count": 15,
+ "voided_count": 16,
  "heal_turn": null,
- "last_propose_cycle": "20261118T160713Z_e8b3ca",
+ "last_propose_cycle": "20261118T190333Z_a70650",
  "operator_stats": {
   "add": {
    "tried": 3,
