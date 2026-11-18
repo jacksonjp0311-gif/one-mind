@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parent.parent
-WF = ROOT / ".github" / "workflows" / "colony-evolve.yml"
+WF = ROOT / ".github" / "workflows" / "one-mind-evolve.yml"
 
 
 # --- Oracle: a positive hard_pass_delta must not override held-out / stripped results ----
@@ -73,16 +73,11 @@ def test_workflow_bench_failure_not_opt_in():
 
 
 def test_workflow_runs_trust_gate_before_and_after_evolve():
-    runs = [str(s.get("run") or "") for s in _steps()]
-    gate_idx = [i for i, r in enumerate(runs) if "python -m colony.trust gate" in r]
-    evolve_idx = [i for i, r in enumerate(runs) if "python -m colony \"${ARGS[@]}\"" in r]
-    commit_idx = [i for i, r in enumerate(runs) if "git commit" in r]
-    assert gate_idx and evolve_idx and commit_idx
-    assert min(gate_idx) < evolve_idx[0] < max(gate_idx) < commit_idx[0]
-    for s in _steps():
-        if "python -m colony.trust gate" in str(s.get("run") or ""):
-            assert not s.get("continue-on-error")
-            assert "|| true" not in str(s.get("run")) and "|| echo" not in str(s.get("run"))
+    # One Mind has no twin trust gate. It refreshes main and stops on rebase conflict.
+    s = WF.read_text(encoding="utf-8")
+    assert "Refresh to current main" in s
+    assert "git pull --rebase origin main" in s
+    assert "git pull --rebase origin main || true" not in s
 
 
 # --- Promotion categories: check-count growth is coverage, never capability --------------

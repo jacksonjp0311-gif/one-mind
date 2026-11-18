@@ -7,7 +7,7 @@ import pytest
 
 import colony.chain_next as CN
 
-WF = Path(__file__).resolve().parents[1] / ".github" / "workflows" / "colony-evolve.yml"
+WF = Path(__file__).resolve().parents[1] / ".github" / "workflows" / "one-mind-evolve.yml"
 
 
 def _run(rid, status="completed", conclusion="success", branch="main"):
@@ -158,24 +158,13 @@ def test_dispatch_inputs_never_authorize():
 
 
 def test_workflow_chains_on_main_with_kill_switch_and_actions_write():
+    # One Mind has no chain-next job. Watch triggers the next evolve.
     s = WF.read_text(encoding="utf-8")
-    assert "chain-next:" in s
-    assert "colony.chain_next" in s or "colony/chain_next.py" in s
-    assert "vars.COLONY_CHAIN" in s
-    assert "actions: write" in s
-    # The chain job itself must not run the Authorizer, and the dispatch
-    # must hard-code authorize=false.
-    assert "EVOLVE_RESULT: ${{ needs.evolve.result }}" in s
-    assert "CURRENT_RUN_ID: ${{ github.run_id }}" in s
-    chain = s[s.index("chain-next:"):]
-    assert "authorize=true" not in chain
-    assert "inputs.authorize" not in chain
-    # Always run after the evolve jobs, including on failure, only on main.
-    header = chain.split("steps:")[0]
-    assert "always()" in header
-    assert "github.ref == 'refs/heads/main'" in header
+    assert "Refresh to current main" in s
+    assert "chain-next:" not in s
+    assert "One Mind watch" in s
     # Concurrency still serializes the evolve group (no pile-up of overlapping evolves).
-    assert "group: colony-evolve" in s
+    assert "group: one-mind-evolve" in s
     assert "cancel-in-progress: false" in s
 
 
@@ -228,6 +217,8 @@ def test_streak_counts_current_like_prior_runs():
 
 
 def test_workflow_passes_needs_json():
+    # One Mind has no needs-json chain. Refresh is the contract.
     from pathlib import Path
-    s = Path(".github/workflows/colony-evolve.yml").read_text()
-    assert "NEEDS_JSON: ${{ toJSON(needs) }}" in s
+    s = Path(".github/workflows/one-mind-evolve.yml").read_text()
+    assert "Refresh to current main" in s
+    assert "NEEDS_JSON" not in s

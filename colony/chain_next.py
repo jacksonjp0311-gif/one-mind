@@ -17,7 +17,7 @@ import sys
 from typing import Any, Iterable, Mapping
 
 WORKFLOW_ID = 367686498
-WORKFLOW_FILE = "colony-evolve.yml"
+WORKFLOW_FILE = "one-mind-evolve.yml"
 FAIL_STREAK_LIMIT = 3
 DEFAULT_CYCLES = "3"
 DEFAULT_RUN_CONTROL = "true"

@@ -81,5 +81,5 @@ def test_calibrated_veto_covers_integrity_areas_only():
 
 def test_workflow_runs_veto_live_with_state_probe():
     from pathlib import Path
-    wf = (Path(__file__).resolve().parents[1] / ".github/workflows/colony-evolve.yml").read_text()
+    wf = (Path(__file__).resolve().parents[1] / ".github/workflows/one-mind-evolve.yml").read_text()
     assert "COLONY_ATHANOR_VETO: live" in wf and "COLONY_ATHANOR_PROBE: state" in wf

@@ -209,15 +209,12 @@ def test_harvest_provisional_then_twin_keep_and_revert(isolated):
          "action": {"op": "set_knob", "name": "desk_budget", "direction": "up"}},
         cycle_id="c1", state=st, write=False,
     )
-    # No twin snapshot → provisional, not kept.
+    # One Mind: no twin required. Heal better is a keep.
     rows = LL.harvest_outcomes(
         "c1", state=st, evidence=evidence,
         treatment=None, control=None, write=True,
     )
-    assert rows and rows[0]["outcome"] == "provisional_adopt"
-    st = LL.load_state()
-    assert st["n_kept"] == 0
-    assert len(st["twin_pending"]) == 1
+    assert rows and rows[0]["outcome"] == "kept"
     # Twin: treatment leads on passes → kept.
     judged = LL.judge_twin_pending(
         treatment={"oracle_passes": 529, "verified_depth_sum": 9228, "fitness": 0.86},
@@ -415,7 +412,7 @@ def test_adapter_on_cycle_passes_proposal(isolated, monkeypatch):
 
 def test_evolve_workflow_adds_learning_md_and_live_state():
     from pathlib import Path
-    text = Path(".github/workflows/colony-evolve.yml").read_text(encoding="utf-8")
+    text = Path(".github/workflows/one-mind-evolve.yml").read_text(encoding="utf-8")
     assert "society/LEARNING.md" in text
     assert "data/society_state.live.json" in text
     assert "data/society_state.segments.json" in text

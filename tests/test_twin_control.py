@@ -644,7 +644,7 @@ def test_prepare_arm_treatment_is_noop_for_seed(monkeypatch, tmp_path):
 
 
 def test_workflow_runs_control_on_same_schedule():
-    wf = (REPO / ".github" / "workflows" / "colony-evolve.yml").read_text(encoding="utf-8")
+    wf = (REPO / ".github" / "workflows" / "one-mind-evolve.yml").read_text(encoding="utf-8")
     assert "cron: \"26 */6 * * *\"" in wf
     assert "evolve-control" in wf
     assert "COLONY_ARM: control" in wf or "COLONY_ARM=control" in wf

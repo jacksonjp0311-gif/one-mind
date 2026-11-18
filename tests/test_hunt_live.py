@@ -122,7 +122,7 @@ def test_record_outcome_keep_reward_live_vs_shadow(tmp_path, monkeypatch):
 
 
 def test_workflow_runs_hunt_live():
-    wf = (Path(__file__).resolve().parents[1] / ".github/workflows/colony-evolve.yml").read_text()
+    wf = (Path(__file__).resolve().parents[1] / ".github/workflows/one-mind-evolve.yml").read_text()
     assert "COLONY_HUNT: live" in wf
 
 
