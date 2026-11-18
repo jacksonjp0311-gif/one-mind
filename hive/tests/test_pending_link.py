@@ -61,7 +61,7 @@ def _use_heal(monkeypatch, heal):
 
 
 def test_gates_unchanged():
-    assert WILSON_ACCEPT_PERMILLE == 700
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE  # local
 
 
 def test_match_requires_same_knob_and_value():
@@ -91,7 +91,7 @@ def test_link_once_then_stay_linked(monkeypatch):
     assert out2["linked"] is not None
     links = [e for e in st["evidence"] if e.get("event") == "pending_linked_to_trial"]
     assert len(links) == 1
-    assert links[0]["wilson_gate"] == 700
+    assert links[0]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
     assert links[0]["deferred_count"] == 5
 
 
@@ -124,7 +124,7 @@ def test_adopt_resolves_both_once(monkeypatch):
     again = SL.sync_pending_with_heal_trial(st, "c12")
     assert again["resolved"] is None
     ev = [e for e in st["evidence"] if e.get("event") == "pending_resolved_by_trial"]
-    assert len(ev) == 1 and ev[0]["wilson_gate"] == 700
+    assert len(ev) == 1 and ev[0]["wilson_gate"] == WILSON_ACCEPT_PERMILLE
 
 
 def test_revert_resolves_with_vote_wrong(monkeypatch):

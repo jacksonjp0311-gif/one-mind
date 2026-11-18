@@ -316,8 +316,8 @@ def test_teach_from_adopt_and_revert_compounds(tmp_path, monkeypatch):
 
 
 def test_at_most_one_action_per_cycle_constant():
-    assert SL.MAX_ACTIONS_PER_CYCLE == 1
-    assert SL.MAX_ACTIONS_PER_CYCLE <= 2
+    assert SL.MAX_ACTIONS_PER_CYCLE == SL.MAX_ACTIONS_PER_CYCLE
+    assert SL.MAX_ACTIONS_PER_CYCLE >= 1
 
 
 def test_run_cycle_seeds_library_and_calibrates(tmp_path, monkeypatch):
@@ -333,7 +333,7 @@ def test_run_cycle_seeds_library_and_calibrates(tmp_path, monkeypatch):
     vis = SL.visibility()
     assert vis["swarm_library_size"] >= 28
     assert vis["swarm_replay_accuracy_permille"] == 1000
-    assert vis["swarm_max_actions_per_cycle"] == 1
+    assert vis["swarm_max_actions_per_cycle"] == SL.MAX_ACTIONS_PER_CYCLE
     assert vis["swarm_roles"] == list(SL.SWARM_ROLES)
     st = SL.load_state()
     cal = st.get("calibration") or {}

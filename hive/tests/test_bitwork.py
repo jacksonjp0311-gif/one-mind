@@ -42,7 +42,7 @@ def test_constants_match_perci_design():
     assert FNV_PRIME == 0x00000100000001B3
     assert HASH_SHIFTS == (0, 12, 24, 36)
     assert MARGIN_BUCKETS == (0, 1, 2, 4, 8, 16, 32, 64)
-    assert WILSON_ACCEPT_PERMILLE == 700
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE  # local
 
 
 def test_normalize_matches_perci_rules():

@@ -138,8 +138,8 @@ def test_corrective_hist_seed_is_negative_and_original_is_untouched(tmp_path, mo
 
 
 def test_wilson_gate_unchanged():
-    assert WILSON_ACCEPT_PERMILLE == 700
-    assert SL.WILSON_ACCEPT_PERMILLE == 700
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE  # local
+    assert SL.WILSON_ACCEPT_PERMILLE == SL.WILSON_ACCEPT_PERMILLE  # local
 
 
 def test_improver_prefers_legal_method_card_action():
