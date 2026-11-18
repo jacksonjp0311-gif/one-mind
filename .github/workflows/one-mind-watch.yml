@@ -19,16 +19,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Refresh to current main before computing
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          echo "Watching from $(git rev-parse --short HEAD)"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Watch
         run: PYTHONPATH=. python3 -m colony.tools.watch one-mind
+      - name: Snapshot before publish
+        if: always()
+        run: |
+          mkdir -p /tmp/pre-publish
+          cp -a data/commons /tmp/pre-publish/ 2>/dev/null || true
+          git status --short > /tmp/pre-publish/status.txt
+          git rev-parse HEAD > /tmp/pre-publish/HEAD
+      - name: Upload pre-publish snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-pre-publish-${{ github.run_id }}
+          path: /tmp/pre-publish
       - name: Commit watch receipt
         run: |
           git config user.name "James Jackson"
           git config user.email "jacksonjp0311-gif@users.noreply.github.com"
           git add -A
           git diff --staged --quiet || git commit -m "one-mind watch $(date -u +%Y-%m-%dT%H%MZ)"
-          git pull --rebase origin main || true
+          git pull --rebase origin main
           git push
