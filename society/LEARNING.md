@@ -15,8 +15,8 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **9**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **43** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 70, correct 0, pending 130, accuracy 0‰
+- Hive decision deferred **45** times (`set_knob:direction=up:name=park_cycles:value=14`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 69, correct 0, pending 131, accuracy 0‰
 
 ## Per method card
 
@@ -51,15 +51,15 @@ _None yet._
 
 ## Reading breadth (knowledge library)
 
-knowledge: 208 papers across 14/14 fields, 112 concepts, 49 cards formed, 0 tested, 0 kept.
+knowledge: 219 papers across 14/14 fields, 116 concepts, 52 cards formed, 0 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | automated_reasoning | 17 | 2 | 0 | 0 | 0 |
-| cognitive_science | 8 | 4 | 3 | 0 | 0 |
-| consciousness_self_models | 9 | 4 | 1 | 0 | 0 |
+| cognitive_science | 10 | 6 | 5 | 0 | 0 |
+| consciousness_self_models | 10 | 6 | 2 | 0 | 0 |
 | learning_theory | 13 | 15 | 1 | 0 | 0 |
-| mathematics | 31 | 0 | 0 | 0 | 0 |
+| mathematics | 39 | 0 | 0 | 0 | 0 |
 | meta_learning | 10 | 8 | 0 | 0 | 0 |
 | multi_agent_systems | 9 | 4 | 1 | 0 | 0 |
 | neural_architecture | 30 | 24 | 8 | 0 | 0 |
@@ -75,8 +75,8 @@ knowledge: 208 papers across 14/14 fields, 112 concepts, 49 cards formed, 0 test
 - `specialist_routing` — 16 papers (neural_architecture): A gating step that sends each target to a specialist desk (mixture-of-experts style routing).
 - `novelty_archive` — 14 papers (consciousness_self_models, neural_architecture, open_endedness, recursive_self_improvement): Keep an archive of behaviourally different claim forms and prefer under-explored ones (novelty/quality-diversity archive).
 - `swarm_topology` — 10 papers (multi_agent_systems, neural_architecture, swarm_collective_intelligence): Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).
+- `working_memory_buffer` — 7 papers (cognitive_science, consciousness_self_models, neural_architecture): A small per-cycle working-memory buffer of recent outcomes that every desk reads before choosing work.
 - `meta_controller` — 7 papers (meta_learning, self_learning_loops): A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.
-- `self_play_challenger` — 7 papers (self_learning_loops): A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).
 
 Not AGI. Not discovery. Human authorize still required for durable accepts.
 

@@ -10,22 +10,22 @@
       "reads": 13
     },
     "cognitive_science": {
-      "cards_formed": 3,
+      "cards_formed": 5,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 4,
+      "concepts": 6,
       "distinct_concepts": 3,
-      "papers": 8,
-      "reads": 13
+      "papers": 10,
+      "reads": 14
     },
     "consciousness_self_models": {
-      "cards_formed": 1,
+      "cards_formed": 2,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 4,
-      "distinct_concepts": 2,
-      "papers": 9,
-      "reads": 13
+      "concepts": 6,
+      "distinct_concepts": 3,
+      "papers": 10,
+      "reads": 14
     },
     "learning_theory": {
       "cards_formed": 1,
@@ -42,8 +42,8 @@
       "cards_tested": 0,
       "concepts": 0,
       "distinct_concepts": 0,
-      "papers": 31,
-      "reads": 26
+      "papers": 39,
+      "reads": 27
     },
     "meta_learning": {
       "cards_formed": 0,
@@ -212,6 +212,33 @@
       "n_papers": 10
     },
     {
+      "description": "A small per-cycle working-memory buffer of recent outcomes that every desk reads before choosing work.",
+      "examples": [
+        {
+          "arxiv_id": "2611.14035",
+          "field": "cognitive_science",
+          "title": "ScaleBrain: A Scale-Consistent Framework for EEG Foundation Models"
+        },
+        {
+          "arxiv_id": "2611.00387",
+          "field": "cognitive_science",
+          "title": "Geometric and algebraic inference in humans and neural networks"
+        },
+        {
+          "arxiv_id": "2611.18417",
+          "field": "neural_architecture",
+          "title": "CoPre-MoE: Consolidating and Preserving MoE for Multimodal Continual Instruction Tuning"
+        }
+      ],
+      "fields": [
+        "cognitive_science",
+        "consciousness_self_models",
+        "neural_architecture"
+      ],
+      "idea": "working_memory_buffer",
+      "n_papers": 7
+    },
+    {
       "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
       "examples": [
         {
@@ -236,39 +263,14 @@
       ],
       "idea": "meta_controller",
       "n_papers": 7
-    },
-    {
-      "description": "A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).",
-      "examples": [
-        {
-          "arxiv_id": "2611.15426",
-          "field": "self_learning_loops",
-          "title": "SimRec: Learning to Search, Ask, and Recommend from Simulated Interaction"
-        },
-        {
-          "arxiv_id": "2611.10841",
-          "field": "self_learning_loops",
-          "title": "A Gamified Framework for Conflict-Driven Design: Discovering Strategies for Collaborative Resilience with Multi-Agent Learning"
-        },
-        {
-          "arxiv_id": "2611.08908",
-          "field": "self_learning_loops",
-          "title": "Toward LLM Self-Play Under Data Scarcity: Effectiveness, Generalizability, and Trustworthiness"
-        }
-      ],
-      "fields": [
-        "self_learning_loops"
-      ],
-      "idea": "self_play_challenger",
-      "n_papers": 7
     }
   ],
   "totals": {
-    "cards_formed": 49,
+    "cards_formed": 52,
     "cards_kept": 0,
     "cards_tested": 0,
-    "concepts": 112,
-    "papers": 208,
-    "reads": 200
+    "concepts": 116,
+    "papers": 219,
+    "reads": 203
   }
 }
