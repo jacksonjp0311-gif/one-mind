@@ -13,7 +13,7 @@ ABSTAIN = {"ok": True, "cycle_id": "c1", "n_proposals": 3, "started": None,
                                "label": "no_progress_perturb", "card_id": "mc_x", "role": "improver"},
                     "abstained": True, "reason": "wilson_abstain", "lower_permille": 342, "margin": 8,
                     "bucket": 8, "bucket_n": 2, "n_votes": 3, "n_vetoes": 0, "runner_up": None,
-                    "wilson_gate": 700}}
+                    "wilson_gate": 400}}
 
 
 def test_abstain_logged_with_exact_cause(tmp_path, monkeypatch):

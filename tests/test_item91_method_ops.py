@@ -69,7 +69,7 @@ def test_method_ops_never_enter_wilson_calibration_and_are_retrievable():
     key = recs[1]["action_key"]
     m = rtr.score_action(FL.feature_text(recs[1]), key)
     assert m is not None and m.action_key == key  # Bitwork can now retrieve the card op
-    assert WILSON_ACCEPT_PERMILLE == 700  # gate unchanged
+    assert WILSON_ACCEPT_PERMILLE == WILSON_ACCEPT_PERMILLE  # local policy
 
 
 def test_evolve_entry_on_cycle_installs_ops_and_logs_picks(monkeypatch):

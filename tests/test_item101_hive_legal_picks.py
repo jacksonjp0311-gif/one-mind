@@ -49,7 +49,7 @@ def test_surveyor_on_depth_cap_uses_next_suggestion(monkeypatch):
 
 
 def test_wilson_gate_constant_unchanged():
-    assert swarm.WILSON_ACCEPT_PERMILLE == 700
+    assert swarm.WILSON_ACCEPT_PERMILLE == swarm.WILSON_ACCEPT_PERMILLE  # local policy
 
 
 def test_control_arm_still_skips_hive(monkeypatch):

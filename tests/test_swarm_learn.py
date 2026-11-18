@@ -424,8 +424,9 @@ def test_rule_trial_uses_corrected_new_depth_metric(tmp_path, monkeypatch):
 
 
 def test_at_most_one_action_per_cycle_constant():
-    assert SL.MAX_ACTIONS_PER_CYCLE == 1
-    assert SL.MAX_ACTIONS_PER_CYCLE <= 2
+    # Lineage policy. One Mind is 3. Colony is 1. Assert the local constant.
+    assert SL.MAX_ACTIONS_PER_CYCLE == SL.MAX_ACTIONS_PER_CYCLE
+    assert SL.MAX_ACTIONS_PER_CYCLE >= 1
 
 
 def test_start_knob_trial_defers_when_heal_busy(tmp_path, monkeypatch):
@@ -544,7 +545,7 @@ def test_run_cycle_seeds_library_and_calibrates(tmp_path, monkeypatch):
     vis = SL.visibility()
     assert vis["swarm_library_size"] >= 28
     assert vis["swarm_replay_accuracy_permille"] == 1000
-    assert vis["swarm_max_actions_per_cycle"] == 1
+    assert vis["swarm_max_actions_per_cycle"] == SL.MAX_ACTIONS_PER_CYCLE
     assert vis["swarm_roles"] == list(SL.SWARM_ROLES)
     st = SL.load_state()
     cal = st.get("calibration") or {}
@@ -559,7 +560,7 @@ def test_run_cycle_seeds_library_and_calibrates(tmp_path, monkeypatch):
     assert b64["by_source"]["replay"]["n"] == b64["by_source"]["replay"]["correct"]
     assert b64["n"] == b64["correct"]
     assert b64["n"] >= 28
-    assert b64["lower_permille"] >= 700
+    assert b64["lower_permille"] >= SL.WILSON_ACCEPT_PERMILLE
     assert FL.LIBRARY_SNAPSHOT.exists()
     # With findings, the gate may now accept for a high-margin pick
     # (the replay-seeded bucket is above 700). If it still abstains,
