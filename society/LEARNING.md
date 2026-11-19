@@ -15,8 +15,8 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **10**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **8** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 63, correct 0, pending 137, accuracy 0‰
+- Hive decision deferred **2** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 62, correct 0, pending 138, accuracy 0‰
 
 ## Per method card
 
