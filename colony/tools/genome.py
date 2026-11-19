@@ -21,6 +21,7 @@ DEFAULT = {
     "tools": ["vote", "self_heal", "exchange"],
     "wilson_gate": 400,
     "generation": 0,
+    "last_score": 0,
 }
 
 
