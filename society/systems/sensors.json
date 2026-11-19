@@ -1,11 +1,9 @@
 {
-  "ts": "2026-11-19T20:09:13Z",
-  "cycle_id": "20261119T200839Z_bd9e97",
+  "ts": "2026-11-19T20:30:15Z",
+  "cycle_id": "20261119T202941Z_31014e",
   "lemma_streaks": {
     "revert_streaks": [
-      "stem_isothermal_work",
-      "stem_rc_discharge",
-      "stem_snell_least_time"
+      "stem_rc_discharge"
     ],
     "oracle_kills_by_theme": {
       "authored_mut_swap_related_sequence_d7641743d5d4": 1
@@ -100,8 +98,8 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8379,
-      "slope": -3.2e-05,
+      "last": 0.838,
+      "slope": -0.000109,
       "min": 0.8379,
       "max": 0.8392
     },
@@ -132,7 +130,7 @@
   },
   "stall": {
     "stalled": false,
-    "aggregate_range": 0.0011,
+    "aggregate_range": 0.0004,
     "novelty_max": 0.6786,
     "window": 6,
     "reason": "moving"
@@ -266,23 +264,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 1.109,
+      "ratio": 1.221,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 1.126,
+      "ratio": 1.228,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 1.188,
+      "ratio": 1.283,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 1.13,
+      "ratio": 1.313,
       "drift": false
     },
     "kinematics_microbench": {
-      "ratio": 1.118,
+      "ratio": 1.228,
       "drift": false
     }
   },
@@ -290,11 +288,11 @@
     "n_targets": 31,
     "verified": {
       "goldbach_even": 570748611,
-      "collatz_descent": 627000000,
+      "collatz_descent": 630200000,
       "legendre_square_gap": 3196607,
       "lehmer_totient": 298200001,
-      "erdos_straus": 1584127,
-      "twin_primes_hl": 782200000,
+      "erdos_straus": 1589127,
+      "twin_primes_hl": 786200000,
       "oeis_A104062_next": 518690000001
     },
     "reviews": [],
@@ -433,7 +431,7 @@
     }
   },
   "signals": [
-    "revert_streaks: stem_isothermal_work, stem_rc_discharge, stem_snell_least_time → deprioritize in seek",
+    "revert_streaks: stem_rc_discharge → deprioritize in seek",
     "feeds: 5 OEIS sequence(s) cached → candidate cross-checks for authored checks",
     "instruments: 4 available (sieve.count_pattern, sieve.forecast_and_count, sieve.hl_constant, sieve.hl_predict) → measure, then let the Oracle judge"
   ],
