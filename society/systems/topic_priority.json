@@ -71,17 +71,17 @@
       "reason": "inbox_gap"
     },
     {
-      "topic": "agent-mediated",
-      "priority": 1.0,
-      "reason": "inbox_gap"
-    },
-    {
       "topic": "artifact-first",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
     {
       "topic": "ceiling-aware]",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
+      "topic": "compute-useful",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
@@ -247,8 +247,8 @@
     }
   ],
   "source": "growth_refresh+findings_coupling",
-  "updated_at": "2026-11-19T18:56:55Z",
-  "updated_cycle": "20261119T185417Z_b39043",
+  "updated_at": "2026-11-19T20:11:37Z",
+  "updated_cycle": "20261119T200839Z_bd9e97",
   "charter_inform": {
     "hints": 29,
     "inform_only": true,

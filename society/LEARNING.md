@@ -8,19 +8,21 @@ lead on Oracle passes or verified depth. Fitness alone never
 decides a keep. Reverts and voids are recorded too. This is not
 AGI, not a novel theorem, and not a breakthrough claim.
 
-- Method cards tried: **0**
+- Method cards tried: **1**
 - Kept: **14**
 - Reverted (including twin-not-better): **10**
-- Voided (environment changed mid-trial): **17**
+- Voided (environment changed mid-trial): **18**
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **10**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **2** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive decision deferred **5** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
 - Hive shadow picks: resolved 62, correct 0, pending 138, accuracy 0‰
 
 ## Per method card
 
-_None yet._
+| Card | Method | Tried | Kept | Reverted | Keep rate |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `mc_bacbbd75d04b` | Perturb candidate claims a little more widely (annealing-style search). | 1 | 0 | 0 | 0‰ |
 
 ## Per op family
 
@@ -32,12 +34,11 @@ _None yet._
 | `set_knob:gf_term_cap` | 7 | 3 | 1 | 428‰ |
 | `set_knob:park_cycles` | 15 | 2 | 7 | 133‰ |
 | `set_knob:perturb_cooldown_cycles` | 2 | 0 | 1 | 0‰ |
-| `set_knob:perturb_epsilon` | 1 | 0 | 0 | 0‰ |
+| `set_knob:perturb_epsilon` | 2 | 0 | 0 | 0‰ |
 | `set_knob:step_size` | 1 | 0 | 0 | 0‰ |
 
 ## Recent outcomes
 
-- `voided` · card `—` · family `set_knob:deep_digits` · cycle `20261116T075057Z_0b95bb` (baseline 24.0, trial None)
 - `kept` · card `—` · family `set_knob:deep_digits` · cycle `20261116T123849Z_0ac470` (baseline 0.0, trial 256.0)
 - `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261116T173537Z_be43ea` (baseline 8.0, trial 5.0)
 - `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261116T183049Z_7f7d82` (baseline 5.0, trial 4.0)
@@ -49,10 +50,11 @@ _None yet._
 - `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261117T010509Z_15fab9` (baseline 4.0, trial 4.0)
 - `voided` · card `—` · family `set_knob:park_cycles` · cycle `20261117T023620Z_29c48a` (baseline 4.0, trial None)
 - `voided` · card `—` · family `set_knob:step_size` · cycle `20261119T160439Z_1e2345` (baseline 2.0, trial None)
+- `voided` · card `mc_bacbbd75d04b` · family `set_knob:perturb_epsilon` · cycle `20261119T195729Z_48a2bb` (baseline 1.0, trial None)
 
 ## Reading breadth (knowledge library)
 
-knowledge: 329 papers across 14/14 fields, 166 concepts, 82 cards formed, 0 tested, 0 kept.
+knowledge: 329 papers across 14/14 fields, 166 concepts, 82 cards formed, 1 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -68,7 +70,7 @@ knowledge: 329 papers across 14/14 fields, 166 concepts, 82 cards formed, 0 test
 | optimization_search | 26 | 27 | 16 | 0 | 0 |
 | physics_complex_systems | 22 | 9 | 3 | 0 | 0 |
 | recursive_self_improvement | 30 | 1 | 3 | 0 | 0 |
-| self_learning_loops | 24 | 13 | 5 | 0 | 0 |
+| self_learning_loops | 24 | 13 | 5 | 1 | 0 |
 | swarm_collective_intelligence | 11 | 10 | 9 | 0 | 0 |
 
 ## Architecture ideas (proposals for a human-built PR; never auto-executed)
