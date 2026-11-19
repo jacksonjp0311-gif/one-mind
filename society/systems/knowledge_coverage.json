@@ -67,10 +67,10 @@
       "cards_formed": 8,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 24,
+      "concepts": 28,
       "distinct_concepts": 7,
-      "papers": 33,
-      "reads": 16
+      "papers": 41,
+      "reads": 17
     },
     "open_endedness": {
       "cards_formed": 26,
@@ -112,10 +112,10 @@
       "cards_formed": 5,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 10,
+      "concepts": 13,
       "distinct_concepts": 4,
-      "papers": 17,
-      "reads": 16
+      "papers": 24,
+      "reads": 17
     },
     "swarm_collective_intelligence": {
       "cards_formed": 9,
@@ -124,7 +124,7 @@
       "concepts": 10,
       "distinct_concepts": 2,
       "papers": 11,
-      "reads": 16
+      "reads": 17
     }
   },
   "fields_with_papers": 14,
@@ -183,7 +183,7 @@
         "physics_complex_systems"
       ],
       "idea": "specialist_routing",
-      "n_papers": 17
+      "n_papers": 21
     },
     {
       "description": "Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).",
@@ -214,6 +214,31 @@
       "n_papers": 12
     },
     {
+      "description": "A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).",
+      "examples": [
+        {
+          "arxiv_id": "2611.15426",
+          "field": "self_learning_loops",
+          "title": "SimRec: Learning to Search, Ask, and Recommend from Simulated Interaction"
+        },
+        {
+          "arxiv_id": "2611.10841",
+          "field": "self_learning_loops",
+          "title": "A Gamified Framework for Conflict-Driven Design: Discovering Strategies for Collaborative Resilience with Multi-Agent Learning"
+        },
+        {
+          "arxiv_id": "2611.08908",
+          "field": "self_learning_loops",
+          "title": "Toward LLM Self-Play Under Data Scarcity: Effectiveness, Generalizability, and Trustworthiness"
+        }
+      ],
+      "fields": [
+        "self_learning_loops"
+      ],
+      "idea": "self_play_challenger",
+      "n_papers": 10
+    },
+    {
       "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
       "examples": [
         {
@@ -238,43 +263,14 @@
       ],
       "idea": "meta_controller",
       "n_papers": 9
-    },
-    {
-      "description": "Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).",
-      "examples": [
-        {
-          "arxiv_id": "2611.17879",
-          "field": "neural_architecture",
-          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
-        },
-        {
-          "arxiv_id": "2610.37327",
-          "field": "cognitive_science",
-          "title": "Local learning is all you need: brain-aligned predictive coding networks"
-        },
-        {
-          "arxiv_id": "2611.16220",
-          "field": "physics_complex_systems",
-          "title": "Learning memory forces and bounding frequency errors in fractional Kuramoto grids"
-        }
-      ],
-      "fields": [
-        "cognitive_science",
-        "learning_theory",
-        "neural_architecture",
-        "optimization_search",
-        "physics_complex_systems"
-      ],
-      "idea": "prediction_error_routing",
-      "n_papers": 7
     }
   ],
   "totals": {
     "cards_formed": 82,
     "cards_kept": 0,
     "cards_tested": 0,
-    "concepts": 159,
-    "papers": 314,
-    "reads": 241
+    "concepts": 166,
+    "papers": 329,
+    "reads": 244
   }
 }
