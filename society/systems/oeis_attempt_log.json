@@ -4979,14 +4979,24 @@
    "fast_cfinite": true,
    "deep_terms": 20000,
    "deep_elapsed_s": 0.01
+  },
+  {
+   "id": "oc_A224417_0",
+   "anum": "A224417",
+   "form": "relation",
+   "depth": 300,
+   "bfile_hi": 300,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261119T160907Z_0e80b9",
+   "planned": 300,
+   "verified_depth": 300,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
   }
  ],
  "by_cycle": {
-  "20261116T072606Z_e4708c": [
-   "oc_A080894_0",
-   "oc_A273905_0",
-   "oc_A116387_0"
-  ],
   "20261116T075057Z_0b95bb": [
    "oc_A186338_0",
    "oc_A285348_0",
@@ -5282,10 +5292,12 @@
   ],
   "20261119T092523Z_9c7eab": [
    "oc_A230113_0"
+  ],
+  "20261119T160907Z_0e80b9": [
+   "oc_A224417_0"
   ]
  },
  "last_forms": [
-  "relation",
   "gf",
   "gf",
   "relation",
@@ -5304,6 +5316,7 @@
   "relation",
   "gf",
   "relation",
-  "gf"
+  "gf",
+  "relation"
  ]
 }
