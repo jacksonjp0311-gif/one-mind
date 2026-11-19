@@ -66,17 +66,17 @@
       "reason": "inbox_gap"
     },
     {
+      "topic": "<https://doi.org/10.1007/s00026-025-00792-9>",
+      "priority": 1.0,
+      "reason": "inbox_gap"
+    },
+    {
       "topic": "`meta-learning`",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
     {
       "topic": "artifact-first",
-      "priority": 1.0,
-      "reason": "inbox_gap"
-    },
-    {
-      "topic": "brain-to-text",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
@@ -247,8 +247,8 @@
     }
   ],
   "source": "growth_refresh+findings_coupling",
-  "updated_at": "2026-11-19T01:33:04Z",
-  "updated_cycle": "20261119T013051Z_84d688",
+  "updated_at": "2026-11-19T06:35:24Z",
+  "updated_cycle": "20261119T063300Z_23fcc5",
   "charter_inform": {
     "hints": 29,
     "inform_only": true,
