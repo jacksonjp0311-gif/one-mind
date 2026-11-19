@@ -16,16 +16,16 @@
       "concepts": 6,
       "distinct_concepts": 3,
       "papers": 10,
-      "reads": 15
+      "reads": 16
     },
     "consciousness_self_models": {
       "cards_formed": 2,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 6,
+      "concepts": 7,
       "distinct_concepts": 3,
-      "papers": 10,
-      "reads": 15
+      "papers": 11,
+      "reads": 16
     },
     "learning_theory": {
       "cards_formed": 1,
@@ -49,10 +49,10 @@
       "cards_formed": 2,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 10,
+      "concepts": 12,
       "distinct_concepts": 3,
-      "papers": 12,
-      "reads": 16
+      "papers": 16,
+      "reads": 17
     },
     "multi_agent_systems": {
       "cards_formed": 1,
@@ -214,6 +214,32 @@
       "n_papers": 12
     },
     {
+      "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
+      "examples": [
+        {
+          "arxiv_id": "2611.17314",
+          "field": "meta_learning",
+          "title": "Linking Rapid Learning to Compositional Structure in Neural Networks: Evidence from Additive Analogies in Meta-Learned Parameter Spaces"
+        },
+        {
+          "arxiv_id": "2611.15923",
+          "field": "meta_learning",
+          "title": "Reinforcement Learning for Target Jerk Estimation in Interceptor Homing Phase"
+        },
+        {
+          "arxiv_id": "2611.15071",
+          "field": "meta_learning",
+          "title": "Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment"
+        }
+      ],
+      "fields": [
+        "meta_learning",
+        "self_learning_loops"
+      ],
+      "idea": "meta_controller",
+      "n_papers": 9
+    },
+    {
       "description": "Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).",
       "examples": [
         {
@@ -241,41 +267,14 @@
       ],
       "idea": "prediction_error_routing",
       "n_papers": 7
-    },
-    {
-      "description": "A small per-cycle working-memory buffer of recent outcomes that every desk reads before choosing work.",
-      "examples": [
-        {
-          "arxiv_id": "2611.14035",
-          "field": "cognitive_science",
-          "title": "ScaleBrain: A Scale-Consistent Framework for EEG Foundation Models"
-        },
-        {
-          "arxiv_id": "2611.00387",
-          "field": "cognitive_science",
-          "title": "Geometric and algebraic inference in humans and neural networks"
-        },
-        {
-          "arxiv_id": "2611.18417",
-          "field": "neural_architecture",
-          "title": "CoPre-MoE: Consolidating and Preserving MoE for Multimodal Continual Instruction Tuning"
-        }
-      ],
-      "fields": [
-        "cognitive_science",
-        "consciousness_self_models",
-        "neural_architecture"
-      ],
-      "idea": "working_memory_buffer",
-      "n_papers": 7
     }
   ],
   "totals": {
     "cards_formed": 72,
     "cards_kept": 0,
     "cards_tested": 0,
-    "concepts": 141,
-    "papers": 266,
-    "reads": 229
+    "concepts": 144,
+    "papers": 271,
+    "reads": 232
   }
 }

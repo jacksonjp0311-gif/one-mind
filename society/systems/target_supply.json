@@ -1,7 +1,7 @@
 {
  "version": 1,
- "cycle_index": 223,
- "last_refill_index": 213,
+ "cycle_index": 226,
+ "last_refill_index": 226,
  "done_pages": {
   "4453a00f513ccdb5": {
    "cycle_id": "20261116T012311Z_c7865a",
@@ -1762,6 +1762,38 @@
   "4b8b046361c0af00": {
    "cycle_id": "20261119T010724Z_3fdf1a",
    "n_hits": 10
+  },
+  "8384ffdeccbae001": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "3802b110b5faf328": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "0cb69c47d3ec21fb": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "ca22a194e9443082": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "7f52a9de42540435": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "ea6ab066dc62deab": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "aa37c3cb899de7c7": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
+  },
+  "f9a0d269e2eb104e": {
+   "cycle_id": "20261119T091334Z_5c1b29",
+   "n_hits": 10
   }
  },
  "rejected": {
@@ -1947,49 +1979,54 @@
   "A005559": "20261117T211012Z_934eeb",
   "A146119": "20261119T010724Z_3fdf1a"
  },
- "refills": 55,
- "added": 198,
+ "refills": 56,
+ "added": 204,
  "last": {
-  "cycle_id": "20261119T010724Z_3fdf1a",
+  "cycle_id": "20261119T091334Z_5c1b29",
   "open_before": 7,
   "pages_read": 8,
-  "requests": 14,
+  "requests": 15,
   "new": [
    {
-    "id": "oc_A224417_0",
+    "id": "oc_A113910_0",
     "form": "relation",
     "definition": false
    },
    {
-    "id": "oc_A028359_0",
+    "id": "oc_A160191_0",
     "form": "relation",
     "definition": false
    },
    {
-    "id": "oc_A229004_0",
+    "id": "oc_A304333_0",
     "form": "relation",
     "definition": false
    },
    {
-    "id": "oc_A233162_0",
+    "id": "oc_A230113_0",
     "form": "gf",
     "definition": false
    },
    {
-    "id": "oc_A143954_0",
+    "id": "oc_A233766_0",
+    "form": "gf",
+    "definition": false
+   },
+   {
+    "id": "oc_A267534_0",
     "form": "relation",
     "definition": false
    }
   ],
   "stats": {
-   "entries": 73,
-   "resolved_skipped": 23,
+   "entries": 71,
+   "resolved_skipped": 8,
    "keyword_skipped": 5,
-   "statements": 61,
-   "parsed": 7,
+   "statements": 85,
+   "parsed": 9,
    "no_bfile": 0,
-   "fails_on_data": 1,
-   "kept": 5,
+   "fails_on_data": 0,
+   "kept": 6,
    "def_candidates": 0
   }
  }
