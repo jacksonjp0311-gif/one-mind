@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 229,
+ "cycle_index": 232,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -13,84 +13,7 @@
   "parent": "bp_default",
   "operator": "add"
  },
- "trial": {
-  "blueprint": {
-   "id": "bp_da03713f61dccc63",
-   "signature": "da03713f61dccc63",
-   "steps": [
-    {
-     "component": "new_data_extra_push",
-     "n": 1
-    }
-   ],
-   "parent": "bp_1a40beac596f0ebe",
-   "operator": "replace",
-   "evidence": [
-    "new_data_extra_push"
-   ],
-   "weight": 0.24375,
-   "added": [
-    {
-     "component": "new_data_extra_push",
-     "n": 1
-    }
-   ],
-   "evidence_detail": {
-    "new_data_extra_push": {
-     "papers": [
-      "2611.08335",
-      "2611.11977",
-      "2611.14424",
-      "2611.15071",
-      "2611.15923",
-      "2611.17314",
-      "2611.20609"
-     ],
-     "n_papers": 7,
-     "idea_rank": 3,
-     "cards": 0,
-     "lessons": 0,
-     "boost": 4.875
-    }
-   },
-   "self_test": {
-    "ok": true,
-    "reason": "ok",
-    "plan": [
-     {
-      "component": "new_data_extra_push",
-      "n": 1,
-      "planned": 1
-     }
-    ]
-   }
-  },
-  "opened_cycle_id": "20261119T062831Z_6c363a",
-  "code_fp": "cb28eaae6288e285781ff3a9b04658245f15afff9e09ebc00d3843b995dcd0a5",
-  "opened_cycle_index": 222,
-  "open_row": 153,
-  "window_rows": 2,
-  "baseline_gain": [
-   0.0,
-   19999.0
-  ],
-  "baseline_overlaps": [
-   {
-    "slot": "self_heal",
-    "id": "park_cycles@20261117T000430Z_7fec4f",
-    "start": "2026-11-17T00:04:30Z",
-    "end": "2026-11-17T01:05:09Z",
-    "outcome": "revert"
-   },
-   {
-    "slot": "self_heal",
-    "id": "park_cycles@20261117T010509Z_15fab9",
-    "start": "2026-11-17T01:05:09Z",
-    "end": "2026-11-17T02:36:20Z",
-    "outcome": "trial_voided_confound"
-   }
-  ]
- },
+ "trial": null,
  "tried": {
   "1a40beac596f0ebe": {
    "outcome": "kept",
@@ -153,6 +76,17 @@
    ],
    "id": "bp_37017bb494713065",
    "cycle_id": "20261118T110016Z_9ce75e"
+  },
+  "da03713f61dccc63": {
+   "outcome": "inconclusive",
+   "steps": [
+    {
+     "component": "new_data_extra_push",
+     "n": 1
+    }
+   ],
+   "id": "bp_da03713f61dccc63",
+   "cycle_id": "20261119T092523Z_9c7eab"
   }
  },
  "component_stats": {
@@ -196,28 +130,60 @@
    "tried": 15,
    "kept": 0,
    "reverted": 0,
-   "inconclusive": 1
+   "inconclusive": 2
   }
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261119T091334Z_5c1b29",
-  "blueprint": "bp_da03713f61dccc63",
+  "cycle_id": "20261119T092901Z_bf5173",
+  "blueprint": "bp_1a40beac596f0ebe",
   "ran": [
    {
-    "component": "new_data_extra_push",
+    "component": "frontier_extra_batch",
     "n": 1,
-    "actions": 0,
-    "error": "ModuleNotFoundError: No module named 'numpy'"
+    "actions": 1,
+    "counts": {
+     "expressions": 260,
+     "fitted": 158,
+     "duplicate": 17,
+     "trivial_formal": 6,
+     "trivial_shuffle_null": 4,
+     "trivial_idle_part": 13,
+     "trivial_implied_parts": 66,
+     "trivial_shared_operand": 1,
+     "trivial_growth_dominance": 0,
+     "trivial_case_split": 0,
+     "trivial_parity_rules": 9,
+     "trivial_running_sum_tail": 0,
+     "trivial_basic_inequality": 1,
+     "trivial_rewrite_closure": 0,
+     "trivial_digit_rule": 0,
+     "expected_by_closure": 7,
+     "loose_inequality": 1,
+     "tested": 23,
+     "survived": 13,
+     "falsified": 10,
+     "machine_checked": 7,
+     "surprises": 0,
+     "known_result": 0,
+     "oeis_known": 0,
+     "oeis_unchecked": 5,
+     "retested": 0,
+     "false_surprises": 0,
+     "trivial_outer_self": 2
+    }
    }
   ],
-  "actions": 0,
-  "cpu_s": 0.003
+  "actions": 1,
+  "cpu_s": 2.075
  },
- "last_skip": null,
+ "last_skip": {
+  "cycle_id": "20261119T092901Z_bf5173",
+  "reason": "self_heal_trial_open"
+ },
  "kept_count": 1,
  "reverted_count": 3,
- "inconclusive_count": 1,
+ "inconclusive_count": 2,
  "voided_count": 18,
  "heal_turn": null,
  "last_propose_cycle": "20261119T062831Z_6c363a",
