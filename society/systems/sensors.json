@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-19T01:13:44Z",
-  "cycle_id": "20261119T011310Z_b4e9ed",
+  "ts": "2026-11-19T01:31:17Z",
+  "cycle_id": "20261119T013051Z_84d688",
   "lemma_streaks": {
     "revert_streaks": [
       "stem_elastic_collision",
@@ -12,7 +12,6 @@
       "stem_snell_least_time"
     ],
     "oracle_kills_by_theme": {
-      "authored_mut_swap_related_sequence_6086023df475": 1,
       "authored_mut_swap_related_sequence_6ed44acf6664": 1,
       "authored_mut_swap_related_sequence_780ec4e5fee0": 1,
       "authored_mut_swap_related_sequence_8d6d6a34114b": 1,
@@ -109,10 +108,10 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.838,
-      "slope": -9.7e-05,
+      "last": 0.8389,
+      "slope": -2.4e-05,
       "min": 0.8379,
-      "max": 0.8396
+      "max": 0.8392
     },
     "novelty": {
       "last": 0.6786,
@@ -141,7 +140,7 @@
   },
   "stall": {
     "stalled": false,
-    "aggregate_range": 0.0005,
+    "aggregate_range": 0.001,
     "novelty_max": 0.6786,
     "window": 6,
     "reason": "moving"
@@ -275,23 +274,23 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 1.199,
+      "ratio": 1.162,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 1.181,
+      "ratio": 1.173,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 1.137,
+      "ratio": 1.176,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 1.123,
+      "ratio": 1.191,
       "drift": false
     },
     "kinematics_microbench": {
-      "ratio": 1.147,
+      "ratio": 1.261,
       "drift": false
     }
   },
@@ -299,11 +298,11 @@
     "n_targets": 31,
     "verified": {
       "goldbach_even": 559548611,
-      "collatz_descent": 611000000,
+      "collatz_descent": 614200000,
       "legendre_square_gap": 3116607,
       "lehmer_totient": 290200001,
-      "erdos_straus": 1559127,
-      "twin_primes_hl": 762200000,
+      "erdos_straus": 1564127,
+      "twin_primes_hl": 766200000,
       "oeis_A104062_next": 518690000001
     },
     "reviews": [],
