@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 214,
+ "cycle_index": 217,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -28,7 +28,7 @@
    "evidence": [
     "new_data_extra_push"
    ],
-   "weight": 0.278571,
+   "weight": 0.26,
    "added": [
     {
      "component": "new_data_extra_push",
@@ -65,9 +65,9 @@
     ]
    }
   },
-  "opened_cycle_id": "20261118T190333Z_a70650",
-  "code_fp": "aaf8cfa5e48a00c157c573fa543091888bf77b6f0846e02d56be51c8bb5ecccb",
-  "opened_cycle_index": 210,
+  "opened_cycle_id": "20261119T010724Z_3fdf1a",
+  "code_fp": "7c1ebbf7aec4f205660550ef3282a8ecc1777d272603af0212e97b9d6b4f5df5",
+  "opened_cycle_index": 216,
   "open_row": 153,
   "window_rows": 2,
   "baseline_gain": [
@@ -193,7 +193,7 @@
    "inconclusive": 0
   },
   "new_data_extra_push": {
-   "tried": 13,
+   "tried": 14,
    "kept": 0,
    "reverted": 0,
    "inconclusive": 1
@@ -201,7 +201,7 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261118T192556Z_68d42e",
+  "cycle_id": "20261119T011310Z_b4e9ed",
   "blueprint": "bp_da03713f61dccc63",
   "ran": [
    {
@@ -212,15 +212,15 @@
    }
   ],
   "actions": 0,
-  "cpu_s": 0.002
+  "cpu_s": 0.003
  },
  "last_skip": null,
  "kept_count": 1,
  "reverted_count": 3,
  "inconclusive_count": 1,
- "voided_count": 16,
+ "voided_count": 17,
  "heal_turn": null,
- "last_propose_cycle": "20261118T190333Z_a70650",
+ "last_propose_cycle": "20261119T010724Z_3fdf1a",
  "operator_stats": {
   "add": {
    "tried": 3,

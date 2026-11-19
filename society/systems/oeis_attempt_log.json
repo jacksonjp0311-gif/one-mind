@@ -4804,22 +4804,39 @@
    "prior_tested_hi": 0,
    "extended": 0,
    "deep_terms": 0
+  },
+  {
+   "id": "oc_A182879_0",
+   "anum": "A182879",
+   "form": "relation",
+   "depth": 356,
+   "bfile_hi": 1000,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261119T010205Z_f3e060",
+   "planned": 1000,
+   "verified_depth": 356,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
+  },
+  {
+   "id": "oc_A301420_0",
+   "anum": "A301420",
+   "form": "relation",
+   "depth": 52,
+   "bfile_hi": 66,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261119T011310Z_b4e9ed",
+   "planned": 66,
+   "verified_depth": 52,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
   }
  ],
  "by_cycle": {
-  "20261116T044657Z_c1f860": [
-   "oc_A116406_0",
-   "oc_A177258_0",
-   "oc_A177260_0",
-   "oc_A162972_0",
-   "oc_A224292_0"
-  ],
-  "20261116T050721Z_31855b": [
-   "oc_A045743_0",
-   "oc_A045742_0",
-   "oc_A397621_0",
-   "oc_A359984_0"
-  ],
   "20261116T051056Z_613a12": [
    "oc_A000002_0",
    "oc_A275207_0",
@@ -5124,11 +5141,15 @@
   ],
   "20261118T192556Z_68d42e": [
    "oc_A226857_0"
+  ],
+  "20261119T010205Z_f3e060": [
+   "oc_A182879_0"
+  ],
+  "20261119T011310Z_b4e9ed": [
+   "oc_A301420_0"
   ]
  },
  "last_forms": [
-  "relation",
-  "relation",
   "gf",
   "relation",
   "relation",
@@ -5139,6 +5160,8 @@
   "relation",
   "gf",
   "gf",
+  "relation",
+  "relation",
   "relation",
   "relation",
   "relation",
