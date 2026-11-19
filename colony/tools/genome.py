@@ -22,6 +22,7 @@ DEFAULT = {
     "wilson_gate": 400,
     "generation": 0,
     "last_score": 0,
+    "receipts_seen": 0,
 }
 
 
@@ -45,8 +46,14 @@ def save(g: dict) -> None:
 
 
 def propose(field: str, value, score: float, prior_score: float) -> dict:
-    """One field. Kept only if score beats prior. Else the genome is unchanged."""
+    """One field. Kept only if score beats prior. Else the genome is unchanged.
+
+    A last_score at or above 50 is the old window ceiling. Refuse it.
+    The end-of-cycle habit scores a delta instead.
+    """
     g = load()
+    if field == "last_score" and float(value or 0) >= 50:
+        return {"kept": False, "reason": "saturated_window", "genome": g}
     if field not in g and field not in DEFAULT:
         return {"kept": False, "reason": "unknown_field"}
     if score <= prior_score:

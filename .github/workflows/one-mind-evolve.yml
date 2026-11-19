@@ -38,6 +38,10 @@ jobs:
       - name: Run cycles
         run: |
           PYTHONPATH=. python3 -m colony evolve --cycles ${{ github.event.inputs.cycles || 3 }} --offline
+      - name: Habit at the end
+        if: always()
+        run: |
+          PYTHONPATH=. python3 -m colony.tools.habit_end
       - name: Snapshot before publish
         if: always()
         run: |
