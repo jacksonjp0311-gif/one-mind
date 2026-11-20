@@ -52,7 +52,7 @@ def propose(field: str, value, score: float, prior_score: float) -> dict:
     The end-of-cycle habit scores a delta instead.
     """
     g = load()
-    if field == "last_score" and float(value or 0) >= 50:
+    if field == "last_score" and float(value or 0) >= 100:
         return {"kept": False, "reason": "saturated_window", "genome": g}
     if field not in g and field not in DEFAULT:
         return {"kept": False, "reason": "unknown_field"}
