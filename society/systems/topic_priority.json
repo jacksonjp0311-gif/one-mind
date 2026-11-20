@@ -66,12 +66,12 @@
       "reason": "inbox_gap"
     },
     {
-      "topic": "`meta-learning`",
+      "topic": "<https://doi.org/10.1007/s00026-025-00792-9>",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
     {
-      "topic": "agent-mediated",
+      "topic": "`meta-learning`",
       "priority": 1.0,
       "reason": "inbox_gap"
     },
@@ -247,8 +247,8 @@
     }
   ],
   "source": "growth_refresh+findings_coupling",
-  "updated_at": "2026-11-20T03:48:55Z",
-  "updated_cycle": "20261120T034647Z_1400c5",
+  "updated_at": "2026-11-20T08:10:54Z",
+  "updated_cycle": "20261120T080848Z_9b16ea",
   "charter_inform": {
     "hints": 29,
     "inform_only": true,

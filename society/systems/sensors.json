@@ -1,6 +1,6 @@
 {
-  "ts": "2026-11-20T03:47:11Z",
-  "cycle_id": "20261120T034647Z_1400c5",
+  "ts": "2026-11-20T08:09:12Z",
+  "cycle_id": "20261120T080848Z_9b16ea",
   "lemma_streaks": {
     "revert_streaks": [],
     "oracle_kills_by_theme": {},
@@ -94,9 +94,9 @@
   "trends": {
     "n": 12,
     "aggregate": {
-      "last": 0.8393,
-      "slope": 3e-06,
-      "min": 0.8379,
+      "last": 0.8392,
+      "slope": 9e-05,
+      "min": 0.838,
       "max": 0.8397
     },
     "novelty": {
@@ -260,33 +260,33 @@
   },
   "bench_timing": {
     "fft_microbench": {
-      "ratio": 1.025,
+      "ratio": 0.761,
       "drift": false
     },
     "fft_stress_microbench": {
-      "ratio": 1.006,
+      "ratio": 0.76,
       "drift": false
     },
     "autodiff_microbench": {
-      "ratio": 0.945,
+      "ratio": 0.75,
       "drift": false
     },
     "lemma_microbench": {
-      "ratio": 1.066,
+      "ratio": 0.752,
       "drift": false
     },
     "kinematics_microbench": {
-      "ratio": 1.056,
+      "ratio": 0.817,
       "drift": false
     }
   },
   "frontier": {
     "n_targets": 31,
     "verified": {
-      "goldbach_even": 577148611,
+      "goldbach_even": 580348611,
       "collatz_descent": 636600000,
-      "legendre_square_gap": 3228607,
-      "lehmer_totient": 301400001,
+      "legendre_square_gap": 3244607,
+      "lehmer_totient": 303000001,
       "erdos_straus": 1599127,
       "twin_primes_hl": 794200000,
       "oeis_A104062_next": 518690000001
