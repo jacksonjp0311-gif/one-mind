@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 304,
+ "cycle_index": 307,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -165,7 +165,7 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261121T094902Z_b3eb3c",
+  "cycle_id": "20261121T121152Z_9c673d",
   "blueprint": "bp_1a40beac596f0ebe",
   "ran": [
    {
@@ -174,40 +174,40 @@
     "actions": 1,
     "counts": {
      "expressions": 260,
-     "fitted": 141,
-     "duplicate": 15,
-     "trivial_formal": 5,
-     "trivial_shuffle_null": 3,
-     "trivial_idle_part": 16,
-     "trivial_implied_parts": 58,
-     "trivial_shared_operand": 2,
+     "fitted": 118,
+     "duplicate": 11,
+     "trivial_formal": 3,
+     "trivial_shuffle_null": 4,
+     "trivial_idle_part": 14,
+     "trivial_implied_parts": 51,
+     "trivial_shared_operand": 0,
      "trivial_growth_dominance": 0,
-     "trivial_case_split": 2,
-     "trivial_parity_rules": 10,
+     "trivial_case_split": 0,
+     "trivial_parity_rules": 6,
      "trivial_running_sum_tail": 0,
-     "trivial_basic_inequality": 2,
-     "trivial_rewrite_closure": 0,
+     "trivial_basic_inequality": 4,
+     "trivial_rewrite_closure": 2,
      "trivial_digit_rule": 0,
-     "expected_by_closure": 7,
-     "loose_inequality": 1,
-     "tested": 19,
-     "survived": 12,
-     "falsified": 7,
-     "machine_checked": 7,
+     "expected_by_closure": 8,
+     "loose_inequality": 0,
+     "tested": 16,
+     "survived": 13,
+     "falsified": 3,
+     "machine_checked": 9,
      "surprises": 0,
      "known_result": 0,
      "oeis_known": 0,
-     "oeis_unchecked": 4,
+     "oeis_unchecked": 5,
      "retested": 0,
      "false_surprises": 0
     }
    }
   ],
   "actions": 1,
-  "cpu_s": 2.663
+  "cpu_s": 2.576
  },
  "last_skip": {
-  "cycle_id": "20261121T094902Z_b3eb3c",
+  "cycle_id": "20261121T121152Z_9c673d",
   "reason": "no_candidate_passed_self_test",
   "rejected": [
    {
@@ -277,7 +277,7 @@
  "inconclusive_count": 4,
  "voided_count": 18,
  "heal_turn": null,
- "last_propose_cycle": "20261121T094902Z_b3eb3c",
+ "last_propose_cycle": "20261121T121152Z_9c673d",
  "operator_stats": {
   "add": {
    "tried": 3,
