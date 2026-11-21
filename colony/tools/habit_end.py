@@ -50,6 +50,12 @@ def apply(lineage: str = "one-mind") -> dict:
         g["exchange_seen"] = after
         g["last_bias_n"] = len(biases)
         save(g)
+        kept = score > prior
+        try:
+            from colony.tools.seeded import record
+            record(prior, score, kept, "one-mind")
+        except Exception:
+            pass
         return propose("last_score", score, score, prior)
     except Exception as exc:
         return {"kept": False, "reason": "fail-open", "error": str(exc)}
