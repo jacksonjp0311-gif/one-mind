@@ -5452,12 +5452,24 @@
    "prior_tested_hi": 0,
    "extended": 0,
    "deep_terms": 0
+  },
+  {
+   "id": "oc_A246697_0",
+   "anum": "A246697",
+   "form": "relation",
+   "depth": 42,
+   "bfile_hi": 42,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261121T200507Z_d5fdf5",
+   "planned": 42,
+   "verified_depth": 42,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
   }
  ],
  "by_cycle": {
-  "20261116T201928Z_963db2": [
-   "oc_A162477_0"
-  ],
   "20261116T205008Z_50bd27": [
    "oc_A173614_0",
    "oc_A363569_0",
@@ -5708,13 +5720,16 @@
   ],
   "20261121T194541Z_f896c7": [
    "oc_A025757_0"
+  ],
+  "20261121T200507Z_d5fdf5": [
+   "oc_A246697_0"
   ]
  },
  "last_forms": [
   "relation",
   "relation",
-  "relation",
   "gf",
+  "relation",
   "relation",
   "relation",
   "relation",
