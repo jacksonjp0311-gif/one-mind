@@ -56,7 +56,13 @@ def apply(lineage: str = "one-mind") -> dict:
             record(prior, score, kept, "one-mind")
         except Exception:
             pass
-        return propose("last_score", score, score, prior)
+        out = propose("last_score", score, score, prior)
+        try:
+            from colony.tools.seeded import replay
+            replay(lineage)
+        except Exception:
+            pass
+        return out
     except Exception as exc:
         return {"kept": False, "reason": "fail-open", "error": str(exc)}
 
