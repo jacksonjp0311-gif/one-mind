@@ -1,8 +1,8 @@
-# Proposal shortlist — 2026-11-20 06:31 PM ET
+# Proposal shortlist — 2026-11-20 11:03 PM ET
 
 View only: nothing here is authorized. Only James authorizes.
 
-36 of 179 proposals meet the authorize bar (27 after grouping near-duplicates; 23 colony-authored, 4 building blocks). Rank = 0.6*P + 0.2*novelty + 0.2*builds_on.
+36 of 180 proposals meet the authorize bar (27 after grouping near-duplicates; 23 colony-authored, 4 building blocks). Rank = 0.6*P + 0.2*novelty + 0.2*builds_on.
 
 | # | Proposal | P | Novelty | Builds on | Athanor | Similar | Shadow # (P) | What it is |
 |---|---|---:|---:|---:|---|---:|---|---|
@@ -45,13 +45,13 @@ Rules in colony/hunt_shadow.py. Would meet the bar: 14 (actual 36). Unknown clai
 | 9 | imp_18d1e0_50 | `authored_frontier_cong_xbb82919e_w1` | 0.825 → 0.825 | meets | yes | 0.0 | 23 |
 | 10 | imp_53f6c2_49 | `authored_frontier_cong_x06b60875_w1` | 0.825 → 0.825 | meets | yes | 0.0 | 25 |
 
-Excluded (reason: count): hearing: 2, no_oracle_pass_in_own_cycle: 24, novelty_killed: 26, oracle_killed_in_own_cycle: 8, status: 94, target_unresolved: 102
+Excluded (reason: count): hearing: 2, no_oracle_pass_in_own_cycle: 25, novelty_killed: 26, oracle_killed_in_own_cycle: 8, status: 95, target_unresolved: 102
 
 
 ## Frontier conjectures (self-chosen; report-only)
 
-Mode `shadow`. Last cycle: 21 tested, 11 survived held-out, 10 falsified, 8 machine-checked, 0 surprises; dropped 14 duplicates, 80 trivial rewrites. OEIS index: absent (OEIS unchecked). Pre-registration Brier: 0.1124.
-Totals: tested 20290, survived 9115, surprises 152, false surprises (failed later re-test) 0.
+Mode `shadow`. Last cycle: 16 tested, 12 survived held-out, 4 falsified, 8 machine-checked, 0 surprises; dropped 13 duplicates, 103 trivial rewrites. OEIS index: absent (OEIS unchecked). Pre-registration Brier: 0.1126.
+Totals: tested 20406, survived 9192, surprises 152, false surprises (failed later re-test) 0.
 Reference check (Stage 2, `shadow`): last cycle 0 explained by a reference, 0 with no reference found.
 
 | Statement | Label | Reference check | OEIS | Hunt v |
