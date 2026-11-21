@@ -260,3 +260,4 @@
 {"cycle_id": "20261120T231136Z_75e5c6", "eligible": 0, "event": "supply_exhausted", "generator_supply_exhausted": true, "reason": "supply_exhausted", "tried": 0, "wide_accepted": 0, "wide_eligible": 0, "wide_tried": 0, "widened": true}
 {"cycle_id": "20261121T040519Z_abb9fb", "eligible": 0, "event": "supply_exhausted", "generator_supply_exhausted": true, "reason": "supply_exhausted", "tried": 0, "wide_accepted": 0, "wide_eligible": 0, "wide_tried": 0, "widened": true}
 {"cycle_id": "20261121T065652Z_0f440b", "eligible": 0, "event": "supply_exhausted", "generator_supply_exhausted": true, "reason": "supply_exhausted", "tried": 0, "wide_accepted": 0, "wide_eligible": 0, "wide_tried": 0, "widened": true}
+{"cycle_id": "20261121T093648Z_993c42", "eligible": 0, "event": "supply_exhausted", "generator_supply_exhausted": true, "reason": "supply_exhausted", "tried": 0, "wide_accepted": 0, "wide_eligible": 0, "wide_tried": 0, "widened": true}
