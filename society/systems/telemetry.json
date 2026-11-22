@@ -1,26 +1,26 @@
 {
-  "ts": "2026-11-22T16:01:05Z",
+  "ts": "2026-11-22T21:43:10Z",
   "version": 1,
   "mile": "spark2_telemetry",
   "internal": {
     "fitness_latest": {
-      "ts": "2026-11-22T15:56:50Z",
-      "cycle_id": "20261122T155307Z_99ef6e",
+      "ts": "2026-11-22T21:38:26Z",
+      "cycle_id": "20261122T213418Z_095665",
       "tribute_quality": 0.9,
       "gather_coverage": 0.6522,
       "build_reuse": 0.84,
       "comm_reply_rate": 0.8,
       "reply_quality": 0.9113,
       "commons_signal": 1.0,
-      "math_prize": 0.8179,
-      "compute_usefulness": 0.9167,
+      "math_prize": 0.8143,
+      "compute_usefulness": 0.9132,
       "citation_reuse": 1.0,
-      "prize_boost": 0.8889,
+      "prize_boost": 0.8861,
       "kill_rate": 0.4004,
       "kill_rate_term": 0.9104,
       "novelty": 0.6786,
       "lesson_uptake": 0.9,
-      "aggregate": 0.8385,
+      "aggregate": 0.838,
       "peer_cite_rate": 1.0,
       "action_changed_from_message": 1.0,
       "self_reject_rate": 0.0,
@@ -28,7 +28,7 @@
       "stall_cycles": 81,
       "perturb_active": false,
       "distinct_targets_tried_last_3_cycles": 0,
-      "perturb_cooldown_remaining": 5,
+      "perturb_cooldown_remaining": 2,
       "perturb_strategy": "mutate",
       "checker_proposals_awaiting_review": 0,
       "checker_proposals": [],
@@ -48,7 +48,7 @@
           "id": "chk_0c904dfae6fab86d"
         }
       ],
-      "checker_lane_cycle_id": "20261122T155307Z_99ef6e",
+      "checker_lane_cycle_id": "20261122T213418Z_095665",
       "self_changes_adopted": 14,
       "self_changes_reverted": 12,
       "self_changes_inconclusive": 6,
@@ -73,8 +73,8 @@
       "trial_skip": {
         "reason": "no_signal_baseline",
         "first_cycle": "20261122T074208Z_3012e2",
-        "last_cycle": "20261122T155307Z_99ef6e",
-        "count": 7,
+        "last_cycle": "20261122T213418Z_095665",
+        "count": 10,
         "findings": [
           "dead_end_streak",
           "flat_passes",
@@ -128,7 +128,7 @@
           "authored": 0
         },
         "retirement_audit": {
-          "cycle_id": "20261122T155307Z_99ef6e",
+          "cycle_id": "20261122T213418Z_095665",
           "n_authored": 103,
           "would_free": 0,
           "by_category": {},
@@ -143,7 +143,7 @@
         }
       },
       "swarm_library_size": 75,
-      "swarm_library_records": 84,
+      "swarm_library_records": 83,
       "swarm_calibration": {
         "buckets": [
           {
@@ -1908,7 +1908,7 @@
             "margin": 69,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1918,7 +1918,7 @@
             "margin": 62,
             "predicted": "set_knob:direction=up:name=unused_menu_cycles:value=25",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1928,7 +1928,7 @@
             "margin": 173,
             "predicted": "add_skip_rule:cycles=12:target_kind=empty_label",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1938,7 +1938,7 @@
             "margin": 245,
             "predicted": "add_park_rule:cycles=12:target_kind=proof_chain_parked",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1948,7 +1948,7 @@
             "margin": 260,
             "predicted": "add_triviality_candidate:applied_to_live_oracle=False:direction=tighten:kind=triviality_pattern:pattern=textbook identity restated:pattern_type=literal:routed_to=checker_lane",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1958,7 +1958,7 @@
             "margin": 155,
             "predicted": "add_skip_rule:cycles=8:target_kind=already_held_range",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1968,7 +1968,7 @@
             "margin": 246,
             "predicted": "set_knob:direction=up:name=perturb_cooldown_cycles:value=8",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1978,7 +1978,7 @@
             "margin": 178,
             "predicted": "set_knob:direction=down:name=step_size:value=0.0975",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1988,7 +1988,7 @@
             "margin": 267,
             "predicted": "set_knob:direction=up:name=evaluation_window:value=7",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -1998,7 +1998,7 @@
             "margin": 374,
             "predicted": "set_knob:direction=up:name=perturb_zero_pick_cycles:value=2",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2008,7 +2008,7 @@
             "margin": 197,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2018,7 +2018,7 @@
             "margin": 237,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2028,7 +2028,7 @@
             "margin": 320,
             "predicted": "set_knob:direction=up:name=gf_term_cap:value=4259",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2038,7 +2038,7 @@
             "margin": 358,
             "predicted": "mark_ceiling:depth=1200:reason=evaluator_cap:target=held-at-cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2048,7 +2048,7 @@
             "margin": 190,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2058,7 +2058,7 @@
             "margin": 212,
             "predicted": "set_knob:direction=up:name=unused_menu_cycles:value=25",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2068,7 +2068,7 @@
             "margin": 317,
             "predicted": "add_skip_rule:cycles=12:target_kind=empty_label",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2078,7 +2078,7 @@
             "margin": 272,
             "predicted": "add_park_rule:cycles=12:target_kind=proof_chain_parked",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2088,7 +2088,7 @@
             "margin": 335,
             "predicted": "add_triviality_candidate:applied_to_live_oracle=False:direction=tighten:kind=triviality_pattern:pattern=textbook identity restated:pattern_type=literal:routed_to=checker_lane",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2098,7 +2098,7 @@
             "margin": 219,
             "predicted": "add_skip_rule:cycles=8:target_kind=already_held_range",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2108,7 +2108,7 @@
             "margin": 241,
             "predicted": "set_knob:direction=up:name=perturb_cooldown_cycles:value=8",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2118,7 +2118,7 @@
             "margin": 179,
             "predicted": "set_knob:direction=down:name=step_size:value=0.0975",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2128,7 +2128,7 @@
             "margin": 308,
             "predicted": "set_knob:direction=up:name=evaluation_window:value=7",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2138,7 +2138,7 @@
             "margin": 409,
             "predicted": "set_knob:direction=up:name=perturb_zero_pick_cycles:value=2",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2148,7 +2148,7 @@
             "margin": 206,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2158,7 +2158,7 @@
             "margin": 263,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2168,7 +2168,7 @@
             "margin": 354,
             "predicted": "set_knob:direction=up:name=gf_term_cap:value=4259",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2178,7 +2178,7 @@
             "margin": 372,
             "predicted": "mark_ceiling:depth=1200:reason=evaluator_cap:target=held-at-cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2188,7 +2188,7 @@
             "margin": 226,
             "predicted": "add_skip_rule:cycles=8:target_kind=already_held_range",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2198,7 +2198,7 @@
             "margin": 247,
             "predicted": "add_skip_rule:cycles=8:target_kind=already_held_range",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2208,7 +2208,7 @@
             "margin": 173,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2218,7 +2218,7 @@
             "margin": 187,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2228,7 +2228,7 @@
             "margin": 228,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2238,7 +2238,7 @@
             "margin": 261,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2248,7 +2248,7 @@
             "margin": 37,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2258,7 +2258,7 @@
             "margin": 63,
             "predicted": "add_family_rotation:family=algebraic",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2268,7 +2268,7 @@
             "margin": 151,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2278,7 +2278,7 @@
             "margin": 78,
             "predicted": "add_family_rotation:family=algebraic",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2288,7 +2288,7 @@
             "margin": 35,
             "predicted": "set_knob:direction=up:name=gf_term_cap:value=4259",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2298,7 +2298,7 @@
             "margin": 18,
             "predicted": "set_knob:direction=up:name=deep_digits",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2308,7 +2308,7 @@
             "margin": 10,
             "predicted": "set_knob:direction=up:name=deep_digits",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2318,7 +2318,7 @@
             "margin": 14,
             "predicted": "set_knob:direction=up:name=deep_digits",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2328,7 +2328,7 @@
             "margin": 0,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2338,7 +2338,7 @@
             "margin": 0,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2348,7 +2348,7 @@
             "margin": 0,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2358,7 +2358,7 @@
             "margin": 0,
             "predicted": "set_knob:direction=up:name=fast_term_cap",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": false,
@@ -2368,7 +2368,7 @@
             "margin": 0,
             "predicted": "set_knob:direction=up:name=deep_digits",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2378,7 +2378,7 @@
             "margin": 20,
             "predicted": "set_knob:direction=up:name=deep_digits",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2388,7 +2388,7 @@
             "margin": 37,
             "predicted": "set_knob:direction=up:name=gf_term_cap:value=4259",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": false,
@@ -2398,7 +2398,7 @@
             "margin": 6,
             "predicted": "set_knob:direction=up:name=gf_term_cap:value=4259",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2408,7 +2408,7 @@
             "margin": 287,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           },
           {
             "correct": true,
@@ -2418,7 +2418,7 @@
             "margin": 290,
             "predicted": "set_knob:direction=up:name=park_cycles:value=12",
             "source": "replay",
-            "ts": "2026-11-22T15:56:32Z"
+            "ts": "2026-11-22T21:38:04Z"
           }
         ]
       },
@@ -2428,7 +2428,7 @@
         "correct": 50,
         "n": 52,
         "source": "replay",
-        "updated_at": "2026-11-22T15:56:32Z"
+        "updated_at": "2026-11-22T21:38:04Z"
       },
       "swarm_replay_accuracy_permille": 961,
       "swarm_replay_lower_permille": 870,
@@ -2445,7 +2445,7 @@
       "swarm_adopt_rate_permille": 0,
       "swarm_abstained": 325,
       "swarm_applied": 13,
-      "swarm_proposals": 2135,
+      "swarm_proposals": 2147,
       "swarm_trial": null,
       "swarm_last_decision": null,
       "swarm_active_rules": 0,
@@ -2478,8 +2478,8 @@
         "method": "",
         "deferred_under": "cb5a852f40b5c0198e2637c0614e1dd3f1805cc7313b0809f377654ee3c1a1f3",
         "first_deferred_cycle": "20261122T155307Z_99ef6e",
-        "last_deferred_cycle": "20261122T155307Z_99ef6e",
-        "deferred_count": 1,
+        "last_deferred_cycle": "20261122T213418Z_095665",
+        "deferred_count": 4,
         "wilson_gate": 400,
         "linked_trial": null
       }
@@ -2550,7 +2550,7 @@
     "swarm_adopt_rate_permille": 0,
     "swarm_abstained": 325,
     "swarm_applied": 13,
-    "swarm_proposals": 2135,
+    "swarm_proposals": 2147,
     "swarm_trial": null,
     "swarm_last_decision": null,
     "swarm_active_rules": 0,
@@ -2559,7 +2559,7 @@
       "mean": null,
       "by_kind": {}
     },
-    "fitness_aggregate": 0.8385,
+    "fitness_aggregate": 0.838,
     "reply_rate": 0.8,
     "bus_metrics": {
       "reply_rate": 0.8,
@@ -2567,15 +2567,15 @@
       "peer_cite_rate": 1.0,
       "action_changed_from_message": 1.0,
       "stats": {
-        "posted": 83184,
-        "read": 397998,
-        "replied": 52571,
-        "actions_planned": 27066,
-        "actions_changed_from_message": 27066,
-        "reply_quality_sum": 47860.60000003193,
-        "reply_quality_n": 52519,
-        "peer_cite_opportunities": 53846,
-        "peer_cites": 53846
+        "posted": 83349,
+        "read": 398772,
+        "replied": 52676,
+        "actions_planned": 27120,
+        "actions_changed_from_message": 27120,
+        "reply_quality_sum": 47956.300000032046,
+        "reply_quality_n": 52624,
+        "peer_cite_opportunities": 53954,
+        "peer_cites": 53954
       }
     },
     "oracle": {
@@ -2723,41 +2723,41 @@
     },
     "cycle_deltas": {
       "n": 30,
-      "delta_aggregate": 0.0003,
+      "delta_aggregate": 0.0001,
       "before": {
-        "cycle_id": "20261122T154524Z_c35ddf",
-        "aggregate": 0.8382
+        "cycle_id": "20261122T212838Z_541c17",
+        "aggregate": 0.8379
       },
       "after": {
-        "cycle_id": "20261122T155307Z_99ef6e",
-        "aggregate": 0.8385
+        "cycle_id": "20261122T213418Z_095665",
+        "aggregate": 0.838
       }
     },
-    "cycle_count": 1515,
+    "cycle_count": 1518,
     "population": {
       "soft_cap": 20,
       "spawns": 10,
       "child_spawns": 8,
       "last_child_cycle": "20260926T221715Z_05fedf"
     },
-    "ts": "2026-11-22T16:01:05Z"
+    "ts": "2026-11-22T21:43:10Z"
   },
   "external": {
     "resource_usage": {
       "loadavg": [
-        0.6337890625,
-        0.95166015625,
-        0.74462890625
+        0.76708984375,
+        0.9775390625,
+        0.69921875
       ],
-      "rss_kb": 1367812,
-      "user_time_s": 820.979822,
+      "rss_kb": 1369980,
+      "user_time_s": 755.391542,
       "probe_latency_ms": 0.014,
-      "disk_free_mb": 88181.1,
-      "pid": 2308,
-      "ts": "2026-11-22T16:01:05Z"
+      "disk_free_mb": 88180.8,
+      "pid": 2432,
+      "ts": "2026-11-22T21:43:10Z"
     },
     "external_array": {
-      "ts": "2026-11-22T16:01:05Z",
+      "ts": "2026-11-22T21:43:10Z",
       "feed_ok": {
         "arxiv": true,
         "nasa_donki_solar": false,
@@ -2771,24 +2771,24 @@
       "patterns": [
         {
           "kind": "global_weather_spread",
-          "summary": "Open-Meteo snapshot across 4 cities: [('NYC', 15.5), ('London', 8.6), ('Tokyo', 6.9), ('Sydney', 23.3)]. Cross-correlate with solar/space feeds for commons resource planning debate — kinematics of environment signals, not prophecy.",
+          "summary": "Open-Meteo snapshot across 4 cities: [('NYC', 13.9), ('London', 6.5), ('Tokyo', 5.2), ('Sydney', 27.5)]. Cross-correlate with solar/space feeds for commons resource planning debate — kinematics of environment signals, not prophecy.",
           "signals": {
             "cities": [
               [
                 "NYC",
-                15.5
+                13.9
               ],
               [
                 "London",
-                8.6
+                6.5
               ],
               [
                 "Tokyo",
-                6.9
+                5.2
               ],
               [
                 "Sydney",
-                23.3
+                27.5
               ]
             ],
             "kp": null
@@ -2803,9 +2803,9 @@
         },
         {
           "kind": "pulsemesh_goes_live",
-          "summary": "PulseMesh GOES X-ray live latest=-6.5944599079174795. Space-weather debate input — not novel physics.",
+          "summary": "PulseMesh GOES X-ray live latest=-6.697553408404633. Space-weather debate input — not novel physics.",
           "signals": {
-            "goes_latest": -6.5944599079174795
+            "goes_latest": -6.697553408404633
           },
           "domains": [
             "cosmos",
@@ -2816,10 +2816,10 @@
         },
         {
           "kind": "pulsemesh_ops_health",
-          "summary": "PulseMesh system_stat/tcp_probe: load1=0.6337890625 probe_ms=18.476637499986737. Ops health for actuation — not consciousness.",
+          "summary": "PulseMesh system_stat/tcp_probe: load1=0.76708984375 probe_ms=8.692071749976549. Ops health for actuation — not consciousness.",
           "signals": {
-            "load1": 0.6337890625,
-            "probe_ms": 18.476637499986737
+            "load1": 0.76708984375,
+            "probe_ms": 8.692071749976549
           },
           "domains": [
             "government",
@@ -2837,39 +2837,39 @@
       "high_residual": [
         [
           "spark",
-          0.5858945000000001
+          0.5858315
         ],
         [
           "improver",
-          0.36542350000000007
+          0.3652745
         ],
         [
           "pathfinder",
-          0.35087100000000004
+          0.35075700000000004
         ]
       ],
       "stats": {
-        "updates": 20837,
-        "conflicts": 71080,
-        "redebatess": 2970
+        "updates": 20879,
+        "conflicts": 71224,
+        "redebatess": 2976
       }
     },
     "time_revision": {
-      "ts": "2026-11-22T16:00:49Z",
+      "ts": "2026-11-22T21:42:55Z",
       "version": 1,
-      "latest_cycle_id": "20261122T155807Z_077f16",
+      "latest_cycle_id": "20261122T213955Z_617bf6",
       "latest_revision_count": 0,
       "total_revisions": 4,
       "latest_revisions": [],
       "latest_inputs": {
         "pattern_kinds": [
-          "pulsemesh_goes_live",
           "pulsemesh_ops_health",
+          "pulsemesh_goes_live",
           "global_weather_spread"
         ],
         "n_residual_conflicts": 24,
         "oracle_easy_pad_kills": 32,
-        "fitness_delta": 0.000300000000000078,
+        "fitness_delta": 9.999999999998899e-05,
         "kp": null
       },
       "examples": [
@@ -2947,42 +2947,42 @@
       ]
     },
     "actuation": {
-      "total_actions": 4538,
-      "successes": 4538,
+      "total_actions": 4547,
+      "successes": 4547,
       "failures": 0,
       "gated_blocked": 0,
       "success_rate": 1.0,
       "by_kind": {
-        "external_api_probe": 1510,
-        "spawn_subdebate": 1510,
-        "controlled_experiment": 1510,
+        "external_api_probe": 1513,
+        "spawn_subdebate": 1513,
+        "controlled_experiment": 1513,
         "adjust_telemetry_weights": 8
       },
       "examples": [
         {
-          "ts": "2026-11-22T16:00:49Z",
+          "ts": "2026-11-22T21:42:55Z",
           "kind": "external_api_probe",
           "hypothesis": "Refreshing EXTERNAL ARRAY will yield ≥1 cross-domain pattern usable as debate input.",
           "success": true,
           "result_snip": "{'feed_ok': {'arxiv': True, 'nasa_donki_solar': False, 'noaa_space_weather': False, 'global_weather': True, 'pulsemesh_goes_xray': True, 'pulsemesh_openmeteo': True, 'pulsemesh_usgs_quakes': True, 'pu",
           "motivating_signal": {
             "kind": "global_weather_spread",
-            "summary": "Open-Meteo snapshot across 4 cities: [('NYC', 15.5), ('London', 8.6), ('Tokyo', 6.9), ('Sydney', 23.3)]. Cross-correlate with solar/space feeds for commons reso"
+            "summary": "Open-Meteo snapshot across 4 cities: [('NYC', 13.9), ('London', 6.5), ('Tokyo', 5.2), ('Sydney', 27.5)]. Cross-correlate with solar/space feeds for commons reso"
           }
         },
         {
-          "ts": "2026-11-22T16:01:05Z",
+          "ts": "2026-11-22T21:43:10Z",
           "kind": "spawn_subdebate",
           "hypothesis": "Targeted sub-debate on `global_weather_spread` will lift load-bear replies / hearing quality.",
           "success": true,
-          "result_snip": "{'msg_id': 'msg_ddcfa4d6f4', 'topic': 'global_weather_spread'}",
+          "result_snip": "{'msg_id': 'msg_80417f85f6', 'topic': 'global_weather_spread'}",
           "motivating_signal": {
             "kind": "global_weather_spread",
             "from": "external_or_residual"
           }
         },
         {
-          "ts": "2026-11-22T16:01:05Z",
+          "ts": "2026-11-22T21:43:10Z",
           "kind": "controlled_experiment",
           "hypothesis": "Bounded exploration_budget.fp nudge will track Oracle easy_pad pressure / external richness.",
           "success": true,
@@ -2998,7 +2998,7 @@
       "external_array_errors": 0,
       "feed_fail_count": 1
     },
-    "ts": "2026-11-22T16:01:05Z"
+    "ts": "2026-11-22T21:43:10Z"
   },
   "note": "Agent-queryable telemetry. Internal colony metrics + external env/array/residuals. Query via colony.telemetry.query during debate. Not AGI.",
   "non_claims": [
