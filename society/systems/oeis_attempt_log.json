@@ -5482,17 +5482,57 @@
    "prior_tested_hi": 0,
    "extended": 0,
    "deep_terms": 0
+  },
+  {
+   "id": "oc_A131607_0",
+   "anum": "A131607",
+   "form": "gf",
+   "depth": 1000,
+   "bfile_hi": 1000,
+   "beyond": false,
+   "status": "proof_rejected",
+   "cycle_id": "20261122T001935Z_442aa5",
+   "planned": 20000,
+   "verified_depth": 1000,
+   "prior_tested_hi": 0,
+   "extended": 1000
+  },
+  {
+   "id": "oc_A131607_0",
+   "anum": "A131607",
+   "form": "gf",
+   "depth": 19999,
+   "bfile_hi": 1000,
+   "beyond": true,
+   "status": "holds_on_range",
+   "cycle_id": "20261122T001935Z_442aa5",
+   "planned": 20000,
+   "verified_depth": 19999,
+   "prior_tested_hi": 0,
+   "extended": 19604,
+   "cap_reason": "term_cap",
+   "cap_value": 20000,
+   "fast_cfinite": true,
+   "deep_terms": 20000,
+   "deep_elapsed_s": 0.12
+  },
+  {
+   "id": "oc_A186388_0",
+   "anum": "A186388",
+   "form": "relation",
+   "depth": 93,
+   "bfile_hi": 93,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261122T002710Z_3b8844",
+   "planned": 93,
+   "verified_depth": 93,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
   }
  ],
  "by_cycle": {
-  "20261116T205517Z_8430ed": [
-   "oc_A299406_0"
-  ],
-  "20261116T211949Z_e1ca90": [
-   "oc_A326781_0",
-   "oc_A328202_0",
-   "oc_A365429_0"
-  ],
   "20261116T222759Z_1beee5": [
    "oc_A003278_0"
   ],
@@ -5735,28 +5775,34 @@
   ],
   "20261122T000928Z_8b6aa0": [
    "oc_A187256_0"
+  ],
+  "20261122T001935Z_442aa5": [
+   "oc_A131607_0"
+  ],
+  "20261122T002710Z_3b8844": [
+   "oc_A186388_0"
   ]
  },
  "last_forms": [
   "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
+  "relation",
   "gf",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
-  "relation",
   "relation"
  ]
 }
