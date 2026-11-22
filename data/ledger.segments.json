@@ -13,11 +13,20 @@
       "status": "closed"
     },
     {
-      "bytes": 41770593,
+      "bytes": 41943706,
       "id": 2,
       "kind": "file",
+      "last_line_sha256": "8b3283a9cbeb25202422700a91d21680f019076d2a750877b4139197d3bc2cb8",
       "path": "ledger/ledger-0002.jsonl",
       "prev_sha256": "0cfb2353b854694fee10e5615cf47b751560347fc698243fed4d0dd0a24faaa3",
+      "status": "closed"
+    },
+    {
+      "bytes": 19435,
+      "id": 3,
+      "kind": "file",
+      "path": "ledger/ledger-0003.jsonl",
+      "prev_sha256": "8b3283a9cbeb25202422700a91d21680f019076d2a750877b4139197d3bc2cb8",
       "status": "active"
     }
   ],
