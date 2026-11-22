@@ -8,21 +8,22 @@ lead on Oracle passes or verified depth. Fitness alone never
 decides a keep. Reverts and voids are recorded too. This is not
 AGI, not a novel theorem, and not a breakthrough claim.
 
-- Method cards tried: **1**
+- Method cards tried: **2**
 - Kept: **14**
-- Reverted (including twin-not-better): **11**
+- Reverted (including twin-not-better): **12**
 - Voided (environment changed mid-trial): **18**
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **10**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **5** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 49, correct 0, pending 151, accuracy 0‰
+- Hive decision deferred **2** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 48, correct 0, pending 152, accuracy 0‰
 
 ## Per method card
 
 | Card | Method | Tried | Kept | Reverted | Keep rate |
 | --- | --- | ---: | ---: | ---: | ---: |
 | `mc_bacbbd75d04b` | Perturb candidate claims a little more widely (annealing-style search). | 2 | 0 | 1 | 0‰ |
+| `mc_e170e02332fe` | Remember already-tried targets for longer before retrying them (longer working memory). | 1 | 0 | 1 | 0‰ |
 
 ## Per op family
 
@@ -36,10 +37,10 @@ AGI, not a novel theorem, and not a breakthrough claim.
 | `set_knob:perturb_cooldown_cycles` | 2 | 0 | 1 | 0‰ |
 | `set_knob:perturb_epsilon` | 3 | 0 | 1 | 0‰ |
 | `set_knob:step_size` | 1 | 0 | 0 | 0‰ |
+| `set_knob:unused_menu_cycles` | 1 | 0 | 1 | 0‰ |
 
 ## Recent outcomes
 
-- `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261116T173537Z_be43ea` (baseline 8.0, trial 5.0)
 - `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261116T183049Z_7f7d82` (baseline 5.0, trial 4.0)
 - `kept` · card `—` · family `set_knob:park_cycles` · cycle `20261116T192905Z_bc22f0` (baseline 4.0, trial 5.0)
 - `reverted` · card `—` · family `set_knob:park_cycles` · cycle `20261116T202906Z_a13d81` (baseline 5.0, trial 4.0)
@@ -51,15 +52,16 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - `voided` · card `—` · family `set_knob:step_size` · cycle `20261119T160439Z_1e2345` (baseline 2.0, trial None)
 - `voided` · card `mc_bacbbd75d04b` · family `set_knob:perturb_epsilon` · cycle `20261119T195729Z_48a2bb` (baseline 1.0, trial None)
 - `reverted` · card `mc_bacbbd75d04b` · family `set_knob:perturb_epsilon` · cycle `20261120T171815Z_5274f1` (baseline 1.0, trial 0.0)
+- `reverted` · card `mc_e170e02332fe` · family `set_knob:unused_menu_cycles` · cycle `20261122T073802Z_5f3e3a` (baseline 1.0, trial 0.0)
 
 ## Reading breadth (knowledge library)
 
-knowledge: 390 papers across 14/14 fields, 192 concepts, 95 cards formed, 1 tested, 0 kept.
+knowledge: 390 papers across 14/14 fields, 192 concepts, 95 cards formed, 2 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | automated_reasoning | 40 | 3 | 1 | 0 | 0 |
-| cognitive_science | 13 | 7 | 6 | 0 | 0 |
+| cognitive_science | 13 | 7 | 6 | 1 | 0 |
 | consciousness_self_models | 13 | 9 | 2 | 0 | 0 |
 | learning_theory | 20 | 23 | 1 | 0 | 0 |
 | mathematics | 71 | 0 | 0 | 0 | 0 |
