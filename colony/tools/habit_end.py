@@ -62,6 +62,11 @@ def apply(lineage: str = "one-mind") -> dict:
             replay(lineage)
         except Exception:
             pass
+        try:
+            from colony.tools.propose_ops import propose as propose_ops
+            out["ops"] = propose_ops()
+        except Exception:
+            pass
         return out
     except Exception as exc:
         return {"kept": False, "reason": "fail-open", "error": str(exc)}
