@@ -4,3 +4,4 @@
 {"source": "one-mind", "ops": ["length", "count", "reverse"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
 {"source": "one-mind", "ops": ["count", "reverse", "complement"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
 {"source": "one-mind", "ops": ["length", "count", "reverse"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
+{"source": "one-mind", "ops": ["count", "reverse", "complement"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
