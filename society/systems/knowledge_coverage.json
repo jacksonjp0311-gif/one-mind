@@ -42,8 +42,8 @@
       "cards_tested": 0,
       "concepts": 0,
       "distinct_concepts": 0,
-      "papers": 79,
-      "reads": 49
+      "papers": 85,
+      "reads": 50
     },
     "meta_learning": {
       "cards_formed": 3,
@@ -55,13 +55,13 @@
       "reads": 26
     },
     "multi_agent_systems": {
-      "cards_formed": 1,
+      "cards_formed": 2,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 6,
-      "distinct_concepts": 3,
-      "papers": 11,
-      "reads": 24
+      "concepts": 7,
+      "distinct_concepts": 4,
+      "papers": 13,
+      "reads": 25
     },
     "neural_architecture": {
       "cards_formed": 9,
@@ -73,7 +73,7 @@
       "reads": 25
     },
     "open_endedness": {
-      "cards_formed": 45,
+      "cards_formed": 48,
       "cards_kept": 0,
       "cards_tested": 0,
       "concepts": 49,
@@ -82,7 +82,7 @@
       "reads": 25
     },
     "optimization_search": {
-      "cards_formed": 26,
+      "cards_formed": 28,
       "cards_kept": 0,
       "cards_tested": 0,
       "concepts": 48,
@@ -105,8 +105,8 @@
       "cards_tested": 0,
       "concepts": 1,
       "distinct_concepts": 1,
-      "papers": 34,
-      "reads": 24
+      "papers": 42,
+      "reads": 25
     },
     "self_learning_loops": {
       "cards_formed": 6,
@@ -268,11 +268,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 116,
+    "cards_formed": 122,
     "cards_kept": 0,
     "cards_tested": 2,
-    "concepts": 246,
-    "papers": 474,
-    "reads": 373
+    "concepts": 247,
+    "papers": 490,
+    "reads": 376
   }
 }
