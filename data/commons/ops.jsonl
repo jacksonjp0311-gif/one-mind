@@ -19,3 +19,4 @@
 {"source": "one-mind", "ops": ["reverse", "complement", "codon"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
 {"source": "one-mind", "ops": ["complement", "codon", "length"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
 {"source": "one-mind", "ops": ["codon", "length", "count"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false}
+{"source": "one-mind", "ops": null, "set": ["reverse", "complement", "codon", "length", "count"], "repeat": true, "reason": "repeat_refuse"}
