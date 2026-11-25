@@ -1,19 +1,19 @@
 {
-  "ts": "2026-11-25T12:12:41Z",
+  "ts": "2026-11-25T12:32:19Z",
   "version": 1,
-  "latest_cycle_id": "20261125T121037Z_40ddd6",
+  "latest_cycle_id": "20261125T122931Z_779193",
   "latest_revision_count": 0,
   "total_revisions": 4,
   "latest_revisions": [],
   "latest_inputs": {
     "pattern_kinds": [
+      "pulsemesh_ops_health",
       "global_weather_spread",
-      "pulsemesh_goes_live",
-      "pulsemesh_ops_health"
+      "pulsemesh_goes_live"
     ],
     "n_residual_conflicts": 24,
     "oracle_easy_pad_kills": 32,
-    "fitness_delta": -0.000300000000000078,
+    "fitness_delta": -0.0044000000000000705,
     "kp": null
   },
   "examples": [

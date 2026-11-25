@@ -15,8 +15,8 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **10**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **10** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
-- Hive shadow picks: resolved 39, correct 0, pending 161, accuracy 0‰
+- Hive decision deferred **2** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive shadow picks: resolved 38, correct 0, pending 162, accuracy 0‰
 
 ## Per method card
 
@@ -56,7 +56,7 @@ AGI, not a novel theorem, and not a breakthrough claim.
 
 ## Reading breadth (knowledge library)
 
-knowledge: 552 papers across 14/14 fields, 285 concepts, 138 cards formed, 2 tested, 0 kept.
+knowledge: 566 papers across 14/14 fields, 286 concepts, 144 cards formed, 2 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -64,14 +64,14 @@ knowledge: 552 papers across 14/14 fields, 285 concepts, 138 cards formed, 2 tes
 | cognitive_science | 17 | 9 | 8 | 1 | 0 |
 | consciousness_self_models | 15 | 11 | 2 | 0 | 0 |
 | learning_theory | 31 | 35 | 1 | 0 | 0 |
-| mathematics | 93 | 0 | 0 | 0 | 0 |
+| mathematics | 97 | 0 | 0 | 0 | 0 |
 | meta_learning | 23 | 16 | 4 | 0 | 0 |
-| multi_agent_systems | 13 | 7 | 2 | 0 | 0 |
+| multi_agent_systems | 15 | 8 | 2 | 0 | 0 |
 | neural_architecture | 64 | 44 | 11 | 0 | 0 |
-| open_endedness | 58 | 57 | 53 | 0 | 0 |
-| optimization_search | 51 | 57 | 31 | 0 | 0 |
+| open_endedness | 58 | 57 | 57 | 0 | 0 |
+| optimization_search | 51 | 57 | 33 | 0 | 0 |
 | physics_complex_systems | 31 | 11 | 3 | 0 | 0 |
-| recursive_self_improvement | 42 | 1 | 3 | 0 | 0 |
+| recursive_self_improvement | 50 | 1 | 3 | 0 | 0 |
 | self_learning_loops | 34 | 16 | 7 | 1 | 0 |
 | swarm_collective_intelligence | 16 | 12 | 11 | 0 | 0 |
 
