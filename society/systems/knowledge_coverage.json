@@ -67,13 +67,13 @@
       "cards_formed": 11,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 44,
-      "distinct_concepts": 8,
-      "papers": 64,
-      "reads": 26
+      "concepts": 46,
+      "distinct_concepts": 9,
+      "papers": 72,
+      "reads": 27
     },
     "open_endedness": {
-      "cards_formed": 57,
+      "cards_formed": 59,
       "cards_kept": 0,
       "cards_tested": 0,
       "concepts": 57,
@@ -109,22 +109,22 @@
       "reads": 26
     },
     "self_learning_loops": {
-      "cards_formed": 7,
+      "cards_formed": 9,
       "cards_kept": 0,
       "cards_tested": 1,
-      "concepts": 16,
-      "distinct_concepts": 4,
-      "papers": 34,
-      "reads": 26
+      "concepts": 20,
+      "distinct_concepts": 5,
+      "papers": 39,
+      "reads": 27
     },
     "swarm_collective_intelligence": {
-      "cards_formed": 11,
+      "cards_formed": 13,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 12,
+      "concepts": 16,
       "distinct_concepts": 2,
-      "papers": 16,
-      "reads": 26
+      "papers": 18,
+      "reads": 27
     }
   },
   "fields_with_papers": 14,
@@ -184,7 +184,7 @@
         "physics_complex_systems"
       ],
       "idea": "specialist_routing",
-      "n_papers": 35
+      "n_papers": 36
     },
     {
       "description": "Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).",
@@ -214,7 +214,7 @@
         "swarm_collective_intelligence"
       ],
       "idea": "swarm_topology",
-      "n_papers": 17
+      "n_papers": 19
     },
     {
       "description": "A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).",
@@ -239,7 +239,7 @@
         "self_learning_loops"
       ],
       "idea": "self_play_challenger",
-      "n_papers": 13
+      "n_papers": 15
     },
     {
       "description": "Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).",
@@ -272,11 +272,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 144,
+    "cards_formed": 150,
     "cards_kept": 0,
     "cards_tested": 2,
-    "concepts": 286,
-    "papers": 566,
-    "reads": 391
+    "concepts": 296,
+    "papers": 581,
+    "reads": 394
   }
 }
