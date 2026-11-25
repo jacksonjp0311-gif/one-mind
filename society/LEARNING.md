@@ -15,7 +15,7 @@ AGI, not a novel theorem, and not a breakthrough claim.
 - Inconclusive (no signal in either window; not counted against the action): **6**
 - Proposed this snapshot: **10**
 - Waiting on a twin judgment: **0**
-- Hive decision deferred **2** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
+- Hive decision deferred **5** times (`set_knob:direction=up:name=park_cycles:value=12`), waiting on a clean 6-cycle window (same Wilson 700‰ gate).
 - Hive shadow picks: resolved 40, correct 0, pending 160, accuracy 0‰
 
 ## Per method card
@@ -56,19 +56,19 @@ AGI, not a novel theorem, and not a breakthrough claim.
 
 ## Reading breadth (knowledge library)
 
-knowledge: 507 papers across 14/14 fields, 257 concepts, 128 cards formed, 2 tested, 0 kept.
+knowledge: 516 papers across 14/14 fields, 262 concepts, 132 cards formed, 2 tested, 0 kept.
 
 | Field | Papers | Concepts | Cards formed | Cards tested | Cards kept |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | automated_reasoning | 56 | 7 | 1 | 0 | 0 |
-| cognitive_science | 14 | 7 | 6 | 1 | 0 |
-| consciousness_self_models | 13 | 9 | 2 | 0 | 0 |
+| cognitive_science | 17 | 9 | 8 | 1 | 0 |
+| consciousness_self_models | 15 | 11 | 2 | 0 | 0 |
 | learning_theory | 28 | 31 | 1 | 0 | 0 |
 | mathematics | 85 | 0 | 0 | 0 | 0 |
-| meta_learning | 19 | 15 | 3 | 0 | 0 |
+| meta_learning | 23 | 16 | 4 | 0 | 0 |
 | multi_agent_systems | 13 | 7 | 2 | 0 | 0 |
 | neural_architecture | 64 | 44 | 11 | 0 | 0 |
-| open_endedness | 50 | 49 | 50 | 0 | 0 |
+| open_endedness | 50 | 49 | 51 | 0 | 0 |
 | optimization_search | 43 | 48 | 28 | 0 | 0 |
 | physics_complex_systems | 30 | 11 | 3 | 0 | 0 |
 | recursive_self_improvement | 42 | 1 | 3 | 0 | 0 |
@@ -81,7 +81,7 @@ knowledge: 507 papers across 14/14 fields, 257 concepts, 128 cards formed, 2 tes
 - `specialist_routing` — 35 papers (neural_architecture, physics_complex_systems): A gating step that sends each target to a specialist desk (mixture-of-experts style routing).
 - `swarm_topology` — 16 papers (multi_agent_systems, neural_architecture, optimization_search, physics_complex_systems, swarm_collective_intelligence): Several improver agents propose over one shared candidate pool and a vote picks one (swarm/consensus topology).
 - `self_play_challenger` — 13 papers (self_learning_loops): A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).
-- `meta_controller` — 11 papers (meta_learning, self_learning_loops): A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.
+- `prediction_error_routing` — 11 papers (cognitive_science, learning_theory, neural_architecture, optimization_search, physics_complex_systems): Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).
 
 Not AGI. Not discovery. Human authorize still required for durable accepts.
 
