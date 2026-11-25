@@ -1,13 +1,13 @@
 {
   "fields": {
     "automated_reasoning": {
-      "cards_formed": 1,
+      "cards_formed": 2,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 7,
-      "distinct_concepts": 2,
-      "papers": 56,
-      "reads": 25
+      "concepts": 9,
+      "distinct_concepts": 3,
+      "papers": 64,
+      "reads": 26
     },
     "cognitive_science": {
       "cards_formed": 8,
@@ -73,22 +73,22 @@
       "reads": 26
     },
     "open_endedness": {
-      "cards_formed": 51,
+      "cards_formed": 53,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 49,
+      "concepts": 57,
       "distinct_concepts": 1,
-      "papers": 50,
-      "reads": 25
+      "papers": 58,
+      "reads": 26
     },
     "optimization_search": {
-      "cards_formed": 28,
+      "cards_formed": 31,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 48,
-      "distinct_concepts": 5,
-      "papers": 43,
-      "reads": 25
+      "concepts": 57,
+      "distinct_concepts": 6,
+      "papers": 51,
+      "reads": 26
     },
     "physics_complex_systems": {
       "cards_formed": 3,
@@ -158,7 +158,7 @@
         "recursive_self_improvement"
       ],
       "idea": "novelty_archive",
-      "n_papers": 53
+      "n_papers": 61
     },
     {
       "description": "A gating step that sends each target to a specialist desk (mixture-of-experts style routing).",
@@ -206,6 +206,7 @@
         }
       ],
       "fields": [
+        "automated_reasoning",
         "multi_agent_systems",
         "neural_architecture",
         "optimization_search",
@@ -213,7 +214,7 @@
         "swarm_collective_intelligence"
       ],
       "idea": "swarm_topology",
-      "n_papers": 16
+      "n_papers": 17
     },
     {
       "description": "A challenger role that generates harder variants of solved targets for the solver desks (self-play curriculum).",
@@ -271,11 +272,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 132,
+    "cards_formed": 138,
     "cards_kept": 0,
     "cards_tested": 2,
-    "concepts": 266,
-    "papers": 528,
-    "reads": 385
+    "concepts": 285,
+    "papers": 552,
+    "reads": 388
   }
 }

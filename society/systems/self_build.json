@@ -1,6 +1,6 @@
 {
  "version": 1,
- "cycle_index": 382,
+ "cycle_index": 385,
  "active": {
   "id": "bp_1a40beac596f0ebe",
   "signature": "1a40beac596f0ebe",
@@ -165,7 +165,7 @@
  },
  "macros": {},
  "last_run": {
-  "cycle_id": "20261125T030850Z_b0080a",
+  "cycle_id": "20261125T121037Z_40ddd6",
   "blueprint": "bp_1a40beac596f0ebe",
   "ran": [
    {
@@ -174,40 +174,40 @@
     "actions": 1,
     "counts": {
      "expressions": 260,
-     "fitted": 136,
-     "duplicate": 18,
-     "trivial_formal": 4,
+     "fitted": 135,
+     "duplicate": 11,
+     "trivial_formal": 5,
      "trivial_shuffle_null": 3,
-     "trivial_idle_part": 15,
-     "trivial_implied_parts": 51,
-     "trivial_shared_operand": 2,
+     "trivial_idle_part": 20,
+     "trivial_implied_parts": 56,
+     "trivial_shared_operand": 1,
      "trivial_growth_dominance": 0,
-     "trivial_case_split": 1,
-     "trivial_parity_rules": 7,
+     "trivial_case_split": 0,
+     "trivial_parity_rules": 13,
      "trivial_running_sum_tail": 0,
-     "trivial_basic_inequality": 0,
-     "trivial_rewrite_closure": 0,
+     "trivial_basic_inequality": 3,
+     "trivial_rewrite_closure": 1,
      "trivial_digit_rule": 0,
      "expected_by_closure": 8,
      "loose_inequality": 0,
-     "tested": 21,
-     "survived": 15,
+     "tested": 18,
+     "survived": 12,
      "falsified": 6,
-     "machine_checked": 10,
+     "machine_checked": 8,
      "surprises": 0,
      "known_result": 0,
      "oeis_known": 0,
-     "oeis_unchecked": 7,
+     "oeis_unchecked": 4,
      "retested": 0,
      "false_surprises": 0
     }
    }
   ],
   "actions": 1,
-  "cpu_s": 2.254
+  "cpu_s": 2.304
  },
  "last_skip": {
-  "cycle_id": "20261125T030850Z_b0080a",
+  "cycle_id": "20261125T121037Z_40ddd6",
   "reason": "no_candidate_passed_self_test",
   "rejected": [
    {
@@ -277,7 +277,7 @@
  "inconclusive_count": 4,
  "voided_count": 18,
  "heal_turn": null,
- "last_propose_cycle": "20261125T030850Z_b0080a",
+ "last_propose_cycle": "20261125T121037Z_40ddd6",
  "operator_stats": {
   "add": {
    "tried": 3,
