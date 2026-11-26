@@ -1,7 +1,7 @@
 {
  "version": 1,
- "cycle_index": 394,
- "last_refill_index": 387,
+ "cycle_index": 397,
+ "last_refill_index": 395,
  "done_pages": {
   "4453a00f513ccdb5": {
    "cycle_id": "20261116T012311Z_c7865a",
@@ -2050,6 +2050,38 @@
   "673a7d2bc6c16b7a": {
    "cycle_id": "20261125T215811Z_966c27",
    "n_hits": 10
+  },
+  "391930337f5af817": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "12006c971e1c04ea": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "2676cd3372b5e801": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "890edbe5cb4cf859": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "123b3f242d64124b": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "2e4f11f4b4cb28dd": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "03b0a3c9da4c3925": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
+  },
+  "2b44b0792299cf41": {
+   "cycle_id": "20261126T040939Z_02faec",
+   "n_hits": 10
   }
  },
  "rejected": {
@@ -2249,72 +2281,72 @@
   "A151483": "20261125T215811Z_966c27",
   "A006415": "20261125T215811Z_966c27"
  },
- "refills": 64,
- "added": 263,
+ "refills": 65,
+ "added": 273,
  "last": {
-  "cycle_id": "20261125T215811Z_966c27",
+  "cycle_id": "20261126T040939Z_02faec",
   "open_before": 7,
   "pages_read": 8,
-  "requests": 20,
+  "requests": 21,
   "new": [
    {
-    "id": "oc_A055278_0",
-    "form": "gf",
-    "definition": false
-   },
-   {
-    "id": "oc_A358587_0",
+    "id": "oc_A219314_0",
     "form": "relation",
     "definition": false
    },
    {
-    "id": "oc_A358588_0",
-    "form": "relation",
-    "definition": false
-   },
-   {
-    "id": "oc_A232866_0",
-    "form": "relation",
-    "definition": false
-   },
-   {
-    "id": "oc_A232867_0",
-    "form": "relation",
-    "definition": false
-   },
-   {
-    "id": "oc_A232868_0",
-    "form": "relation",
-    "definition": false
-   },
-   {
-    "id": "oc_A187167_0",
+    "id": "oc_A321774_0",
     "form": "gf",
     "definition": false
    },
    {
-    "id": "oc_A187164_0",
+    "id": "oc_A321775_0",
     "form": "gf",
     "definition": false
    },
    {
-    "id": "oc_A187165_0",
+    "id": "oc_A321776_0",
     "form": "gf",
     "definition": false
    },
    {
-    "id": "oc_A187166_0",
+    "id": "oc_A321777_0",
     "form": "gf",
+    "definition": false
+   },
+   {
+    "id": "oc_A073783_0",
+    "form": "relation",
+    "definition": false
+   },
+   {
+    "id": "oc_A325688_0",
+    "form": "gf",
+    "definition": false
+   },
+   {
+    "id": "oc_A325696_0",
+    "form": "gf",
+    "definition": false
+   },
+   {
+    "id": "oc_A277624_0",
+    "form": "relation",
+    "definition": false
+   },
+   {
+    "id": "oc_A245094_0",
+    "form": "relation",
     "definition": false
    }
   ],
   "stats": {
-   "entries": 74,
-   "resolved_skipped": 16,
-   "keyword_skipped": 6,
-   "statements": 72,
-   "parsed": 36,
-   "no_bfile": 2,
+   "entries": 78,
+   "resolved_skipped": 14,
+   "keyword_skipped": 12,
+   "statements": 78,
+   "parsed": 22,
+   "no_bfile": 0,
    "fails_on_data": 0,
    "kept": 10,
    "def_candidates": 0
