@@ -1,7 +1,7 @@
 """Propose a sequence from a closed set.
 
 Pattern: reverse, complement, codon, length, count.
-At most three. A repeat of the last kept sequence is not a proposal.
+Three operators first. Four when three are exhausted.
 An order that has already appeared twice is refused.
 The set stays closed. Adding an operation is not allowed.
 Fail-open. Does not change a gate.
@@ -15,7 +15,7 @@ STORE = ROOT / "data" / "commons" / "ops.jsonl"
 OPS = ("reverse", "complement", "codon", "length", "count")
 
 
-def _recent(n: int = 16) -> list[list]:
+def _recent(n: int = 32) -> list[list]:
     try:
         if not STORE.exists():
             return []
@@ -41,27 +41,30 @@ def _counts(recent: list[list]) -> dict:
     return c
 
 
-def propose() -> dict:
-    """One sequence. Different from the last. Not a twice-seen order. Closed set."""
-    recent = _recent()
-    counts = _counts(recent)
-    last = recent[-1] if recent else []
-    # Rotate. Skip any order that has already appeared twice.
-    start = len(last) % len(OPS)
-    ops = None
+def _try(length: int, start: int, last: list, counts: dict) -> list | None:
     for shift in range(len(OPS)):
-        cand = [OPS[(start + shift + i) % len(OPS)] for i in range(3)]
+        cand = [OPS[(start + shift + i) % len(OPS)] for i in range(length)]
         if cand == last:
             continue
         if counts.get(tuple(cand), 0) >= 2:
             continue
-        ops = cand
-        break
+        return cand
+    return None
+
+
+def propose() -> dict:
+    """One sequence. Three first. Four when three are exhausted. Closed set."""
+    recent = _recent()
+    counts = _counts(recent)
+    last = recent[-1] if recent else []
+    start = len(last) % len(OPS)
+    ops = _try(3, start, last, counts)
     if ops is None:
-        # All candidates refused. Write none. Fail-open.
+        ops = _try(4, start, last, counts)
+    if ops is None:
         rec = {"source": "one-mind", "ops": None, "set": list(OPS), "repeat": True, "reason": "repeat_refuse"}
     else:
-        rec = {"source": "one-mind", "ops": ops, "set": list(OPS), "repeat": False}
+        rec = {"source": "one-mind", "ops": ops, "set": list(OPS), "repeat": False, "length": len(ops)}
     try:
         STORE.parent.mkdir(parents=True, exist_ok=True)
         with STORE.open("a", encoding="utf-8") as f:
