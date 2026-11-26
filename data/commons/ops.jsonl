@@ -25,3 +25,4 @@
 {"source": "one-mind", "ops": ["length", "count", "reverse", "complement"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false, "length": 4}
 {"source": "one-mind", "ops": ["count", "reverse", "complement", "codon"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false, "length": 4}
 {"source": "one-mind", "ops": ["reverse", "complement", "codon", "length"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false, "length": 4}
+{"source": "one-mind", "ops": ["count", "reverse", "complement", "codon"], "set": ["reverse", "complement", "codon", "length", "count"], "repeat": false, "length": 4}
