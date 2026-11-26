@@ -43,7 +43,7 @@
       "concepts": 1,
       "distinct_concepts": 1,
       "papers": 105,
-      "reads": 53
+      "reads": 54
     },
     "meta_learning": {
       "cards_formed": 4,
@@ -60,8 +60,8 @@
       "cards_tested": 0,
       "concepts": 8,
       "distinct_concepts": 4,
-      "papers": 15,
-      "reads": 26
+      "papers": 16,
+      "reads": 27
     },
     "neural_architecture": {
       "cards_formed": 11,
@@ -73,7 +73,7 @@
       "reads": 27
     },
     "open_endedness": {
-      "cards_formed": 63,
+      "cards_formed": 64,
       "cards_kept": 0,
       "cards_tested": 0,
       "concepts": 62,
@@ -100,13 +100,13 @@
       "reads": 27
     },
     "recursive_self_improvement": {
-      "cards_formed": 3,
+      "cards_formed": 5,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 1,
-      "distinct_concepts": 1,
-      "papers": 50,
-      "reads": 26
+      "concepts": 2,
+      "distinct_concepts": 2,
+      "papers": 54,
+      "reads": 27
     },
     "self_learning_loops": {
       "cards_formed": 11,
@@ -243,38 +243,42 @@
       "n_papers": 15
     },
     {
-      "description": "A meta-level desk that learns which kinds of self-heal trials tend to win and orders trials accordingly.",
+      "description": "Route work to targets where predicted and actual outcomes differ most (prediction-error-driven routing).",
       "examples": [
         {
-          "arxiv_id": "2611.17314",
-          "field": "meta_learning",
-          "title": "Linking Rapid Learning to Compositional Structure in Neural Networks: Evidence from Additive Analogies in Meta-Learned Parameter Spaces"
+          "arxiv_id": "2611.17879",
+          "field": "neural_architecture",
+          "title": "From Local Prediction Error to Final Outputs: A Theory of Expert Sharing in Multi-Step Reasoning"
         },
         {
-          "arxiv_id": "2611.15923",
-          "field": "meta_learning",
-          "title": "Reinforcement Learning for Target Jerk Estimation in Interceptor Homing Phase"
+          "arxiv_id": "2610.37327",
+          "field": "cognitive_science",
+          "title": "Local learning is all you need: brain-aligned predictive coding networks"
         },
         {
-          "arxiv_id": "2611.15071",
-          "field": "meta_learning",
-          "title": "Improving Efficiency and Power in Small Rare-Disease Trials Through Prespecified, Data-Adaptive Covariate Adjustment"
+          "arxiv_id": "2611.16220",
+          "field": "physics_complex_systems",
+          "title": "Learning memory forces and bounding frequency errors in fractional Kuramoto grids"
         }
       ],
       "fields": [
-        "meta_learning",
-        "self_learning_loops"
+        "cognitive_science",
+        "learning_theory",
+        "neural_architecture",
+        "optimization_search",
+        "physics_complex_systems",
+        "recursive_self_improvement"
       ],
-      "idea": "meta_controller",
+      "idea": "prediction_error_routing",
       "n_papers": 12
     }
   ],
   "totals": {
-    "cards_formed": 160,
+    "cards_formed": 163,
     "cards_kept": 0,
     "cards_tested": 2,
-    "concepts": 317,
-    "papers": 622,
-    "reads": 403
+    "concepts": 318,
+    "papers": 627,
+    "reads": 406
   }
 }
