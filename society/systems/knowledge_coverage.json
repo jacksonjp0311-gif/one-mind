@@ -28,22 +28,22 @@
       "reads": 27
     },
     "learning_theory": {
+      "cards_formed": 2,
+      "cards_kept": 0,
+      "cards_tested": 0,
+      "concepts": 40,
+      "distinct_concepts": 5,
+      "papers": 35,
+      "reads": 27
+    },
+    "mathematics": {
       "cards_formed": 1,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 35,
-      "distinct_concepts": 4,
-      "papers": 31,
-      "reads": 26
-    },
-    "mathematics": {
-      "cards_formed": 0,
-      "cards_kept": 0,
-      "cards_tested": 0,
-      "concepts": 0,
-      "distinct_concepts": 0,
-      "papers": 97,
-      "reads": 52
+      "concepts": 1,
+      "distinct_concepts": 1,
+      "papers": 105,
+      "reads": 53
     },
     "meta_learning": {
       "cards_formed": 4,
@@ -94,10 +94,10 @@
       "cards_formed": 3,
       "cards_kept": 0,
       "cards_tested": 0,
-      "concepts": 11,
+      "concepts": 12,
       "distinct_concepts": 5,
-      "papers": 31,
-      "reads": 26
+      "papers": 37,
+      "reads": 27
     },
     "recursive_self_improvement": {
       "cards_formed": 3,
@@ -152,13 +152,14 @@
       ],
       "fields": [
         "consciousness_self_models",
+        "mathematics",
         "neural_architecture",
         "open_endedness",
         "optimization_search",
         "recursive_self_improvement"
       ],
       "idea": "novelty_archive",
-      "n_papers": 61
+      "n_papers": 62
     },
     {
       "description": "A gating step that sends each target to a specialist desk (mixture-of-experts style routing).",
@@ -269,11 +270,11 @@
     }
   ],
   "totals": {
-    "cards_formed": 152,
+    "cards_formed": 154,
     "cards_kept": 0,
     "cards_tested": 2,
-    "concepts": 298,
-    "papers": 584,
-    "reads": 397
+    "concepts": 305,
+    "papers": 602,
+    "reads": 400
   }
 }
