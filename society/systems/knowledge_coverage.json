@@ -7,7 +7,7 @@
       "concepts": 10,
       "distinct_concepts": 3,
       "papers": 72,
-      "reads": 28
+      "reads": 29
     },
     "cognitive_science": {
       "cards_formed": 8,
@@ -79,7 +79,7 @@
       "concepts": 62,
       "distinct_concepts": 1,
       "papers": 64,
-      "reads": 28
+      "reads": 29
     },
     "optimization_search": {
       "cards_formed": 35,
@@ -88,7 +88,7 @@
       "concepts": 63,
       "distinct_concepts": 6,
       "papers": 57,
-      "reads": 28
+      "reads": 29
     },
     "physics_complex_systems": {
       "cards_formed": 3,
@@ -275,6 +275,6 @@
     "cards_tested": 2,
     "concepts": 331,
     "papers": 643,
-    "reads": 430
+    "reads": 433
   }
 }
