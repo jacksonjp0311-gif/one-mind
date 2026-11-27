@@ -1,16 +1,6 @@
 {
  "attempts": [
   {
-   "id": "oc_A027027_0",
-   "anum": "A027027",
-   "form": "relation",
-   "depth": 750,
-   "bfile_hi": 750,
-   "beyond": false,
-   "status": "holds_on_range",
-   "cycle_id": "20261112T234609Z_0f7791"
-  },
-  {
    "id": "oc_A090079_0",
    "anum": "A090079",
    "form": "relation",
@@ -6185,12 +6175,24 @@
    "prior_tested_hi": 0,
    "extended": 0,
    "deep_terms": 0
+  },
+  {
+   "id": "oc_A232867_0",
+   "anum": "A232867",
+   "form": "relation",
+   "depth": 499,
+   "bfile_hi": 1000,
+   "beyond": false,
+   "status": "holds_on_range",
+   "cycle_id": "20261127T232726Z_8c6b1e",
+   "planned": 1000,
+   "verified_depth": 499,
+   "prior_tested_hi": 0,
+   "extended": 0,
+   "deep_terms": 0
   }
  ],
  "by_cycle": {
-  "20261118T105614Z_a0beac": [
-   "oc_A005560_0"
-  ],
   "20261118T160713Z_e8b3ca": [
    "oc_A182881_0"
   ],
@@ -6438,10 +6440,12 @@
   ],
   "20261127T150258Z_7280b2": [
    "oc_A073783_0"
+  ],
+  "20261127T232726Z_8c6b1e": [
+   "oc_A232867_0"
   ]
  },
  "last_forms": [
-  "gf",
   "gf",
   "relation",
   "gf",
@@ -6456,6 +6460,7 @@
   "relation",
   "relation",
   "property",
+  "relation",
   "relation",
   "relation",
   "relation",

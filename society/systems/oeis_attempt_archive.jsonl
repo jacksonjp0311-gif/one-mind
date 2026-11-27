@@ -7,3 +7,4 @@
 {"id": "oc_A026598_0", "anum": "A026598", "form": "relation", "depth": 500, "bfile_hi": 500, "beyond": false, "status": "holds_on_range", "cycle_id": "20261112T234609Z_0f7791"}
 {"id": "oc_A108475_0", "anum": "A108475", "form": "relation", "depth": 20000, "bfile_hi": 1000, "beyond": true, "status": "holds_on_range", "cycle_id": "20261112T234609Z_0f7791"}
 {"id": "oc_A285195_0", "anum": "A285195", "form": "relation", "depth": 1000, "bfile_hi": 1000, "beyond": false, "status": "holds_on_range", "cycle_id": "20261112T234609Z_0f7791"}
+{"id": "oc_A027027_0", "anum": "A027027", "form": "relation", "depth": 750, "bfile_hi": 750, "beyond": false, "status": "holds_on_range", "cycle_id": "20261112T234609Z_0f7791"}
